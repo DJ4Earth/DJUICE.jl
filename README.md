@@ -1,3 +1,7 @@
 # dJUICE
 differentiable JUlia ICE model
-(Mathieu Morlighem, 2022/01)
+
+Authors:
+ - Mathieu Morlighem, Dartmouth College
+
+License: MIT
