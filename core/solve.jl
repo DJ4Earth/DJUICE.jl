@@ -24,12 +24,21 @@ include("./modules.jl")
 include("./elementmatrix.jl")
 include("./utils.jl")
 
-function IssmCore(md::model, solutionstring::String) #{{{
+function solve(md::model, solution::String) #{{{
 
-	#Construct FemModel
+	#Process incoming string
+	if solution=="sb" || solution=="Stressbalance"
+		solutionstring = "StressbalanceSolution"
+	elseif solution=="tr" || solution=="Transient"
+		solutionstring = "TransientSolution"
+	else
+		error("solutionstring "*solution*" not supported!");
+	end
+
+	#Construct FemModel from md
 	femmodel=ModelProcessor(md, solutionstring)
 
-	#Solve FIXME: to be improved later...
+	#Solve (FIXME: to be improved later...)
 	if(solutionstring=="StressbalanceSolution")
 		analysis = StressbalanceAnalysis()
 	elseif (solutionstring=="TransientSolution")
@@ -39,7 +48,7 @@ function IssmCore(md::model, solutionstring::String) #{{{
 	end
 	Core(analysis, femmodel)
 
-	#move results to md
+	#add results to md.results
 	OutputResultsx(femmodel, md, solutionstring)
 
 end# }}}
