@@ -202,20 +202,6 @@ function InterpFromMeshToMesh2d2(index_data::Array,x_data::Vector,y_data::Vector
 
 	return dataout
 end #}}}
-function solve(md::model,solution::String) #{{{
-
-	if solution=="sb" || solution=="Stressbalance"
-		solutionstring = "StressbalanceSolution"
-	elseif solution=="tr" || solution=="Transient"
-			solutionstring = "TransientSolution"
-	else
-		error("solutionstring "*solution*" not supported!");
-	end
-
-	IssmCore(md, solutionstring)
-
-	return md
-end #}}}
 function IssmStructDisp(io::IO, modelfield::Any) # {{{
 	println(io,typeof(modelfield),":")
 	for name in fieldnames(typeof(modelfield))

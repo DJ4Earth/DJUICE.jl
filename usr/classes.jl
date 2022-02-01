@@ -212,6 +212,19 @@ function Base.show(io::IO, this::Transient)# {{{
 	IssmStructDisp(io, this)
 end# }}}
 # }}}
+#Inversion{{{
+mutable struct Inversion
+	iscontrol::Bool
+	vx_obs::Vector{Float64}
+	vy_obs::Vector{Float64}
+end
+function Inversion() #{{{
+	return Inversion( false, Vector{Float64}(undef,0), Vector{Float64}(undef,0))
+end# }}}
+function Base.show(io::IO, this::Inversion)# {{{
+	IssmStructDisp(io, this)
+end# }}}
+# }}}
 
 #Model structure
 mutable struct model
@@ -229,12 +242,13 @@ mutable struct model
 	timestepping::Timestepping
 	masstransport::Masstransport
 	transient::Transient
+	inversion::Inversion
 end
 function model() #{{{
 	return model( Mesh2dTriangle(), Geometry(), Mask(), Materials(),
 					 Initialization(),Stressbalance(), Constants(), Dict(),
 					 BuddFriction(), Basalforcings(), SMBforcings(), Timestepping(),
-					 Masstransport(), Transient())
+					 Masstransport(), Transient(), Inversion())
 end#}}}
 function model(matmd::Dict) #{{{
 
@@ -307,5 +321,7 @@ function Base.show(io::IO, md::model)# {{{
 	@printf "%19s: %-26s -- %s\n" "stressbalance" typeof(md.stressbalance) "parameters stress balance simulations"
 	@printf "%19s: %-26s -- %s\n" "masstransport" typeof(md.masstransport) "parameters mass transport simulations"
 	@printf "%19s: %-26s -- %s\n" "transient" typeof(md.transient) "parameters for transient simulations"
+	@printf "%19s: %-26s -- %s\n" "inversion" typeof(md.inversion) "parameters for inverse methods"
+	@printf "%19s: %-26s -- %s\n" "results" typeof(md.results) "model results"
 
 end# }}}

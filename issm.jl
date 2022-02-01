@@ -10,11 +10,12 @@ export model, WeertmanFriction
 include("usr/exp.jl")
 export expread, ContourToNodes
 include("usr/utils.jl")
-export archread, solve, issmdir
+export archread, issmdir
 include("usr/triangle.jl")
 export triangle
 include("usr/parameterization.jl")
 export setmask, InterpFromMeshToMesh2d
 include("core/solve.jl")
+export solve
 
 end
