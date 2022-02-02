@@ -152,9 +152,14 @@ function triangle(md::model,domainname::String,resolution::Float64) #{{{
 	#Call triangle using ISSM's default options
 	triangle_switches = "pQzDq30ia"*@sprintf("%lf",area) #replace V by Q to quiet down the logging
 	#rc=ccall( (:triangulate,"libtriangle"),
-	rc=ccall( (:triangulate,issmdir()*"/externalpackages/triangle/src/libtriangle.dylib"),
+	try rc=ccall( (:triangulate,issmdir()*"/externalpackages/triangle/src/libtriangle.dylib"),
 				Cint, ( Cstring, Ref{CTriangulateIO}, Ref{CTriangulateIO}, Ref{CTriangulateIO}),
 				triangle_switches, Ref(ctio_in), Ref(ctio_out), Ref(vor_out))
+	catch LoadError
+		rc=ccall( (:triangulate,issmdir()*"/externalpackages/triangle/install/lib/libtriangle.dylib"),
+					Cint, ( Cstring, Ref{CTriangulateIO}, Ref{CTriangulateIO}, Ref{CTriangulateIO}),
+					triangle_switches, Ref(ctio_in), Ref(ctio_out), Ref(vor_out))
+	end
 
 	#post process output
 	points    = convert(Array{Cdouble,2}, Base.unsafe_wrap(Array, ctio_out.pointlist,    (2,Int(ctio_out.numberofpoints)), own=true))'
@@ -174,5 +179,5 @@ function triangle(md::model,domainname::String,resolution::Float64) #{{{
 	md.mesh.vertexonboundary = zeros(Bool,md.mesh.numberofvertices)
 	md.mesh.vertexonboundary[md.mesh.segments] .= true
 
-   return md
+	return md
 end#}}}
