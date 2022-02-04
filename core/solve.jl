@@ -51,4 +51,6 @@ function solve(md::model, solution::String) #{{{
 	#add results to md.results
 	OutputResultsx(femmodel, md, solutionstring)
 
+	# otherwise, julia function always returns the last expression
+	return md
 end# }}}
