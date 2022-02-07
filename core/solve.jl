@@ -51,4 +51,11 @@ function solve(md::model, solution::String) #{{{
 	#add results to md.results
 	OutputResultsx(femmodel, md, solutionstring)
 
+	#FIXME: temporary exploration!
+	if(md.inversion.iscontrol)
+		J = SurfaceAbsVelMisfitx(femmodel)
+		println("MISFIT is ", J)
+		return J
+	end
+
 end# }}}

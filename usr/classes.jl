@@ -128,7 +128,7 @@ end# }}}
 #Friction {{{
 abstract type AbstractFriction end
 mutable struct BuddFriction <: AbstractFriction
-	coefficient::Vector{Float64}
+	coefficient
 end
 function BuddFriction() #{{{
 	return BuddFriction(Vector{Float64}(undef,0))
