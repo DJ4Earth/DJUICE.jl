@@ -51,11 +51,13 @@ function solve(md::model, solution::String) #{{{
 	#add results to md.results
 	OutputResultsx(femmodel, md, solutionstring)
 
-	#FIXME: temporary exploration!
+	#FIXME: exploratory for now!
 	if(md.inversion.iscontrol)
 		J = SurfaceAbsVelMisfitx(femmodel)
 		println("MISFIT is ", J)
 		return J
 	end
 
+	# otherwise, julia function always returns the last expression
+	return md
 end# }}}
