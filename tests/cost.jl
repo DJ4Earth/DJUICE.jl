@@ -1,5 +1,5 @@
 
 #define function
 function cost(md, α)
-	J = solve(md, "stressbalance")
+	J = solve(md, "Stressbalance")
 end
