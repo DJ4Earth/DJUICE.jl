@@ -51,13 +51,19 @@ function solve(md::model, solution::String) #{{{
 	#add results to md.results
 	OutputResultsx(femmodel, md, solutionstring)
 
-	#FIXME: exploratory for now!
-	if(md.inversion.iscontrol)
-		J = SurfaceAbsVelMisfitx(femmodel)
-		println("MISFIT is ", J)
-		return J
-	end
-
-	# otherwise, julia function always returns the last expression
 	return md
+end# }}}
+function solve2(md::model) #{{{
+
+	#Construct FemModel from md
+	femmodel=ModelProcessor(md, "StressbalanceSolution")
+
+	#Solve model first
+	analysis = StressbalanceAnalysis()
+	Core(analysis, femmodel)
+
+	#Compute cost function
+	J = SurfaceAbsVelMisfitx(femmodel)
+	println("MISFIT is ", J)
+	return J
 end# }}}

@@ -15,6 +15,7 @@ md = model(mat)
 
 #define control
 α = md.friction.coefficient
+
 md.friction.coefficient = Active(α)
 
 #initialize derivative as 0

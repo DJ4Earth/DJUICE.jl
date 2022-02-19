@@ -16,6 +16,6 @@ export triangle
 include("usr/parameterization.jl")
 export setmask, InterpFromMeshToMesh2d
 include("core/solve.jl")
-export solve
+export solve, solve2
 
 end
