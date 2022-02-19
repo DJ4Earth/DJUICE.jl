@@ -50,19 +50,18 @@ function Alpha2(friction::CoreBuddFriction, gauss::GaussTria, i::Int64) #{{{
 	c = GetInputValue(friction.c_input, gauss, i)
 	N = friction.rho_ice*friction.g*H + friction.rho_water*friction.g*b
 
-	if(N<0) N=0 end
+	if(N<0.0) N=0.0 end
 
 	return c^2*N
 end #}}}
-
 function Alpha2(friction::CoreWeertmanFriction, gauss::GaussTria, i::Int64)#{{{
 	c = GetInputValue(friction.c_input, gauss, i)
 	m = GetInputValue(friction.m_input, gauss, i)
 	vx = GetInputValue(friction.vx_input, gauss, i)
 	vy = GetInputValue(friction.vy_input, gauss, i)
 	
-	if sqrt(vx^2+vy^2)==0 && m<1
-		return 0
+	if sqrt(vx^2+vy^2)==0.0 && m<1.0
+		return 0.0
 	else
 		return c^2*sqrt(vx^2+vy^2)^(m-1)
 	end
