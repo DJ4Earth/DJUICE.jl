@@ -1,6 +1,6 @@
 import ColorSchemes.jet
 using  GLMakie
-using .ISSM
+using dJUICE
 
 function plotmodel( md::model, data::Vector, showvertices::Bool=false, showfacets::Bool=true)
 

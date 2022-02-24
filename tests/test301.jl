@@ -1,6 +1,5 @@
 #!/Applications/Julia-1.6.app/Contents/Resources/julia/bin/julia
-include("../issm.jl")
-using .ISSM
+using dJUICE
 
 md = model()
 md = triangle(md,issmdir()*"/test/Exp/Square.exp",150000.)
