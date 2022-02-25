@@ -3,19 +3,21 @@
 # Author: Mathieu Morlighem, Joel Wilner
 # email:  mathieu.morlighem@dartmouth.edu
 
-module ISSM
+module dJUICE
+const userdir = joinpath("..", "usr")
+const coredir = joinpath("..", "core")
 
-include("usr/classes.jl")
+include("$userdir/classes.jl")
 export model, WeertmanFriction
-include("usr/exp.jl")
+include("$userdir/exp.jl")
 export expread, ContourToNodes
-include("usr/utils.jl")
+include("$userdir/utils.jl")
 export archread, issmdir
-include("usr/triangle.jl")
+include("$userdir/triangle.jl")
 export triangle
-include("usr/parameterization.jl")
+include("$userdir/parameterization.jl")
 export setmask, InterpFromMeshToMesh2d
-include("core/solve.jl")
+include("$coredir/solve.jl")
 export solve, solve2
 
 end

@@ -1,9 +1,9 @@
 #!/Applications/Julia-1.7.app/Contents/Resources/julia/bin/julia 
-include("../issm.jl")
-include("./cost.jl")
-using .ISSM
+using dJUICE
 using MAT
 using Enzyme
+
+include("./cost.jl")
 
 #Load model from MATLAB file
 file = matopen("./temp12k.mat")

@@ -1,9 +1,8 @@
 #!/Applications/Julia-1.6.app/Contents/Resources/julia/bin/julia
-include("../issm.jl")
-using .ISSM
+using dJUICE
 
 md = model()
-md = triangle(md,issmdir()*"/test/Exp/Square.exp", 150000.)
+md = triangle(md,issmdir()*"/test/Exp/Square.exp", 50000.)
 md = setmask(md, "all", "")
 
 #Geometry
@@ -34,9 +33,6 @@ md.friction.coefficient=20*ones(md.mesh.numberofvertices)
 md.stressbalance.restol=0.1
 md.stressbalance.reltol=0.02
 md.stressbalance.abstol=NaN
-md.timestepping.start_time = 0.0
-md.timestepping.final_time = 3.0
-md.timestepping.time_step  = 1.0
 
 #Boundary conditions
 nodefront=ContourToNodes(md.mesh.x,md.mesh.y,issmdir()*"/test/Exp/SquareFront.exp",2.0) .& md.mesh.vertexonboundary
@@ -51,9 +47,4 @@ pos=md.mesh.segments[segments,1:2]
 md.stressbalance.spcvx[pos] .= 0.0
 md.stressbalance.spcvy[pos] .= 0.0
 
-md.smb.mass_balance = zeros(md.mesh.numberofvertices)
-md.basalforcings.groundedice_melting_rate = zeros(md.mesh.numberofvertices)
-md.basalforcings.floatingice_melting_rate = ones(md.mesh.numberofvertices)
-md.masstransport.spcthickness = NaN*ones(md.mesh.numberofvertices)
-
-md=solve(md,"Transient")
+md=solve(md,"Stressbalance")
