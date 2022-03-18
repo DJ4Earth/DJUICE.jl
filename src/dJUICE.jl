@@ -1,11 +1,11 @@
 # Julia version of the Ice-sheet and Sea-level System Model
 #
-# Author: Mathieu Morlighem, Joel Wilner
+# Author: Mathieu Morlighem
 # email:  mathieu.morlighem@dartmouth.edu
 
 module dJUICE
-const userdir = joinpath("..", "usr")
-const coredir = joinpath("..", "core")
+const userdir = "./usr"
+const coredir = "./core"
 
 include("$userdir/classes.jl")
 export model, WeertmanFriction

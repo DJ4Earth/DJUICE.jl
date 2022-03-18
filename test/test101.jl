@@ -1,4 +1,4 @@
-#!/Applications/Julia-1.6.app/Contents/Resources/julia/bin/julia
+#!/Applications/Julia-1.7.app/Contents/Resources/julia/bin/julia
 using dJUICE
 
 md = model()
