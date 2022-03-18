@@ -74,14 +74,12 @@ function CreateElements(elements::Vector{Tria},md::model) #{{{
 	#Make sure elements is currently empty
 	@assert length(elements)==0
 
-
-
 	count = 0
-	for i in 1:md.mesh.numberofelements
+	for i in 1:(md.mesh.numberofelements::Int64)
 
 		#Assume Linear Elements for now
-		vertexids = md.mesh.elements[i,:]
-		nodeids   = md.mesh.elements[i,:]
+		vertexids = (md.mesh.elements[i,:]::Vector{Int64})
+		nodeids   = (md.mesh.elements[i,:]::Vector{Int64})
 
 		#Call constructor and add to dataset elements
 		push!(elements,Tria(i,count, vertexids))
