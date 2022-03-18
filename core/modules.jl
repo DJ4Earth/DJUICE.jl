@@ -3,6 +3,7 @@ function FetchDataToInput(md::model,inputs::Inputs,elements::Vector{Tria},data::
 	for i in 1:length(elements)
 		InputCreate(elements[i],inputs,data,enum)
 	end
+	return nothing
 end#}}}
 function ModelProcessor(md::model, solutionstring::String) #{{{
 
@@ -85,6 +86,7 @@ function CreateElements(elements::Vector{Tria},md::model) #{{{
 		push!(elements,Tria(i,count, vertexids))
 	end
 
+	return nothing
 end# }}}
 function CreateVertices(vertices::Vector{Vertex},md::model) #{{{
 
@@ -100,6 +102,7 @@ function CreateVertices(vertices::Vector{Vertex},md::model) #{{{
 		push!(vertices,Vertex(i,x[i],y[i],0.))
 	end
 
+	return nothing
 end# }}}
 function CreateParameters(parameters::Parameters,md::model) #{{{
 
@@ -113,12 +116,15 @@ function CreateParameters(parameters::Parameters,md::model) #{{{
 	AddParam(parameters,1,StepEnum)
 	AddParam(parameters,0.0,TimeEnum)
 
+	return nothing
 end# }}}
 function CreateInputs(inputs::Inputs,elements::Vector{Tria},md::model) #{{{
 
 	#Only assume we have Matice for now
 	FetchDataToInput(md,inputs,elements,md.materials.rheology_B,MaterialsRheologyBEnum)
 	FetchDataToInput(md,inputs,elements,md.materials.rheology_n,MaterialsRheologyNEnum)
+
+	return nothing
 end# }}}
 function OutputResultsx(femmodel::FemModel, md::model, solution::String)# {{{
 
@@ -151,6 +157,7 @@ function OutputResultsx(femmodel::FemModel, md::model, solution::String)# {{{
 
 	md.results[solution] = output
 
+	return nothing
 end# }}}
 
 #Other modules
@@ -160,6 +167,7 @@ function ConfigureObjectx(elements::Vector{Tria}, nodes::Vector{Node}, vertices:
 		Configure(elements[i], nodes, vertices, parameters, inputs, analysis)
 	end
 
+	return nothing
 end# }}}
 function SpcNodesx(nodes::Vector{Node},constraints::Vector{Constraint},parameters::Parameters) #{{{
 
@@ -167,6 +175,7 @@ function SpcNodesx(nodes::Vector{Node},constraints::Vector{Constraint},parameter
 		ConstrainNode(constraints[i],nodes,parameters)
 	end
 
+	return nothing
 end# }}}
 function NodesDofx(nodes::Vector{Node}, parameters::Parameters) #{{{
 
@@ -183,6 +192,7 @@ function NodesDofx(nodes::Vector{Node}, parameters::Parameters) #{{{
 	DistributeDofs(nodes,FsetEnum)
 	DistributeDofs(nodes,SsetEnum)
 
+	return nothing
 end# }}}
 function GetSolutionFromInputsx(analysis::Analysis,femmodel::FemModel) #{{{
 
@@ -198,7 +208,6 @@ function GetSolutionFromInputsx(analysis::Analysis,femmodel::FemModel) #{{{
 	end
 
 	return ug
-
 end#}}}
 function InputUpdateFromSolutionx(analysis::Analysis,ug::IssmVector,femmodel::FemModel) #{{{
 
@@ -217,9 +226,11 @@ function InputUpdateFromVectorx(femmodel::FemModel, vector::Vector{Float64}, enu
 		InputUpdateFromVector(femmodel.elements[i], vector, enum, layout)
 	end
 
+	return nothing
 end#}}}
 function InputDuplicatex(femmodel::FemModel, oldenum::IssmEnum, newenum::IssmEnum) #{{{
 	DuplicateInput(femmodel.inputs, oldenum, newenum)
+	return nothing
 end#}}}
 function Reducevectorgtofx(ug::IssmVector,nodes::Vector{Node}) #{{{
 
@@ -264,6 +275,7 @@ function Reduceloadx!(pf::IssmVector, Kfs::IssmMatrix, ys::IssmVector) #{{{
 		AXPY!(pf,-1.0,Kfsy_s)
 
 	end
+	return nothing
 end#}}}
 function SystemMatricesx(femmodel::FemModel,analysis::Analysis)# {{{
 
@@ -325,6 +337,7 @@ function RequestedOutputsx(femmodel::FemModel,outputlist::Vector{IssmEnum})# {{{
 			println("Output ",outputlist[i]," not supported yet")
 		end
 	end
+	return nothing
 end# }}}
 function MigrateGroundinglinex(femmodel::FemModel)# {{{
 
@@ -332,6 +345,7 @@ function MigrateGroundinglinex(femmodel::FemModel)# {{{
 		MigrateGroundingLine(femmodel.elements[i])
 	end
 
+	return nothing
 end# }}}
 function UpdateConstraintsx(femmodel::FemModel, analysis::Analysis)# {{{
 
@@ -344,6 +358,7 @@ function UpdateConstraintsx(femmodel::FemModel, analysis::Analysis)# {{{
 	#Now, update degrees of freedoms
 	NodesDofx(femmodel.nodes, femmodel.parameters)
 
+	return nothing
 end# }}}
 function SetActiveNodesLSMx(femmodel::FemModel) #{{{
 
@@ -358,8 +373,8 @@ function SetActiveNodesLSMx(femmodel::FemModel) #{{{
 			else             Deactivate!(node)
 			end
 		end
-
 	end
+	return nothing
 end#}}}
 function GetMaskOfIceVerticesLSMx0(femmodel::FemModel) #{{{
 
@@ -389,6 +404,8 @@ function GetMaskOfIceVerticesLSMx0(femmodel::FemModel) #{{{
 
 	#Update IceMaskNodeActivationEnum in elements
 	InputUpdateFromVectorx(femmodel, vec_mask_ice_serial, IceMaskNodeActivationEnum, VertexSIdEnum)
+
+	return nothing
 end#}}}
 function SurfaceAbsVelMisfitx(femmodel::FemModel) #{{{
 

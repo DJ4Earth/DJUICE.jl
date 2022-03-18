@@ -27,6 +27,7 @@ function AddValues!(matrix::IssmMatrix,m::Int64,midx::Vector{Int64},n::Int64,nid
 		end
 	end
 
+	return nothing
 end#}}}
 function GetSize(matrix::IssmMatrix)#{{{
 
@@ -37,6 +38,7 @@ function Assemble!(matrix::IssmMatrix)#{{{
 
 	matrix.matrix = sparse(matrix.rows, matrix.cols, matrix.vals, matrix.M, matrix.N)
 
+	return nothing
 end#}}}
 
 #Vector
@@ -59,6 +61,7 @@ function AddValues!(vector::IssmVector,m::Int64,midx::Vector{Int64},values::Vect
 		vector.vector[midx[i]] += values[i]
 	end
 
+	return nothing
 end#}}}
 function SetValues!(vector::IssmVector,m::Int64,midx::Vector{Int64},values::Vector{Float64})#{{{
 
@@ -68,6 +71,7 @@ function SetValues!(vector::IssmVector,m::Int64,midx::Vector{Int64},values::Vect
 		vector.vector[midx[i]] = values[i]
 	end
 
+	return nothing
 end#}}}
 function IsEmpty(vector::IssmVector)#{{{
 
@@ -85,10 +89,12 @@ function VecCopy!(x::IssmVector,y::IssmVector)#{{{
 
 	y.vector = x.vector
 
+	return nothing
 end#}}}
 function Assemble!(vector::IssmVector)#{{{
 
 	#Nothing to do for this toolkit
+	return nothing
 
 end#}}}
 function ToSerial(vector::IssmVector)#{{{
@@ -98,7 +104,7 @@ function ToSerial(vector::IssmVector)#{{{
 end#}}}
 function Norm(x::IssmVector,type::Int64)#{{{
 
-	norm = 0
+	norm = 0.0
 
 	if type==2
 		for i in 1:length(x.vector)
@@ -123,11 +129,13 @@ function MatMult!(A::IssmMatrix,x::IssmVector,y::IssmVector) #{{{
 
 	y.vector = A.matrix*x.vector
 
+	return nothing
 end#}}}
 function AXPY!(y::IssmVector,alpha::Float64,x::IssmVector) #{{{
 
 	y.vector = alpha*x.vector + y.vector
 
+	return nothing
 end#}}}
 function Solverx(A::IssmMatrix, b::IssmVector, xold::IssmVector) #{{{
 

@@ -51,6 +51,8 @@ function SetInput(inputs::Inputs,enum::IssmEnum,index::Int64,value::Bool) #{{{
 	#set value
 	@assert index>0 && index<=inputs.numberofelements
 	input.values[index] = value
+
+	return nothing
 end#}}}
 function SetTriaInput(inputs::Inputs,enum::IssmEnum,interp::IssmEnum,index::Int64,value::Float64) #{{{
 
@@ -74,6 +76,8 @@ function SetTriaInput(inputs::Inputs,enum::IssmEnum,interp::IssmEnum,index::Int6
 
 	#set value
 	input.values[index] = value
+
+	return nothing
 end#}}}
 function SetTriaInput(inputs::Inputs,enum::IssmEnum,interp::IssmEnum,indices::Vector{Int64},values::Vector{Float64}) #{{{
 
@@ -95,6 +99,8 @@ function SetTriaInput(inputs::Inputs,enum::IssmEnum,interp::IssmEnum,indices::Ve
 
 	#set value
 	input.values[indices] = values
+
+	return nothing
 end#}}}
 function GetInputAverageValue(input::ElementInput) #{{{
 
@@ -164,4 +170,5 @@ function DuplicateInput(inputs::Inputs, old::IssmEnum, new::IssmEnum)#{{{
 		inputs.lookup[new] = ElementInput(new, oldinput.interp, copy(oldinput.values), copy(oldinput.element_values))
 	end
 
+	return nothing
 end#}}}

@@ -29,6 +29,8 @@ function Base.show(io::IO, this::ElementMatrix)# {{{
 	println(io,"   sglobaldoflist: ",this.sglobaldoflist)
 	print(io,"   values: ")
 	display(this.values)
+
+	return nothing
 end# }}}
 function AddToGlobal!(Ke::ElementMatrix,Kff::IssmMatrix,Kfs::IssmMatrix)#{{{
 
@@ -50,6 +52,7 @@ function AddToGlobal!(Ke::ElementMatrix,Kff::IssmMatrix,Kfs::IssmMatrix)#{{{
 		AddValues!(Kfs,Ke.nrows,Ke.fglobaldoflist,Ke.nrows,Ke.sglobaldoflist,Ke.values)
 	end
 
+	return nothing
 end#}}}
 function CheckConsistency(Ke::ElementMatrix)#{{{
 
@@ -60,6 +63,8 @@ function CheckConsistency(Ke::ElementMatrix)#{{{
 			if(abs(Ke.values[i,j])>1.e+50) error("Element Matrix values exceeds 1.e+50") end
 		end
 	end
+
+	return nothing
 end#}}}
 
 mutable struct ElementVector#{{{
@@ -87,6 +92,8 @@ function Base.show(io::IO, this::ElementVector)# {{{
 	println(io,"   fglobaldoflist: ",this.fglobaldoflist)
 	print(io,"   values: ")
 	display(this.values)
+
+	return nothing
 end# }}}
 function AddToGlobal!(pe::ElementVector,pf::IssmVector)#{{{
 
@@ -106,6 +113,7 @@ function AddToGlobal!(pe::ElementVector,pf::IssmVector)#{{{
 		AddValues!(pf,pe.nrows,pe.fglobaldoflist,pe.values)
 	end
 
+	return nothing
 end#}}}
 function CheckConsistency(pe::ElementVector)#{{{
 
@@ -114,4 +122,6 @@ function CheckConsistency(pe::ElementVector)#{{{
 		if(isinf(pe.values[i])) error("Inf found in Element Vector") end
 		if(abs(pe.values[i])>1.e+50) error("Element Vector values exceeds 1.e+50") end
 	end
+
+	return nothing
 end#}}}

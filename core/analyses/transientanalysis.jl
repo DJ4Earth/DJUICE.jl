@@ -11,6 +11,7 @@ function UpdateParameters(analysis::TransientAnalysis,parameters::Parameters,md:
 	AddParam(parameters, md.transient.isstressbalance, TransientIsstressbalanceEnum)
 	AddParam(parameters, md.transient.ismasstransport, TransientIsmasstransportEnum)
 
+	return nothing
 end#}}}
 function Core(analysis::TransientAnalysis,femmodel::FemModel)# {{{
 
@@ -41,4 +42,5 @@ function Core(analysis::TransientAnalysis,femmodel::FemModel)# {{{
 	println("   Simulation completed successfully"   )
 	println("=======================================")
 
+	return nothing
 end #}}}

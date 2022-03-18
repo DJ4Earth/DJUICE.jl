@@ -34,16 +34,19 @@ function AddParam(parameters::Parameters,value::Float64,enum::IssmEnum) #{{{
 
 	parameters.lookup[enum] = DoubleParam(enum,value)
 
+	return nothing
 end#}}}
 function AddParam(parameters::Parameters,value::Int64, enum::IssmEnum) #{{{
 
 	parameters.lookup[enum] = IntParam(enum,value)
 
+	return nothing
 end#}}}
 function AddParam(parameters::Parameters,value::Bool, enum::IssmEnum) #{{{
 
 	parameters.lookup[enum] = BoolParam(enum,value)
 
+	return nothing
 end#}}}
 function FindParam(::Type{T}, parameters::Parameters,enum::IssmEnum) where T #{{{
 

@@ -21,6 +21,7 @@ function CreateConstraints(analysis::StressbalanceAnalysis,constraints::Vector{C
 		end
 	end
 
+	return nothing
 end#}}}
 function CreateNodes(analysis::StressbalanceAnalysis,nodes::Vector{Node},md::model) #{{{
 
@@ -28,6 +29,8 @@ function CreateNodes(analysis::StressbalanceAnalysis,nodes::Vector{Node},md::mod
 	for i in 1:md.mesh.numberofvertices
 		push!(nodes,Node(i,i,true,true,numdof,-ones(Int64,numdof), ones(Int64,numdof), -ones(Int64,numdof), zeros(numdof)))
 	end
+
+	return nothing
 end#}}}
 function UpdateElements(analysis::StressbalanceAnalysis,elements::Vector{Tria}, inputs::Inputs, md::model) #{{{
 
@@ -56,6 +59,7 @@ function UpdateElements(analysis::StressbalanceAnalysis,elements::Vector{Tria}, 
 		error("Friction ", typeof(md.friction), " not supported yet")
 	end
 
+	return nothing
 end#}}}
 function UpdateParameters(analysis::StressbalanceAnalysis,parameters::Parameters,md::model) #{{{
 	AddParam(parameters,md.stressbalance.restol,StressbalanceRestolEnum)
@@ -71,6 +75,8 @@ function UpdateParameters(analysis::StressbalanceAnalysis,parameters::Parameters
 	else
 		error("Friction ", typeof(md.friction), " not supported yet")
 	end
+
+	return nothing
 end#}}}
 
 #Finite Element Analysis
@@ -92,6 +98,7 @@ function Core(analysis::StressbalanceAnalysis,femmodel::FemModel)# {{{
 	#Save output
 	RequestedOutputsx(femmodel, [VxEnum,VyEnum,VelEnum])
 
+	return nothing
 end #}}}
 function CreateKMatrix(analysis::StressbalanceAnalysis,element::Tria)# {{{
 
@@ -250,6 +257,7 @@ function GetSolutionFromInputs(analysis::StressbalanceAnalysis,ug::IssmVector,el
 	#Make sure we reached all the values
 	@assert count==length(doflist)
 
+	return nothing
 end#}}}
 function InputUpdateFromSolution(analysis::StressbalanceAnalysis,ug::Vector{Float64},element::Tria) #{{{
 
@@ -278,7 +286,10 @@ function InputUpdateFromSolution(analysis::StressbalanceAnalysis,ug::Vector{Floa
 	AddInput(element, VxEnum,  vx,  P1Enum)
 	AddInput(element, VyEnum,  vy,  P1Enum)
 	AddInput(element, VelEnum, vel, P1Enum)
+
+	return nothing
 end#}}}
 function UpdateConstraints(analysis::StressbalanceAnalysis, femmodel::FemModel) #{{{
 	SetActiveNodesLSMx(femmodel)
+	return nothing
 end#}}}

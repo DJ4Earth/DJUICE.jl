@@ -20,6 +20,7 @@ function solutionsequence_linear(femmodel::FemModel,analysis::Analysis) # {{{
 
 	InputUpdateFromSolutionx(analysis, ug, femmodel)
 
+	return nothing
 end# }}}
 function solutionsequence_nonlinear(femmodel::FemModel,analysis::Analysis,maxiter::Int64,restol::Float64,reltol::Float64,abstol::Float64) # {{{
 
@@ -67,6 +68,7 @@ function solutionsequence_nonlinear(femmodel::FemModel,analysis::Analysis,maxite
 	end
 
 	print("\n   total number of iterations: ",  count,  "\n")
+	return nothing
 
 end# }}}
 function convergence(Kff::IssmMatrix, pf::IssmVector, uf::IssmVector, old_uf::IssmVector, restol::Float64, reltol::Float64, abstol::Float64)#{{{

@@ -14,6 +14,8 @@ function Base.show(io::IO, this::GaussTria)# {{{
 	println(io,"   coords1:  ",this.coords1)
 	println(io,"   coords2:  ",this.coords2)
 	println(io,"   coords3:  ",this.coords3)
+
+	return nothing
 end# }}}
 
 #Gauss constructor
@@ -57,11 +59,11 @@ function GaussTria(finiteelement::IssmEnum) #{{{
 		coords2 = [0.333333333333333]
 		coords3 = [0.333333333333333]
 	elseif(finiteelement==P1Enum)
-			npoints = 3
-			weights = 0.333333333333333*ones(3)
-			coords1 = [1.; 0.; 0.]
-			coords2 = [0.; 1.; 0.]
-			coords3 = [0.; 0.; 1.]
+		npoints = 3
+		weights = 0.333333333333333*ones(3)
+		coords1 = [1.; 0.; 0.]
+		coords2 = [0.; 1.; 0.]
+		coords3 = [0.; 0.; 1.]
 	else
 		error("finite element ", finiteelement," not supported yet");
 	end

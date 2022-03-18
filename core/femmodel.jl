@@ -37,4 +37,5 @@ function SetCurrentConfiguration!(femmodel::FemModel, analysis::Analysis) #{{{
 	femmodel.nodes       = femmodel.nodes_list[index]
 	femmodel.constraints = femmodel.constraints_list[index]
 
+	return nothing
 end#}}}

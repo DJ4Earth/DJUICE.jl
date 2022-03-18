@@ -23,6 +23,7 @@ function Base.show(io::IO, this::Node)# {{{
 	println(io,"   fdoflist: ",this.fdoflist)
 	println(io,"   sdoflist: ",this.sdoflist)
 	println(io,"   svalues: ",this.svalues)
+	return nothing
 end# }}}
 function Activate!(node::Node) #{{{
 
@@ -36,6 +37,7 @@ function Activate!(node::Node) #{{{
 		end
 	end
 
+	return nothing
 end# }}}
 function Deactivate!(node::Node) #{{{
 
@@ -49,6 +51,7 @@ function Deactivate!(node::Node) #{{{
 		end
 	end
 
+	return nothing
 end# }}}
 function ApplyConstraint(node::Node,dof::Int8,value::Float64) #{{{
 
@@ -57,6 +60,7 @@ function ApplyConstraint(node::Node,dof::Int8,value::Float64) #{{{
 	node.sdoflist[dof]  = +1
 	node.svalues[dof]   = value
 
+	return nothing
 end# }}}
 function CreateNodalConstraints(node::Node,ys::IssmVector) #{{{
 
@@ -64,6 +68,7 @@ function CreateNodalConstraints(node::Node,ys::IssmVector) #{{{
 		SetValues!(ys,node.gsize,node.sdoflist,node.svalues)
 	end
 
+	return nothing
 end# }}}
 function DistributeDofs(node::Node,setenum::IssmEnum,dofcount::Int64) #{{{
 
@@ -170,6 +175,7 @@ function VecReduce(node::Node,ug::Vector{Float64},uf::IssmVector) #{{{
 		end
 	end
 
+	return nothing
 end# }}}
 function VecMerge(node::Node,ug::IssmVector,uf::Vector{Float64},ys::Vector{Float64}) #{{{
 
@@ -206,6 +212,7 @@ function VecMerge(node::Node,ug::IssmVector,uf::Vector{Float64},ys::Vector{Float
 		SetValues!(ug,ssize,indices,values)
 	end
 
+	return nothing
 end# }}}
 function SSize(node::Node) #{{{
 
@@ -254,6 +261,7 @@ function DistributeDofs(nodes::Vector{Node},setenum::IssmEnum) #{{{
 		dofcount = DistributeDofs(nodes[i],setenum,dofcount)
 	end
 
+	return nothing
 
 end# }}}
 function NumberOfDofs(nodes::Vector{Node},setenum::IssmEnum) #{{{

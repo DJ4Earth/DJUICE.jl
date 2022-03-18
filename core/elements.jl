@@ -36,6 +36,8 @@ function InputCreate(element::Tria,inputs::Inputs,data::Vector{Float64},enum::Is
 	else
 		error("size ",size(data,1)," not supported yet");
 	end
+
+	return nothing
 end #}}}
 function AddInput(element::Tria,inputenum::IssmEnum,data::Vector{Float64},interpolation::IssmEnum) #{{{
 	if interpolation==P1Enum
@@ -44,6 +46,8 @@ function AddInput(element::Tria,inputenum::IssmEnum,data::Vector{Float64},interp
 	else
 		error("interpolation ", interpolation, " not supported yet");
 	end
+
+	return nothing
 end #}}}
 function InputUpdateFromVector(element::Tria, vector::Vector{Float64}, enum::IssmEnum, layout::IssmEnum) #{{{
 
@@ -59,6 +63,8 @@ function InputUpdateFromVector(element::Tria, vector::Vector{Float64}, enum::Iss
 	else
 		error("layout ", layout, " not supported yet");
 	end
+
+	return nothing
 end #}}}
 function Update(element::Tria, inputs::Inputs, index::Int64, md::model, finiteelement::IssmEnum) #{{{
 
@@ -74,6 +80,8 @@ function Update(element::Tria, inputs::Inputs, index::Int64, md::model, finiteel
 	else
 		error("not supported yet")
 	end
+
+	return nothing
 end #}}}
 function Configure(element::Tria,nodes::Vector{Node},vertices::Vector{Vertex},parameters::Parameters,inputs::Inputs,index::Int64) # {{{
 
@@ -93,7 +101,8 @@ function Configure(element::Tria,nodes::Vector{Node},vertices::Vector{Vertex},pa
 	element.nodes      = element.nodes_list[index]
 	element.parameters = parameters
 	element.inputs     = inputs
-	
+
+	return nothing
 end # }}}
 function GetDofList(element::Tria,setenum::IssmEnum) # {{{
 
@@ -135,6 +144,7 @@ function GetInputListOnNodes!(element::Tria, vector::Vector{Float64}, enum::Issm
 		vector[i] = GetInputValue(input, gauss, i)
 	end
 
+	return nothing
 end # }}}
 function GetInputListOnVertices!(element::Tria, vector::Vector{Float64}, enum::IssmEnum) # {{{
 
@@ -147,6 +157,7 @@ function GetInputListOnVertices!(element::Tria, vector::Vector{Float64}, enum::I
 		vector[i] = GetInputValue(input, gauss, i)
 	end
 
+	return nothing
 end # }}}
 function FindParam(::Type{T}, element::Tria, enum::IssmEnum) where T # {{{
 
@@ -165,6 +176,7 @@ function InputServe!(element::Tria,input::ElementInput) # {{{
 		error("interpolation ",input.interp," not supported yet")
 	end
 
+	return nothing
 end # }}}
 function GetGroundedPortion(element::Tria, xyz_list::Matrix{Float64}) #{{{
 
@@ -265,7 +277,7 @@ function GetIcefrontCoordinates!(element::Tria, xyz_front::Matrix{Float64}, xyz_
 	#Return nodes
 	xyz_front[1,:]=xyz_list[indicesfront[1],:]
 	xyz_front[2,:]=xyz_list[indicesfront[2],:]
-
+	return nothing
 end#}}}
 function GetArea(element::Tria)#{{{
 
@@ -341,6 +353,7 @@ function MigrateGroundingLine(element::Tria) #{{{
 	AddInput(element,SurfaceEnum,s,P1Enum)
 	AddInput(element,BaseEnum,b,P1Enum)
 
+	return nothing
 end#}}}
 
 #Finite Element stuff
@@ -409,7 +422,7 @@ function NodalFunctions(element::Tria,basis::Vector{Float64}, gauss::GaussTria, 
 		error("Element type ",finiteelement," not supported yet")
 	end
 
-
+	return nothing
 end#}}}
 function NodalFunctionsDerivatives(element::Tria,dbasis::Matrix{Float64},xyz_list::Matrix{Float64}, gauss::GaussTria) #{{{
 
@@ -428,6 +441,7 @@ function NodalFunctionsDerivatives(element::Tria,dbasis::Matrix{Float64},xyz_lis
 		dbasis[i,2] = Jinv[2,1]*dbasis_ref[i,1]+Jinv[2,2]*dbasis_ref[i,2]
 	end
 
+	return nothing
 end#}}}
 function NodalFunctionsDerivativesReferenceTria(dbasis::Matrix{Float64}, gauss::GaussTria, finiteelement::IssmEnum) #{{{
 
@@ -449,6 +463,8 @@ function NodalFunctionsDerivativesReferenceTria(dbasis::Matrix{Float64}, gauss::
 	else
 		error("Element type ",finiteelement," not supported yet")
 	end
+
+	return nothing
 end#}}}
 function NumberofNodesTria(finiteelement) #{{{
 
@@ -457,6 +473,8 @@ function NumberofNodesTria(finiteelement) #{{{
 	else
 		error("Element type ",finiteelement," not supported yet")
 	end
+
+	return nothing
 end#}}}
 function GaussTria(element::Tria, xyz_list::Matrix{Float64}, xyz_list_front::Matrix{Float64}, order::Int64) #{{{
 
@@ -486,4 +504,6 @@ function GetAreaCoordinates!(element::Tria, area_coordinates::Matrix{Float64}, x
 			xyz_bis[j,:] = xyz_list[j,:]
 		end
 	end
+
+	return nothing
 end #}}}

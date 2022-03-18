@@ -16,6 +16,7 @@ function CreateConstraints(analysis::MasstransportAnalysis,constraints::Vector{C
 		end
 	end
 
+	return nothing
 end#}}}
 function CreateNodes(analysis::MasstransportAnalysis,nodes::Vector{Node},md::model) #{{{
 
@@ -23,6 +24,8 @@ function CreateNodes(analysis::MasstransportAnalysis,nodes::Vector{Node},md::mod
 	for i in 1:md.mesh.numberofvertices
 		push!(nodes,Node(i,i,true,true,numdof,-ones(Int64,numdof), ones(Int64,numdof), -ones(Int64,numdof), zeros(numdof)))
 	end
+
+	return nothing
 end#}}}
 function UpdateElements(analysis::MasstransportAnalysis,elements::Vector{Tria}, inputs::Inputs, md::model) #{{{
 
@@ -44,12 +47,14 @@ function UpdateElements(analysis::MasstransportAnalysis,elements::Vector{Tria}, 
 	FetchDataToInput(md,inputs,elements,md.initialization.vx./md.constants.yts,VxEnum)
 	FetchDataToInput(md,inputs,elements,md.initialization.vy./md.constants.yts,VyEnum)
 
+	return nothing
 end#}}}
 function UpdateParameters(analysis::MasstransportAnalysis,parameters::Parameters,md::model) #{{{
 
 	AddParam(parameters, md.masstransport.min_thickness, MasstransportMinThicknessEnum)
 	AddParam(parameters, md.masstransport.stabilization, MasstransportStabilizationEnum)
 
+	return nothing
 end#}}}
 
 #Finite Element Analysis
@@ -67,6 +72,7 @@ function Core(analysis::MasstransportAnalysis,femmodel::FemModel)# {{{
 	#Save output
 	RequestedOutputsx(femmodel, [ThicknessEnum, SurfaceEnum, BaseEnum])
 
+	return nothing
 end #}}}
 function CreateKMatrix(analysis::MasstransportAnalysis,element::Tria)# {{{
 
@@ -208,6 +214,7 @@ function GetSolutionFromInputs(analysis::MasstransportAnalysis,ug::IssmVector,el
 	#Make sure we reached all the values
 	@assert count==length(doflist)
 
+	return nothing
 end#}}}
 function InputUpdateFromSolution(analysis::MasstransportAnalysis,ug::Vector{Float64},element::Tria) #{{{
 
@@ -269,7 +276,10 @@ function InputUpdateFromSolution(analysis::MasstransportAnalysis,ug::Vector{Floa
 
 	AddInput(element, SurfaceEnum, newsurface, P1Enum)
 	AddInput(element, BaseEnum,    newbase,    P1Enum)
+
+	return nothing
 end#}}}
 function UpdateConstraints(analysis::MasstransportAnalysis, femmodel::FemModel) #{{{
 	SetActiveNodesLSMx(femmodel)
+	return nothing
 end#}}}

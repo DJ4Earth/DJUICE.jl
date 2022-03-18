@@ -15,4 +15,5 @@ function ConstrainNode(constraint::Constraint,nodes::Vector{Node},parameters::Pa
 	#Apply Constraint
 	ApplyConstraint(node, constraint.dof, constraint.value)
 
+	return nothing
 end# }}}
