@@ -1,4 +1,3 @@
-include("../usr/classes.jl")
 include("./issmenums.jl")
 include("./toolkits.jl")
 include("./gauss.jl")
