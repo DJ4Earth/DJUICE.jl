@@ -21,6 +21,10 @@ md.friction.coefficient = Active(α)
 #initialize derivative as 0
 ∂J_∂α = zero(α)
 
+#@show cost(md, α)
+
 #Call enzyme to get derivative of cost function
+Enzyme.API.looseTypeAnalysis!(true)
+Enzyme.API.strictAliasing!(false)
 autodiff(cost, Active, md, Duplicated(α, ∂J_∂α))
 print(∂f_∂α[1:10])
