@@ -227,8 +227,8 @@ end# }}}
 # }}}
 
 #Model structure
-mutable struct model
-	mesh::AbstractMesh
+mutable struct model{Mesh<:AbstractMesh}
+	mesh::Mesh
 	geometry::Geometry
 	mask::Mask
 	materials::Materials
