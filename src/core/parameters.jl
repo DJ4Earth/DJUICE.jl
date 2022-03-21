@@ -16,6 +16,7 @@ end# }}}
 #Parameters dataset class definition
 mutable struct Parameters #{{{
 	lookup::Dict{IssmEnum,Parameter}
+	double_lookup::Dict{IssmEnum,DoubleParam}
 end# }}}
 
 #Parameter functions
@@ -32,7 +33,7 @@ end#}}}
 #Parameters functions
 function AddParam(parameters::Parameters,value::Float64,enum::IssmEnum) #{{{
 
-	parameters.lookup[enum] = DoubleParam(enum,value)
+	parameters.double_lookup[enum] = DoubleParam(enum,value)
 
 	return nothing
 end#}}}
@@ -48,7 +49,15 @@ function AddParam(parameters::Parameters,value::Bool, enum::IssmEnum) #{{{
 
 	return nothing
 end#}}}
-function FindParam(::Type{T}, parameters::Parameters,enum::IssmEnum) where T #{{{
+
+@noinline function FindParam(::Type{Float64}, parameters::Parameters,enum::IssmEnum) #{{{
+
+	param = parameters.double_lookup[enum]
+	return GetParameterValue(param)::Float64
+
+end#}}}
+
+@noinline function FindParam(::Type{T}, parameters::Parameters,enum::IssmEnum) where T #{{{
 
 	param = parameters.lookup[enum]
 	return GetParameterValue(param)::T
