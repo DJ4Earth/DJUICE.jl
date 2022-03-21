@@ -18,7 +18,7 @@ end# }}}
 function Tria(sid::Int64, pid::Int64, vertexids::Vector{Int64}) #{{{
 
 	#This is the default constructor, at this point we don't have much information
-	tempparams   = Parameters(Dict{IssmEnum,Parameter}())
+	tempparams   = Parameters()
 	tempinputs   = Inputs(-1,-1,Dict{IssmEnum,Input}())
 	return Tria(sid, pid,
 					vertexids, Vector{Vertex}(undef,3),

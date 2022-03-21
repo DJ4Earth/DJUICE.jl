@@ -18,6 +18,7 @@ mutable struct Parameters #{{{
 	lookup::Dict{IssmEnum,Parameter}
 	double_lookup::Dict{IssmEnum,DoubleParam}
 end# }}}
+Parameters() = Parameters(Dict{IssmEnum,Parameter}(), Dict{IssmEnum,DoubleParam}())
 
 #Parameter functions
 function GetParameterValue(param::DoubleParam) #{{{
