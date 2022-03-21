@@ -6,7 +6,7 @@ using Enzyme
 include("./cost.jl")
 
 #Load model from MATLAB file
-file = matopen("./temp12k.mat")
+file = matopen(joinpath(@__DIR__, "..", "data","temp12k.mat"))
 mat  = read(file, "md")
 close(file)
 md = model(mat)
