@@ -128,7 +128,7 @@ end# }}}
 #Friction {{{
 abstract type AbstractFriction end
 mutable struct BuddFriction <: AbstractFriction
-	coefficient
+	coefficient::Vector{Float64}
 end
 function BuddFriction() #{{{
 	return BuddFriction(Vector{Float64}(undef,0))
@@ -227,7 +227,7 @@ end# }}}
 # }}}
 
 #Model structure
-mutable struct model{Mesh<:AbstractMesh}
+mutable struct model{Mesh<:AbstractMesh, Friction<:AbstractFriction}
 	mesh::Mesh
 	geometry::Geometry
 	mask::Mask
@@ -236,7 +236,7 @@ mutable struct model{Mesh<:AbstractMesh}
 	stressbalance::Stressbalance
 	constants::Constants
 	results::Dict
-	friction::AbstractFriction
+	friction::Friction
 	basalforcings::Basalforcings
 	smb::SMBforcings
 	timestepping::Timestepping
