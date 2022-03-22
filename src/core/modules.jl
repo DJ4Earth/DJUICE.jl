@@ -11,7 +11,7 @@ function ModelProcessor(md::model, solutionstring::String) #{{{
 	elements    = Vector{Tria}(undef,0)
 	vertices    = Vector{Vertex}(undef,0)
 	results     = Vector{Result}(undef,0)
-	parameters  = Parameters(Dict{IssmEnum,Parameter}())
+	parameters  = Parameters()
 	inputs      = Inputs(md.mesh.numberofelements, md.mesh.numberofvertices, Dict{IssmEnum,Input}())
 
 	#Create  elements, vertices and materials (independent of the analysis)
@@ -327,7 +327,7 @@ function RequestedOutputsx(femmodel::FemModel,outputlist::Vector{IssmEnum})# {{{
 		if outputlist[i]>InputsSTARTEnum && outputlist[i]<InputsENDEnum
 
 			#Create Result
-			input  = GetInput(femmodel.inputs,outputlist[i])
+			input  = GetInput(femmodel.inputs, outputlist[i])
 			result = Result(outputlist[i], step, time, copy(input.values))
 
 			#Add to femmodel.results dataset

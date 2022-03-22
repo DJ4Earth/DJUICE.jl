@@ -50,9 +50,9 @@ function UpdateElements(analysis::StressbalanceAnalysis,elements::Vector{Tria}, 
 	FetchDataToInput(md,inputs,elements,md.mask.ocean_levelset, MaskOceanLevelsetEnum)
 
 	#Deal with friction
-	if typeof(md.friction)==BuddFriction
+	if typeof(md.friction) == BuddFriction
 		FetchDataToInput(md,inputs,elements,md.friction.coefficient,FrictionCoefficientEnum)
-	elseif typeof(md.friction)==WeertmanFriction
+	elseif typeof(md.friction) == WeertmanFriction
 		FetchDataToInput(md,inputs,elements,md.friction.C,FrictionCEnum)
 		FetchDataToInput(md,inputs,elements,md.friction.m,FrictionMEnum)
 	else

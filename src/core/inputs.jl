@@ -70,7 +70,7 @@ function SetTriaInput(inputs::Inputs,enum::IssmEnum,interp::IssmEnum,index::Int6
 	end
 
 	#Get this input and check type
-	input = inputs.lookup[enum]
+	input::ElementInput = inputs.lookup[enum]
 	if typeof(input)!=ElementInput error("input type not consistent") end
 	if interp!=input.interp        error("input interpolations not consistent") end
 
@@ -93,7 +93,7 @@ function SetTriaInput(inputs::Inputs,enum::IssmEnum,interp::IssmEnum,indices::Ve
 	end
 
 	#Get this input and check type
-	input = inputs.lookup[enum]
+	input::ElementInput = inputs.lookup[enum]
 	if typeof(input)!=ElementInput error("input type not consistent") end
 	if interp!=input.interp        error("input interpolations not consistent") end
 

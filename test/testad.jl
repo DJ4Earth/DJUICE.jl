@@ -9,18 +9,22 @@ include("./cost.jl")
 file = matopen(joinpath(@__DIR__, "..", "data","temp12k.mat"))
 mat  = read(file, "md")
 close(file)
-md = model(mat)
 
 # ========================================================
 
+md = model(mat)
+# d_md = copy(md)
+
 #define control
 α = md.friction.coefficient
-
-md.friction.coefficient = Active(α)
-
 #initialize derivative as 0
 ∂J_∂α = zero(α)
 
 #Call enzyme to get derivative of cost function
+Enzyme.API.looseTypeAnalysis!(true)
+Enzyme.API.strictAliasing!(false)
+# TODO: We might have to make this `Duplicated(md, d_md)`
+# TODO(@wsmoses): How do we make this sparsely active?
+#                 We could construct the model as part of the code to differentiate...
 autodiff(cost, Active, md, Duplicated(α, ∂J_∂α))
 print(∂f_∂α[1:10])

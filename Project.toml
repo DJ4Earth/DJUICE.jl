@@ -11,6 +11,7 @@ SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 [extras]
 Enzyme = "7da242da-08ed-463a-9acd-ee780be4f1d9"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+Enzyme_jll = "7cc45869-7501-5eee-bdea-0790c847d4ef"
 
 [targets]
 test = ["Enzyme", "Test"]
