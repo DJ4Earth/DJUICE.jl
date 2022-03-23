@@ -1,8 +1,9 @@
 
-#Toolkit #1: serial sparse arrays
-using SparseArrays
-
 #Matrix
+
+#Toolkit #1: serial sparse arrays
+#= DEACTIVATED FOR NOW
+using SparseArrays
 mutable struct IssmMatrix #{{{
 	M::Int64
 	N::Int64
@@ -40,6 +41,41 @@ function Assemble!(matrix::IssmMatrix)#{{{
 
 	return nothing
 end#}}}
+=#
+
+#Toolkit #2: dense matrix (for ensyme)
+mutable struct IssmMatrix #{{{
+	M::Int64
+	N::Int64
+	matrix::Matrix{Float64}
+end #}}}
+function IssmMatrix(M::Int64,N::Int64)#{{{
+	return IssmMatrix(M, N, zeros(M,N))
+end#}}}
+function AddValues!(matrix::IssmMatrix,m::Int64,midx::Vector{Int64},n::Int64,nidx::Vector{Int64},values::Matrix{Float64})#{{{
+
+	#This is inefficient now, but it will work
+	for i in 1:m
+		if(midx[i]==-1) continue end
+		for j in 1:n
+			if(nidx[j]==-1) continue end
+			matrix.matrix[midx[i],nidx[j]] += values[i,j]
+		end
+	end
+
+	return nothing
+end#}}}
+function GetSize(matrix::IssmMatrix)#{{{
+
+	return size(matrix.matrix)
+
+end#}}}
+function Assemble!(matrix::IssmMatrix)#{{{
+
+	#Nothing to do here :)
+	return nothing
+end#}}}
+
 
 #Vector
 mutable struct IssmVector #{{{

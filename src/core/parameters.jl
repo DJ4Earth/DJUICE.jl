@@ -18,7 +18,9 @@ mutable struct Parameters #{{{
 	lookup::Dict{IssmEnum,Parameter}
 	double_lookup::Dict{IssmEnum,DoubleParam}
 end# }}}
-Parameters() = Parameters(Dict{IssmEnum,Parameter}(), Dict{IssmEnum,DoubleParam}())
+function Parameters() #{{{
+	return Parameters(Dict{IssmEnum,Parameter}(), Dict{IssmEnum,DoubleParam}())
+end # }}}
 
 #Parameter functions
 function GetParameterValue(param::DoubleParam) #{{{
@@ -50,14 +52,12 @@ function AddParam(parameters::Parameters,value::Bool, enum::IssmEnum) #{{{
 
 	return nothing
 end#}}}
-
 @noinline function FindParam(::Type{Float64}, parameters::Parameters,enum::IssmEnum) #{{{
 
 	param = parameters.double_lookup[enum]
 	return GetParameterValue(param)::Float64
 
 end#}}}
-
 @noinline function FindParam(::Type{T}, parameters::Parameters,enum::IssmEnum) where T #{{{
 
 	param = parameters.lookup[enum]
