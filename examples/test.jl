@@ -1,6 +1,7 @@
-#!/Applications/Julia-1.6.app/Contents/Resources/julia/bin/julia 
+#!/Applications/Julia-1.7.app/Contents/Resources/julia/bin/julia --project 
 using dJUICE
 using MAT
+using Test
 
 #Load model from MATLAB file
 file = matopen(joinpath(@__DIR__, "..", "data", "temp.mat"))
