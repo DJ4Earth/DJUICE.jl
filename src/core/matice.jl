@@ -1,9 +1,9 @@
 #Matice class definition
 struct Matice#{{{
-	vx_input::ElementInput
-	vy_input::ElementInput
-	B_input::ElementInput
-	n_input::ElementInput
+	vx_input::Input
+	vy_input::Input
+	B_input::Input
+	n_input::Input
 end# }}}
 
 function Matice(element::Tria) #{{{

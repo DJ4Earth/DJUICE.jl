@@ -164,7 +164,7 @@ function FindParam(::Type{T}, element::Tria, enum::IssmEnum) where T # {{{
 	return FindParam(T, element.parameters, enum)
 
 end # }}}
-function InputServe!(element::Tria,input::ElementInput) # {{{
+function InputServe!(element::Tria,input::Input) # {{{
 
 	if input.interp==P0Enum
 		input.element_values[1] = input.values[element.sid]

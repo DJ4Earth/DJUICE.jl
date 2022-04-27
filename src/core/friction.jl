@@ -2,18 +2,18 @@
 
 abstract type CoreFriction end
 struct CoreBuddFriction#{{{
-	H_input::ElementInput
-	b_input::ElementInput
-	c_input::ElementInput
+	H_input::Input
+	b_input::Input
+	c_input::Input
 	rho_ice::Float64
 	rho_water::Float64
 	g::Float64
 end# }}}
 struct CoreWeertmanFriction#{{{
-   c_input::ElementInput
-	m_input::ElementInput
-	vx_input::ElementInput
-	vy_input::ElementInput
+   c_input::Input
+	m_input::Input
+	vx_input::Input
+	vy_input::Input
 end# }}}
 
 function CoreFriction(element::Tria) #{{{

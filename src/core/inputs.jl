@@ -1,14 +1,5 @@
 #Input class definition
-abstract type Input end
-struct BoolInput <: Input#{{{
-	enum::IssmEnum
-	values::Matrix{Bool}
-end# }}}
-struct IntInput <: Input#{{{
-	enum::IssmEnum
-	values::Matrix{Int64}
-end# }}}
-struct ElementInput <: Input#{{{
+struct Input#{{{
 	enum::IssmEnum
 	interp::IssmEnum
 	values::Vector{Float64}
@@ -34,26 +25,6 @@ function GetInput(inputs::Inputs,enum::IssmEnum) #{{{
 	return inputs.lookup[enum]
 
 end#}}}
-function SetInput(inputs::Inputs,enum::IssmEnum,index::Int64,value::Bool) #{{{
-
-	#Does this input exist
-	if !haskey(inputs.lookup,enum)
-		#it does not exist yet, we need to create it...
-		@assert inputs.numberofelements > 0
-		input = BoolInput(enum,zeros(Bool,inputs.numberofelements))
-		inputs.lookup[enum] = BoolInput(enum,zeros(Bool,inputs.numberofelements))
-	end
-
-	#Get this input and check type
-	input = inputs.lookup[enum]
-	if typeof(input)!=BoolInput error("not consistent") end
-
-	#set value
-	@assert index>0 && index<=inputs.numberofelements
-	input.values[index] = value
-
-	return nothing
-end#}}}
 function SetTriaInput(inputs::Inputs,enum::IssmEnum,interp::IssmEnum,index::Int64,value::Float64) #{{{
 
 	#Does this input exist
@@ -61,17 +32,17 @@ function SetTriaInput(inputs::Inputs,enum::IssmEnum,interp::IssmEnum,index::Int6
 		#it does not exist yet, we need to create it...
 		@assert inputs.numberofelements > 0
 		if interp==P0Enum
-			inputs.lookup[enum] = ElementInput(enum,interp,zeros(inputs.numberofelements),Vector{Float64}(undef,1))
+			inputs.lookup[enum] = Input(enum,interp,zeros(inputs.numberofelements),Vector{Float64}(undef,1))
 		elseif interp==P1Enum
-			inputs.lookup[enum] = ElementInput(enum,interp,zeros(inputs.numberofvertices),Vector{Float64}(undef,3))
+			inputs.lookup[enum] = Input(enum,interp,zeros(inputs.numberofvertices),Vector{Float64}(undef,3))
 		else
 			error("not supported yet")
 		end
 	end
 
 	#Get this input and check type
-	input::ElementInput = inputs.lookup[enum]
-	if typeof(input)!=ElementInput error("input type not consistent") end
+	input::Input = inputs.lookup[enum]
+	if typeof(input)!=Input error("input type not consistent") end
 	if interp!=input.interp        error("input interpolations not consistent") end
 
 	#set value
@@ -86,15 +57,15 @@ function SetTriaInput(inputs::Inputs,enum::IssmEnum,interp::IssmEnum,indices::Ve
 		#it does not exist yet, we need to create it...
 		@assert inputs.numberofvertices>0
 		if interp==P1Enum
-			inputs.lookup[enum] = ElementInput(enum,interp,zeros(inputs.numberofvertices),Vector{Float64}(undef,3))
+			inputs.lookup[enum] = Input(enum,interp,zeros(inputs.numberofvertices),Vector{Float64}(undef,3))
 		else
 			error("not supported yet")
 		end
 	end
 
 	#Get this input and check type
-	input::ElementInput = inputs.lookup[enum]
-	if typeof(input)!=ElementInput error("input type not consistent") end
+	input::Input = inputs.lookup[enum]
+	if typeof(input)!=Input error("input type not consistent") end
 	if interp!=input.interp        error("input interpolations not consistent") end
 
 	#set value
@@ -102,7 +73,7 @@ function SetTriaInput(inputs::Inputs,enum::IssmEnum,interp::IssmEnum,indices::Ve
 
 	return nothing
 end#}}}
-function GetInputAverageValue(input::ElementInput) #{{{
+function GetInputAverageValue(input::Input) #{{{
 
 	numnodes = NumberofNodesTria(input.interp)
 	value = 0.0
@@ -114,12 +85,12 @@ function GetInputAverageValue(input::ElementInput) #{{{
 	return value/numnodes
 
 end#}}}
-function GetInputMin(input::ElementInput) #{{{
+function GetInputMin(input::Input) #{{{
 
 	return minimum(input.element_values)
 
 end#}}}
-function GetInputValue(input::ElementInput,gauss::GaussTria,i::Int64) #{{{
+function GetInputValue(input::Input,gauss::GaussTria,i::Int64) #{{{
 
 	if input.interp==P0Enum
 		return input.element_values[1]
@@ -132,7 +103,7 @@ function GetInputValue(input::ElementInput,gauss::GaussTria,i::Int64) #{{{
 	return value
 
 end#}}}
-function GetInputDerivativeValue(input::ElementInput,xyz_list::Matrix{Float64},gauss::GaussTria,i::Int64) #{{{
+function GetInputDerivativeValue(input::Input,xyz_list::Matrix{Float64},gauss::GaussTria,i::Int64) #{{{
 
 	#Get nodal function derivatives in reference element
 	numnodes = NumberofNodesTria(input.interp)
@@ -166,8 +137,8 @@ function DuplicateInput(inputs::Inputs, old::IssmEnum, new::IssmEnum)#{{{
 	#Fetch input that needs to be copied
 	oldinput = inputs.lookup[old]
 
-	if typeof(oldinput)==ElementInput
-		inputs.lookup[new] = ElementInput(new, oldinput.interp, copy(oldinput.values), copy(oldinput.element_values))
+	if typeof(oldinput)==Input
+		inputs.lookup[new] = Input(new, oldinput.interp, copy(oldinput.values), copy(oldinput.element_values))
 	end
 
 	return nothing
