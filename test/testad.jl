@@ -1,4 +1,4 @@
-#!/Applications/Julia-1.7.app/Contents/Resources/julia/bin/julia 
+#!/Applications/Julia-1.7.app/Contents/Resources/julia/bin/julia --project
 using dJUICE
 using MAT
 using Enzyme
@@ -6,13 +6,18 @@ using Enzyme
 include("./cost.jl")
 
 #Load model from MATLAB file
-file = matopen(joinpath(@__DIR__, "..", "data","temp12k.mat"))
+#file = matopen(joinpath(@__DIR__, "..", "data","temp12k.mat")) #BIG model
+file = matopen(joinpath(@__DIR__, "..", "data","temp.mat")) #SMAL model (35 elements)
 mat  = read(file, "md")
 close(file)
 
 # ========================================================
 
 md = model(mat)
+
+#make model run faster 
+md.stressbalance.maxiter = 1
+
 # d_md = copy(md)
 
 #define control

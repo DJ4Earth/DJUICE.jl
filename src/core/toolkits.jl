@@ -1,3 +1,4 @@
+using LinearSolve
 
 #Matrix
 
@@ -75,7 +76,6 @@ function Assemble!(matrix::IssmMatrix)#{{{
 	#Nothing to do here :)
 	return nothing
 end#}}}
-
 
 #Vector
 mutable struct IssmVector #{{{
@@ -173,6 +173,7 @@ function AXPY!(y::IssmVector,alpha::Float64,x::IssmVector) #{{{
 
 	return nothing
 end#}}}
+#= DEACTIVATED FOR NOW: backslash operator
 function Solverx(A::IssmMatrix, b::IssmVector, xold::IssmVector) #{{{
 
 	#Initialize output
@@ -190,5 +191,25 @@ function Solverx(A::IssmMatrix, b::IssmVector) #{{{
 	x.vector = A.matrix\b.vector
 
 	return x
+
+end#}}}
+=#
+function Solverx(A::IssmMatrix, b::IssmVector, xold::IssmVector) #{{{
+
+return Solverx(A, b)
+
+end#}}}
+function Solverx(A::IssmMatrix, b::IssmVector) #{{{
+
+#Initialize output
+x = IssmVector(0)
+
+#Solve linear system
+prob = LinearProblem(A.matrix, b.vector)
+linsolve = init(prob)
+sol = LinearSolve.solve(linsolve)
+x.vector = sol.u
+
+return x
 
 end#}}}

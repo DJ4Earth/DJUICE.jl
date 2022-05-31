@@ -4,14 +4,15 @@ authors = ["Mathieu Morlighem <Mathieu.Morlighem@dartmouth.edu>"]
 version = "0.1.0"
 
 [deps]
+LinearSolve = "7ed4a6bd-45f5-4d41-b270-4a48e9bafcae"
 MAT = "23992714-dd62-5051-b70f-ba57cb901cac"
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 
 [extras]
 Enzyme = "7da242da-08ed-463a-9acd-ee780be4f1d9"
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 Enzyme_jll = "7cc45869-7501-5eee-bdea-0790c847d4ef"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
 test = ["Enzyme", "Test"]
