@@ -1,6 +1,6 @@
 import ColorSchemes.jet
-using  GLMakie
-using dJUICE
+using GLMakie
+#using dJUICE
 
 function plotmodel( md::model, data::Vector, showvertices::Bool=false, showfacets::Bool=true)
 
