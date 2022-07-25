@@ -250,7 +250,7 @@ function model() #{{{
 					 BuddFriction(), Basalforcings(), SMBforcings(), Timestepping(),
 					 Masstransport(), Transient(), Inversion())
 end#}}}
-function model(matmd::Dict) #{{{
+function model(matmd::Dict,verbose::Bool=true) #{{{
 
 	#initialize output
 	md = model()
@@ -258,14 +258,14 @@ function model(matmd::Dict) #{{{
 	#Loop over all possible fields
 	for name1 in keys(matmd)
 		if !(Symbol(name1) in fieldnames(model))
-			println("could not recover md.",name1)
+			if verbose; println("could not recover md.",name1) end
 			continue
 		end
 		mdfield  = getfield(md,Symbol(name1))
 		matfield = matmd[name1]
 		for name2 in keys(matfield)
 			if !(Symbol(name2) in fieldnames(typeof(mdfield)))
-				println("could not recover md.",name1,".",name2)
+				if verbose; println("could not recover md.",name1,".",name2) end
 				continue
 			end
 			value_matlab = matfield[name2]
