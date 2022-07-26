@@ -4,10 +4,10 @@ using MAT
 using Enzyme
 
 #define cost function
-function cost(md::model, friction::Vector{Float64})
+function cost(md::model, frictioncoeff::Vector{Float64})
     
     #Set friction coefficient based on input
-    md.friction.coefficient = friction
+    md.friction.coefficient = frictioncoeff
     
     #Solve stress balance
     md = solve(md, "Stressbalance")
@@ -20,7 +20,7 @@ end
 
 #Load model from MATLAB file
 #file = matopen(joinpath(@__DIR__, "..", "data","temp12k.mat")) #BIG model
-file = matopen(joinpath(@__DIR__, "..", "data","temp.mat")) #SMAL model (35 elements)
+file = matopen(joinpath(@__DIR__, "..", "data","temp.mat")) #SMALL model (35 elements)
 mat  = read(file, "md")
 close(file)
 md = model(mat)
