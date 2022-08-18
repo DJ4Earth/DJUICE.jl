@@ -157,6 +157,7 @@
 	FeFSNitscheGammaEnum
 	FrictionCouplingEnum
 	FrictionDeltaEnum
+	FrictionDNNChainEnum
 	FrictionEffectivePressureLimitEnum
 	FrictionFEnum
 	FrictionGammaEnum
@@ -1711,6 +1712,7 @@ function EnumToString(enum::IssmEnum)
 	if(enum==FeFSNitscheGammaEnum) return "FeFSNitscheGamma" end
 	if(enum==FrictionCouplingEnum) return "FrictionCoupling" end
 	if(enum==FrictionDeltaEnum) return "FrictionDelta" end
+	if(enum==FrictionDNNChainEnum) return "FrictionDNNChain" end
 	if(enum==FrictionEffectivePressureLimitEnum) return "FrictionEffectivePressureLimit" end
 	if(enum==FrictionFEnum) return "FrictionF" end
 	if(enum==FrictionGammaEnum) return "FrictionGamma" end

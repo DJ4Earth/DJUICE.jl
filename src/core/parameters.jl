@@ -12,6 +12,10 @@ struct BoolParam <: Parameter #{{{
 	enum::IssmEnum
 	value::Bool
 end# }}}
+struct FluxChainParam <: Parameter #{{{
+	enum::IssmEnum
+	value::Flux.Chain
+end# }}}
 
 #Parameters dataset class definition
 mutable struct Parameters #{{{
@@ -32,6 +36,9 @@ end#}}}
 function GetParameterValue(param::BoolParam) #{{{
 	return param.value
 end#}}}
+function GetParameterValue(param::FluxChainParam) #{{{
+	return param.value
+end#}}}
 
 #Parameters functions
 function AddParam(parameters::Parameters,value::Float64,enum::IssmEnum) #{{{
@@ -49,6 +56,12 @@ end#}}}
 function AddParam(parameters::Parameters,value::Bool, enum::IssmEnum) #{{{
 
 	parameters.lookup[enum] = BoolParam(enum,value)
+
+	return nothing
+end#}}}
+function AddParam(parameters::Parameters,value::Flux.Chain, enum::IssmEnum) #{{{
+
+	parameters.lookup[enum] = FluxChainParam(enum,value)
 
 	return nothing
 end#}}}

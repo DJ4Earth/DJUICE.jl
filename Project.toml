@@ -4,6 +4,7 @@ authors = ["Mathieu Morlighem <Mathieu.Morlighem@dartmouth.edu>"]
 version = "0.1.0"
 
 [deps]
+Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
 LinearSolve = "7ed4a6bd-45f5-4d41-b270-4a48e9bafcae"
 MAT = "23992714-dd62-5051-b70f-ba57cb901cac"
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"

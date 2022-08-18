@@ -55,6 +55,8 @@ function UpdateElements(analysis::StressbalanceAnalysis,elements::Vector{Tria}, 
 	elseif typeof(md.friction) == WeertmanFriction
 		FetchDataToInput(md,inputs,elements,md.friction.C,FrictionCEnum)
 		FetchDataToInput(md,inputs,elements,md.friction.m,FrictionMEnum)
+	elseif typeof(md.friction) == DNNFriction
+		FetchDataToInput(md,inputs,elements,md.friction.coefficient,FrictionCoefficientEnum)
 	else
 		error("Friction ", typeof(md.friction), " not supported yet")
 	end
@@ -72,6 +74,9 @@ function UpdateParameters(analysis::StressbalanceAnalysis,parameters::Parameters
 		AddParam(parameters, 1, FrictionLawEnum)
 	elseif typeof(md.friction)==WeertmanFriction
 		AddParam(parameters, 2, FrictionLawEnum)
+	elseif typeof(md.friction)==DNNFriction
+		AddParam(parameters, 10, FrictionLawEnum)
+		AddParam(parameters, md.friction.dnnChain, FrictionDNNChainEnum)
 	else
 		error("Friction ", typeof(md.friction), " not supported yet")
 	end
