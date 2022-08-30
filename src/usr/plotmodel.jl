@@ -1,8 +1,7 @@
 import ColorSchemes.jet
 using GLMakie
-#using dJUICE
 
-function plotmodel( md::model, data::Vector, showvertices::Bool=false, showfacets::Bool=true)
+function plotmodel( md::model, data::Vector, showvertices::Bool=false, showfacets::Bool=true) #{{{
 
 	vertexcolor  = :black
 	facetcolor   = :blue
@@ -44,7 +43,7 @@ function plotmodel( md::model, data::Vector, showvertices::Bool=false, showfacet
 	end
 
 	return fig
-end
+end #}}}
 
 function plotmodel(md::model,data::BitVector) #{{{
 

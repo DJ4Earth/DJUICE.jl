@@ -19,5 +19,7 @@ include("$userdir/parameterization.jl")
 export setmask, InterpFromMeshToMesh2d
 include("$coredir/solve.jl")
 export solve, solve2
+include("$userdir/plotmodel.jl")
+export plotmodel
 
 end
