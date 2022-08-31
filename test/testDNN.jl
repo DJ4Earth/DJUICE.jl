@@ -1,6 +1,7 @@
 #!/Applications/Julia-1.6.app/Contents/Resources/julia/bin/julia
 using dJUICE
 using Flux
+using BSON: @load
 
 md = model2()
 md = triangle(md,issmdir()*"/test/Exp/Square.exp",150000.)
@@ -19,27 +20,14 @@ md.geometry.surface   = md.geometry.base+md.geometry.thickness
 md.geometry.bed       = md.geometry.base
 
 #Initial velocity
-#x     = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","x")
-#y     = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","y")
-#vx    = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","vx")
-#vy    = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","vy")
-#index = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","index")
 md.initialization.vx=zeros(md.mesh.numberofvertices)#InterpFromMeshToMesh2d(index,x,y,vx,md.mesh.x,md.mesh.y)
 md.initialization.vy=zeros(md.mesh.numberofvertices)#InterpFromMeshToMesh2d(index,x,y,vy,md.mesh.x,md.mesh.y)
 
 md.materials.rheology_B=1.815730284801701e+08*ones(md.mesh.numberofvertices)
 md.materials.rheology_n=3*ones(md.mesh.numberofelements)
 md.friction.coefficient=20*ones(md.mesh.numberofvertices)
-md.friction.dnnChain = Chain(Flux.Dense(3, 128, relu), 
-                Flux.BatchNorm(128, relu), 
-                Flux.Dense(128, 64), 
-                Flux.BatchNorm(64, relu), 
-                Flux.Dense(64, 32),                
-                Flux.BatchNorm(32, relu), 
-                Flux.Dense(32, 10),
-                Flux.BatchNorm(10, relu), 
-                Flux.Dense(10, 1),
-                )
+@load "../data/Weertman.bson" nn
+md.friction.dnnChain = nn;
 
 md.stressbalance.restol=0.05
 md.stressbalance.reltol=0.05
