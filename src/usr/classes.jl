@@ -130,9 +130,11 @@ end# }}}
 abstract type AbstractFriction end
 mutable struct BuddFriction <: AbstractFriction
 	coefficient::Vector{Float64}
+	p::Vector{Float64}
+	q::Vector{Float64}
 end
 function BuddFriction() #{{{
-	return BuddFriction(Vector{Float64}(undef,0))
+	return BuddFriction(Vector{Float64}(undef,0),Vector{Float64}(undef,0),Vector{Float64}(undef,0))
 end# }}}
 function Base.show(io::IO, this::BuddFriction)# {{{
 	IssmStructDisp(io, this)
