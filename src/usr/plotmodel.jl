@@ -24,7 +24,7 @@ function plotmodel( md::model, data::Vector, showvertices::Bool=false, showfacet
 			fig, ax, h = Makie.mesh( [md.mesh.x md.mesh.y], md.mesh.elements, shading = false, color = data, colormap = jet)
 
 			#Add colorbar
-			#Colorbar(fig[1, 2], h, width=25)
+			Colorbar(fig[1, 2], h, width=25)
 		else
 			error("data of size "*string(length(data))*" not supported yet!")
 		end
