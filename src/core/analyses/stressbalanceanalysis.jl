@@ -52,6 +52,8 @@ function UpdateElements(analysis::StressbalanceAnalysis,elements::Vector{Tria}, 
 	#Deal with friction
 	if typeof(md.friction) == BuddFriction
 		FetchDataToInput(md,inputs,elements,md.friction.coefficient,FrictionCoefficientEnum)
+		FetchDataToInput(md,inputs,elements,md.friction.p,FrictionPEnum)
+		FetchDataToInput(md,inputs,elements,md.friction.q,FrictionQEnum)
 	elseif typeof(md.friction) == WeertmanFriction
 		FetchDataToInput(md,inputs,elements,md.friction.C,FrictionCEnum)
 		FetchDataToInput(md,inputs,elements,md.friction.m,FrictionMEnum)
