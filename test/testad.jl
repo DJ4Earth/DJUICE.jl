@@ -1,4 +1,4 @@
-#!/Applications/Julia-1.7.app/Contents/Resources/julia/bin/julia --project
+#!/Applications/Julia-1.8.app/Contents/Resources/julia/bin/julia --project
 using dJUICE
 using MAT
 using Enzyme

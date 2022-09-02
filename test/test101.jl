@@ -1,8 +1,8 @@
-#!/Applications/Julia-1.7.app/Contents/Resources/julia/bin/julia
+#!/Applications/Julia-1.8.app/Contents/Resources/julia/bin/julia --project
 using dJUICE
 
 md = model()
-md = triangle(md,issmdir()*"/test/Exp/Square.exp",50000.)
+md = triangle2(md,issmdir()*"/test/Exp/Square.exp",50000.)
 md = setmask(md,"all","")
 
 #Geometry
