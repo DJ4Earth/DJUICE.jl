@@ -15,6 +15,8 @@ include("$userdir/utils.jl")
 export archread, issmdir
 include("$userdir/triangle.jl")
 export triangle
+include("$userdir/triangle2.jl")
+export triangle2
 include("$userdir/parameterization.jl")
 export setmask, InterpFromMeshToMesh2d
 include("$coredir/solve.jl")
