@@ -1,4 +1,5 @@
 using Printf
+using Flux
 
 #Model fields
 #Mesh {{{
@@ -129,9 +130,11 @@ end# }}}
 abstract type AbstractFriction end
 mutable struct BuddFriction <: AbstractFriction
 	coefficient::Vector{Float64}
+	p::Vector{Float64}
+	q::Vector{Float64}
 end
 function BuddFriction() #{{{
-	return BuddFriction(Vector{Float64}(undef,0))
+	return BuddFriction(Vector{Float64}(undef,0),Vector{Float64}(undef,0),Vector{Float64}(undef,0))
 end# }}}
 function Base.show(io::IO, this::BuddFriction)# {{{
 	IssmStructDisp(io, this)
@@ -145,6 +148,16 @@ function WeertmanFriction() #{{{
 end# }}}
 function Base.show(io::IO, this::WeertmanFriction)# {{{
    IssmStructDisp(io, this)
+end# }}}
+mutable struct DNNFriction <: AbstractFriction
+	coefficient::Vector{Float64}
+	dnnChain::Flux.Chain{}
+end
+function DNNFriction() #{{{
+	return DNNFriction(Vector{Float64}(undef,0), Flux.Chain{}())
+end# }}}
+function Base.show(io::IO, this::DNNFriction)# {{{
+	IssmStructDisp(io, this)
 end# }}}
 # }}}
 #Basalforcings {{{
@@ -248,6 +261,12 @@ function model() #{{{
 	return model( Mesh2dTriangle(), Geometry(), Mask(), Materials(),
 					 Initialization(),Stressbalance(), Constants(), Dict(),
 					 BuddFriction(), Basalforcings(), SMBforcings(), Timestepping(),
+					 Masstransport(), Transient(), Inversion())
+end#}}}
+function model2() #{{{
+	return model( Mesh2dTriangle(), Geometry(), Mask(), Materials(),
+					 Initialization(),Stressbalance(), Constants(), Dict(),
+					 DNNFriction(), Basalforcings(), SMBforcings(), Timestepping(),
 					 Masstransport(), Transient(), Inversion())
 end#}}}
 function model(matmd::Dict,verbose::Bool=true) #{{{

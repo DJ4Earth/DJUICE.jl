@@ -110,7 +110,7 @@ function InterpFromMeshToMesh2d(index_data::Array,x_data::Vector,y_data::Vector,
 	return data_out
 
 	#OLD STUFF!!! not working...
-	
+
 	#prepare input arrays
 	nods = Cint(length(x))
 	nels = Cint(size(index,1))
@@ -210,6 +210,8 @@ function IssmStructDisp(io::IO, modelfield::Any) # {{{
 		@printf "%19s: " name
 		if isa(a,String)
 			println(io, a)
+		elseif isa(a, Flux.Chain)
+			println(io, "Flux.", a)
 		elseif length(a)>1
 			if !isempty(a)
 				println(io, typeof(a), " of size ", size(a))
@@ -221,8 +223,8 @@ function IssmStructDisp(io::IO, modelfield::Any) # {{{
 		end
 	end
 end #}}}
-function meshgrid(x::Vector, y::Vector)
-    X = [i for i in x, j in 1:length(y)]
-    Y = [j for i in 1:length(x), j in y]
-    return X, Y
-end
+function meshgrid(x::Vector, y::Vector) # {{{
+	X = [i for i in x, j in 1:length(y)]
+	Y = [j for i in 1:length(x), j in y]
+	return X, Y
+end #}}}

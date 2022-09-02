@@ -29,6 +29,8 @@ md.initialization.vy=zeros(md.mesh.numberofvertices)#InterpFromMeshToMesh2d(inde
 md.materials.rheology_B=1.815730284801701e+08*ones(md.mesh.numberofvertices)
 md.materials.rheology_n=3*ones(md.mesh.numberofelements)
 md.friction.coefficient=20*ones(md.mesh.numberofvertices)
+md.friction.p=ones(md.mesh.numberofvertices)
+md.friction.q=ones(md.mesh.numberofvertices)
 
 md.stressbalance.restol=0.1
 md.stressbalance.reltol=0.02

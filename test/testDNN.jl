@@ -1,7 +1,9 @@
 #!/Applications/Julia-1.6.app/Contents/Resources/julia/bin/julia
 using dJUICE
+using Flux
+using BSON: @load
 
-md = model()
+md = model2()
 md = triangle(md,issmdir()*"/test/Exp/Square.exp",150000.)
 md = setmask(md,"","")
 
@@ -18,19 +20,14 @@ md.geometry.surface   = md.geometry.base+md.geometry.thickness
 md.geometry.bed       = md.geometry.base
 
 #Initial velocity
-#x     = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","x")
-#y     = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","y")
-#vx    = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","vx")
-#vy    = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","vy")
-#index = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","index")
 md.initialization.vx=zeros(md.mesh.numberofvertices)#InterpFromMeshToMesh2d(index,x,y,vx,md.mesh.x,md.mesh.y)
 md.initialization.vy=zeros(md.mesh.numberofvertices)#InterpFromMeshToMesh2d(index,x,y,vy,md.mesh.x,md.mesh.y)
 
 md.materials.rheology_B=1.815730284801701e+08*ones(md.mesh.numberofvertices)
 md.materials.rheology_n=3*ones(md.mesh.numberofelements)
 md.friction.coefficient=20*ones(md.mesh.numberofvertices)
-md.friction.p=ones(md.mesh.numberofvertices)
-md.friction.q=ones(md.mesh.numberofvertices)
+@load "../data/Weertman.bson" nn
+md.friction.dnnChain = nn;
 
 md.stressbalance.restol=0.05
 md.stressbalance.reltol=0.05
