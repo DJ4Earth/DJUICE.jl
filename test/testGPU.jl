@@ -44,7 +44,7 @@ function elem2node(f_e,index,areas,weights,nbe,nbv)# {{{
 	f_v = zeros(nbv, 1)
 	for i in 1:nbe
 		for j in 1:3
-			weights[index[i,j]] += areas[i]*f_e[i]
+			f_v[index[i,j]] += areas[i]*f_e[i]
 		end
 	end
 
@@ -363,7 +363,9 @@ function testGPU()
 					end
 				end
 			end
+		if(any(isnan.(KVx))) error("Found NaN in dVxdt[i]"); end
 		end
+		if(any(isnan.(KVx))) error("Found NaN in dVxdt[i]"); end
 
 		#Get current viscosity on nodes (Needed for time stepping)
 		eta_nbv = elem2node(etan,index,areas,weights,nbe,nbv)
@@ -391,6 +393,7 @@ function testGPU()
 		#Apply Dirichlet boundary condition, Residual should also be 0 (for convergence)
 		pos = findall(.~isnan.(spcvx))
 		vx[pos] = spcvx[pos]
+		if any(isnan.(vx)) error("VX NaN") end
 		dVxdt[pos] .= 0.
 		pos = findall(.~isnan.(spcvy))
 		vy[pos] = spcvy[pos]
@@ -406,7 +409,10 @@ function testGPU()
 
 		#Check convergence
 		iterror = max(normX,normY)
-		if((iterror < epsi) && (iter > 2)) break; end
+		if((iterror < epsi) && (iter > 2))
+			@printf("iter=%d, err=%1.3e --> converged\n",iter,iterror)
+			break
+		end
 		if (mod(iter,nout_iter)==1)
 			@printf("iter=%d, err=%1.3e \n",iter,iterror)
 		end
@@ -425,6 +431,5 @@ function testGPU()
 			if(isnan(etan[i])) error("Found NaN in etan[i]"); end
 		end
 	end
-
 	return md
 end
