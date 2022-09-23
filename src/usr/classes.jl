@@ -269,10 +269,14 @@ function model2() #{{{
 					 DNNFriction(), Basalforcings(), SMBforcings(), Timestepping(),
 					 Masstransport(), Transient(), Inversion())
 end#}}}
-function model(matmd::Dict,verbose::Bool=true) #{{{
+function model(matmd::Dict,verbose::Bool=true; useDNN::Bool=false) #{{{
 
 	#initialize output
-	md = model()
+	if useDNN
+		md = model2()
+	else
+		md = model()
+	end
 
 	#Loop over all possible fields
 	for name1 in keys(matmd)
@@ -299,6 +303,10 @@ function model(matmd::Dict,verbose::Bool=true) #{{{
 			elseif typeof(value_matlab)==Float64 && typeof(value_julia)==Bool
 				setfield!(mdfield, Symbol(name2), Bool(value_matlab))
 
+				# TODO: temporarily fix the issue when loading one value from matlab to a vector in Julia
+			elseif typeof(value_matlab)==Float64 && typeof(value_julia)==Vector{Float64}
+				setfield!(mdfield, Symbol(name2), [value_matlab])
+
 			elseif typeof(value_matlab)==Matrix{Float64} && typeof(value_julia)==Vector{Float64}
 				if(size(value_matlab,2)!=1) error("only one column expected") end
 				setfield!(mdfield, Symbol(name2), value_matlab[:,1])
@@ -315,7 +323,7 @@ function model(matmd::Dict,verbose::Bool=true) #{{{
 				setfield!(mdfield, Symbol(name2), vector)
 
 			else
-				error("Don't know how to convert ",typeof(value_matlab)," to ",typeof(value_julia))
+				error("Don't know how to convert ", name2, " from ",typeof(value_matlab)," to ",typeof(value_julia))
 			end
 		end
 	end
