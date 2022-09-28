@@ -16,6 +16,10 @@ struct FluxChainParam <: Parameter #{{{
 	enum::IssmEnum
 	value::Flux.Chain
 end# }}}
+struct StatsBaseTransformParam <: Parameter #{{{
+	enum::IssmEnum
+	value::StatsBase.ZScoreTransform
+end# }}}
 
 #Parameters dataset class definition
 mutable struct Parameters #{{{
@@ -37,6 +41,9 @@ function GetParameterValue(param::BoolParam) #{{{
 	return param.value
 end#}}}
 function GetParameterValue(param::FluxChainParam) #{{{
+	return param.value
+end#}}}
+function GetParameterValue(param::StatsBaseTransformParam) #{{{
 	return param.value
 end#}}}
 
@@ -62,6 +69,12 @@ end#}}}
 function AddParam(parameters::Parameters,value::Flux.Chain, enum::IssmEnum) #{{{
 
 	parameters.lookup[enum] = FluxChainParam(enum,value)
+
+	return nothing
+end#}}}
+function AddParam(parameters::Parameters,value::StatsBase.ZScoreTransform, enum::IssmEnum) #{{{
+
+	parameters.lookup[enum] = StatsBaseTransformParam(enum,value)
 
 	return nothing
 end#}}}

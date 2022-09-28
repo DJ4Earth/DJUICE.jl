@@ -24,6 +24,8 @@ struct CoreDNNFriction <: CoreFriction#{{{
 	vx_input::Input
 	vy_input::Input
 	dnnChain::Flux.Chain
+	dtx::StatsBase.ZScoreTransform
+	dty::StatsBase.ZScoreTransform
 end# }}}
 
 function CoreFriction(element::Tria) #{{{
@@ -51,7 +53,9 @@ function CoreFriction(element::Tria) #{{{
 	elseif frictionlaw==10
 		c_input   = GetInput(element, FrictionCoefficientEnum)
 		dnnChain  = FindParam(Flux.Chain, element, FrictionDNNChainEnum)
-		return CoreDNNFriction(c_input,vx_input,vy_input,dnnChain)
+		dtx  = FindParam(StatsBase.ZScoreTransform, element, FrictionDNNdtxEnum)
+		dty  = FindParam(StatsBase.ZScoreTransform, element, FrictionDNNdtyEnum)
+		return CoreDNNFriction(c_input,vx_input,vy_input,dnnChain,dtx,dty)
 	else
 		error("Friction ",typeof(md.friction)," not supported yet")
 	end
