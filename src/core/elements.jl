@@ -34,7 +34,7 @@ function InputCreate(element::Tria,inputs::Inputs,data::Vector{Float64},enum::Is
 	elseif size(data,1)==inputs.numberofvertices
 		SetTriaInput(inputs,enum,P1Enum,element.vertexids,data[element.vertexids])
 	else
-		error("size ",size(data,1)," not supported yet");
+		error("size ",size(data,1)," not supported for ", enum);
 	end
 
 	return nothing

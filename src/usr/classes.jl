@@ -1,5 +1,6 @@
 using Printf
 using Flux
+using StatsBase
 
 #Model fields
 #Mesh {{{
@@ -152,9 +153,11 @@ end# }}}
 mutable struct DNNFriction <: AbstractFriction
 	coefficient::Vector{Float64}
 	dnnChain::Flux.Chain{}
+	dtx::StatsBase.ZScoreTransform{Float64, Vector{Float64}}
+	dty::StatsBase.ZScoreTransform{Float64, Vector{Float64}}
 end
 function DNNFriction() #{{{
-	return DNNFriction(Vector{Float64}(undef,0), Flux.Chain{}())
+	return DNNFriction(Vector{Float64}(undef,0), Flux.Chain{}(), StatsBase.ZScoreTransform(1, 1, [0.0],[0.0]), StatsBase.ZScoreTransform(1, 1, [0.0],[0.0]))
 end# }}}
 function Base.show(io::IO, this::DNNFriction)# {{{
 	IssmStructDisp(io, this)

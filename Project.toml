@@ -15,6 +15,7 @@ MAT = "23992714-dd62-5051-b70f-ba57cb901cac"
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 Triangulate = "f7e6ffb2-c36d-4f8f-a77e-16e897189344"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
 [extras]
 Enzyme = "7da242da-08ed-463a-9acd-ee780be4f1d9"

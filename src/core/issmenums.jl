@@ -158,6 +158,8 @@
 	FrictionCouplingEnum
 	FrictionDeltaEnum
 	FrictionDNNChainEnum
+	FrictionDNNdtxEnum
+	FrictionDNNdtyEnum
 	FrictionEffectivePressureLimitEnum
 	FrictionFEnum
 	FrictionGammaEnum
@@ -1713,6 +1715,8 @@ function EnumToString(enum::IssmEnum)
 	if(enum==FrictionCouplingEnum) return "FrictionCoupling" end
 	if(enum==FrictionDeltaEnum) return "FrictionDelta" end
 	if(enum==FrictionDNNChainEnum) return "FrictionDNNChain" end
+	if(enum==FrictionDNNdtxEnum) return "FrictionDNNdtx" end
+	if(enum==FrictionDNNdtyEnum) return "FrictionDNNdty" end
 	if(enum==FrictionEffectivePressureLimitEnum) return "FrictionEffectivePressureLimit" end
 	if(enum==FrictionFEnum) return "FrictionF" end
 	if(enum==FrictionGammaEnum) return "FrictionGamma" end

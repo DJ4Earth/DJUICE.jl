@@ -24,6 +24,8 @@ struct CoreDNNFriction <: CoreFriction#{{{
 	vx_input::Input
 	vy_input::Input
 	dnnChain::Flux.Chain
+	dtx::StatsBase.ZScoreTransform
+	dty::StatsBase.ZScoreTransform
 end# }}}
 
 function CoreFriction(element::Tria) #{{{
@@ -51,7 +53,9 @@ function CoreFriction(element::Tria) #{{{
 	elseif frictionlaw==10
 		c_input   = GetInput(element, FrictionCoefficientEnum)
 		dnnChain  = FindParam(Flux.Chain, element, FrictionDNNChainEnum)
-		return CoreDNNFriction(c_input,vx_input,vy_input,dnnChain)
+		dtx  = FindParam(StatsBase.ZScoreTransform, element, FrictionDNNdtxEnum)
+		dty  = FindParam(StatsBase.ZScoreTransform, element, FrictionDNNdtyEnum)
+		return CoreDNNFriction(c_input,vx_input,vy_input,dnnChain,dtx,dty)
 	else
 		error("Friction ",typeof(md.friction)," not supported yet")
 	end
@@ -103,7 +107,10 @@ end#}}}
 function Alpha2(friction::CoreDNNFriction, gauss::GaussTria, i::Int64)#{{{
 	c = GetInputValue(friction.c_input, gauss, i)
 	vmag = VelMag(friction, gauss, i)
-	return first(friction.dnnChain(reshape(vcat(c, vmag), 2, :)))
+	xin = StatsBase.transform(friction.dtx, (reshape(vcat(c, vmag), 2, :)))
+	pred = StatsBase.reconstruct(friction.dty, friction.dnnChain(xin))
+	alpha2 = first(pred)./vmag
+	return alpha2
 end#}}}
 function VelMag(friction::CoreFriction, gauss::GaussTria, i::Int64) #{{{
 	vx = GetInputValue(friction.vx_input, gauss, i)
