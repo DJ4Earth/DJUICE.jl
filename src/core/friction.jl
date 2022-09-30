@@ -109,7 +109,8 @@ function Alpha2(friction::CoreDNNFriction, gauss::GaussTria, i::Int64)#{{{
 	vmag = VelMag(friction, gauss, i)
 	xin = StatsBase.transform(friction.dtx, (reshape(vcat(c, vmag), 2, :)))
 	pred = StatsBase.reconstruct(friction.dty, friction.dnnChain(xin))
-	return first(pred)
+	alpha2 = first(pred)./vmag
+	return alpha2
 end#}}}
 function VelMag(friction::CoreFriction, gauss::GaussTria, i::Int64) #{{{
 	vx = GetInputValue(friction.vx_input, gauss, i)
