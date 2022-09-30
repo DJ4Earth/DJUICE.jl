@@ -272,6 +272,12 @@ function model2() #{{{
 					 DNNFriction(), Basalforcings(), SMBforcings(), Timestepping(),
 					 Masstransport(), Transient(), Inversion())
 end#}}}
+function model(md::model; friction=BuddFriction()) #{{{
+	return model( Mesh2dTriangle(), Geometry(), Mask(), Materials(),
+					 Initialization(),Stressbalance(), Constants(), Dict(),
+					 friction, Basalforcings(), SMBforcings(), Timestepping(),
+					 Masstransport(), Transient(), Inversion())
+end#}}}
 function model(matmd::Dict,verbose::Bool=true; useDNN::Bool=false) #{{{
 
 	#initialize output
