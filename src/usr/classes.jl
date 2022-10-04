@@ -261,31 +261,21 @@ mutable struct model{Mesh<:AbstractMesh, Friction<:AbstractFriction}
 	inversion::Inversion
 end
 function model() #{{{
-	return model( Mesh2dTriangle(), Geometry(), Mask(), Materials(),
-					 Initialization(),Stressbalance(), Constants(), Dict(),
-					 BuddFriction(), Basalforcings(), SMBforcings(), Timestepping(),
-					 Masstransport(), Transient(), Inversion())
+      return model( Mesh2dTriangle(), Geometry(), Mask(), Materials(),
+                                       Initialization(),Stressbalance(), Constants(), Dict(),
+                                       BuddFriction(), Basalforcings(), SMBforcings(), Timestepping(),
+                                       Masstransport(), Transient(), Inversion())
 end#}}}
-function model2() #{{{
-	return model( Mesh2dTriangle(), Geometry(), Mask(), Materials(),
-					 Initialization(),Stressbalance(), Constants(), Dict(),
-					 DNNFriction(), Basalforcings(), SMBforcings(), Timestepping(),
-					 Masstransport(), Transient(), Inversion())
+function model(md::model; mesh::AbstractMesh=md.mesh, friction::AbstractFriction=md.friction) #{{{
+	return model(mesh, md.geometry, md.mask, md.materials, 
+					 md.initialization, md.stressbalance, md.constants, md.results, 
+					 friction, md.basalforcings, md.smb, md.timestepping, 
+					 md.masstransport, md.transient, md.inversion)
 end#}}}
-function model(md::model; friction=BuddFriction()) #{{{
-	return model( Mesh2dTriangle(), Geometry(), Mask(), Materials(),
-					 Initialization(),Stressbalance(), Constants(), Dict(),
-					 friction, Basalforcings(), SMBforcings(), Timestepping(),
-					 Masstransport(), Transient(), Inversion())
-end#}}}
-function model(matmd::Dict,verbose::Bool=true; useDNN::Bool=false) #{{{
+function model(matmd::Dict,verbose::Bool=true) #{{{
 
 	#initialize output
-	if useDNN
-		md = model2()
-	else
-		md = model()
-	end
+	md = model()
 
 	#Loop over all possible fields
 	for name1 in keys(matmd)
