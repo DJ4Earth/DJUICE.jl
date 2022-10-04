@@ -21,6 +21,9 @@ struct CoreWeertmanFriction <: CoreFriction#{{{
 end# }}}
 struct CoreDNNFriction <: CoreFriction#{{{
    c_input::Input
+   b_input::Input
+	element::Tria
+	xyz_list::Matrix{Float64}
 	vx_input::Input
 	vy_input::Input
 	dnnChain::Flux.Chain
@@ -52,10 +55,12 @@ function CoreFriction(element::Tria) #{{{
 		return CoreWeertmanFriction(c_input,vx_input,vy_input,m_input)
 	elseif frictionlaw==10
 		c_input   = GetInput(element, FrictionCoefficientEnum)
+		b_input   = GetInput(element, BaseEnum)
+		xyz_list  = GetVerticesCoordinates(element.vertices)
 		dnnChain  = FindParam(Flux.Chain, element, FrictionDNNChainEnum)
 		dtx  = FindParam(StatsBase.ZScoreTransform, element, FrictionDNNdtxEnum)
 		dty  = FindParam(StatsBase.ZScoreTransform, element, FrictionDNNdtyEnum)
-		return CoreDNNFriction(c_input,vx_input,vy_input,dnnChain,dtx,dty)
+		return CoreDNNFriction(c_input,b_input,element,xyz_list,vx_input,vy_input,dnnChain,dtx,dty)
 	else
 		error("Friction ",typeof(md.friction)," not supported yet")
 	end
@@ -105,11 +110,14 @@ function Alpha2(friction::CoreWeertmanFriction, gauss::GaussTria, i::Int64)#{{{
 	end
 end#}}}
 function Alpha2(friction::CoreDNNFriction, gauss::GaussTria, i::Int64)#{{{
-	c = GetInputValue(friction.c_input, gauss, i)
+#	c = GetInputValue(friction.c_input, gauss, i)
+	b = GetInputValue(friction.b_input, gauss, i)
+	x = GetXcoord(friction.element, friction.xyz_list, gauss, i)
+	y = GetYcoord(friction.element, friction.xyz_list, gauss, i)
 	vmag = VelMag(friction, gauss, i)
-	xin = StatsBase.transform(friction.dtx, (reshape(vcat(c, vmag), 2, :)))
+	xin = StatsBase.transform(friction.dtx, (reshape(vcat(vmag, x, y, b), 4, :)))
 	pred = StatsBase.reconstruct(friction.dty, friction.dnnChain(xin))
-	alpha2 = first(pred)./vmag
+	alpha2 = first(pred) ./ vmag
 	return alpha2
 end#}}}
 function VelMag(friction::CoreFriction, gauss::GaussTria, i::Int64) #{{{
