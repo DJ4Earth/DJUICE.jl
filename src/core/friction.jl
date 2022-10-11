@@ -20,15 +20,16 @@ struct CoreWeertmanFriction <: CoreFriction#{{{
 	m_input::Input
 end# }}}
 struct CoreDNNFriction <: CoreFriction#{{{
-   c_input::Input
-   b_input::Input
-	x_input::Input
-	y_input::Input
-	vx_input::Input
-	vy_input::Input
 	dnnChain::Flux.Chain
 	dtx::StatsBase.ZScoreTransform
 	dty::StatsBase.ZScoreTransform
+	vx_input::Input
+	vy_input::Input
+   c_input::Input
+   b_input::Input
+   H_input::Input
+   sslope_input::Input
+   bslope_input::Input
 end# }}}
 
 function CoreFriction(element::Tria) #{{{
@@ -54,14 +55,15 @@ function CoreFriction(element::Tria) #{{{
 		m_input   = GetInput(element, FrictionMEnum)
 		return CoreWeertmanFriction(c_input,vx_input,vy_input,m_input)
 	elseif frictionlaw==10
-		c_input   = GetInput(element, FrictionCoefficientEnum)
-		b_input   = GetInput(element, BaseEnum)
-		x_input   = GetInput(element, MeshXEnum)
-		y_input   = GetInput(element, MeshYEnum)
 		dnnChain  = FindParam(Flux.Chain, element, FrictionDNNChainEnum)
 		dtx  = FindParam(StatsBase.ZScoreTransform, element, FrictionDNNdtxEnum)
 		dty  = FindParam(StatsBase.ZScoreTransform, element, FrictionDNNdtyEnum)
-		return CoreDNNFriction(c_input,b_input,x_input,y_input,vx_input,vy_input,dnnChain,dtx,dty)
+		c_input   = GetInput(element, FrictionCoefficientEnum)
+		H_input   = GetInput(element, ThicknessEnum)
+		b_input   = GetInput(element, BaseEnum)
+		sslope_input   = GetInput(element, SurfaceSlopeEnum)
+		bslope_input   = GetInput(element, BedSlopeEnum)
+		return CoreDNNFriction(dnnChain,dtx,dty,vx_input,vy_input,c_input,b_input,H_input,sslope_input,bslope_input)
 	else
 		error("Friction ",typeof(md.friction)," not supported yet")
 	end
@@ -111,12 +113,12 @@ function Alpha2(friction::CoreWeertmanFriction, gauss::GaussTria, i::Int64)#{{{
 	end
 end#}}}
 function Alpha2(friction::CoreDNNFriction, gauss::GaussTria, i::Int64)#{{{
-#	c = GetInputValue(friction.c_input, gauss, i)
 	b = GetInputValue(friction.b_input, gauss, i)
-	x = GetInputValue(friction.x_input, gauss, i)
-	y = GetInputValue(friction.y_input, gauss, i)
+	H = GetInputValue(friction.H_input, gauss, i)
+	sslope = GetInputValue(friction.sslope_input, gauss, i)
+	bslope = GetInputValue(friction.bslope_input, gauss, i)
 	vmag = VelMag(friction, gauss, i)
-	xin = StatsBase.transform(friction.dtx, (reshape(vcat(vmag, x, y, b), 4, :)))
+	xin = StatsBase.transform(friction.dtx, (reshape(vcat(vmag, b, H, sslope, bslope), 5, :)))
 	pred = StatsBase.reconstruct(friction.dty, friction.dnnChain(xin))
 	alpha2 = first(pred)
 	if ( (vmag == 0.0) | (alpha2 < 0.0) )

@@ -34,5 +34,8 @@ md3.friction.dnnChain = nn;
 md3.friction.coefficient =  mat["friction"]["C"][:];
 md3.friction.dtx = dtx;
 md3.friction.dty = dty;
+md3.geometry.sslope = mat["results"]["sslope"][:]
+md3.geometry.bslope = mat["results"]["bslope"][:]
 
 md3=solve(md3,"Stressbalance")
+

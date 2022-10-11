@@ -41,9 +41,11 @@ mutable struct Geometry
 	base::Vector{Float64}
 	thickness::Vector{Float64}
 	bed::Vector{Float64}
+	sslope::Vector{Float64}
+	bslope::Vector{Float64}
 end
 function Geometry() #{{{
-	return Geometry( Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0))
+	return Geometry( Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0))
 end# }}}
 function Base.show(io::IO, this::Geometry)# {{{
 	IssmStructDisp(io, this)
