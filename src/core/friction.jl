@@ -28,8 +28,10 @@ struct CoreDNNFriction <: CoreFriction#{{{
    c_input::Input
    b_input::Input
    H_input::Input
-   sslope_input::Input
-   bslope_input::Input
+   ssx_input::Input
+   ssy_input::Input
+   bsx_input::Input
+   bsy_input::Input
 end# }}}
 
 function CoreFriction(element::Tria) #{{{
@@ -61,9 +63,11 @@ function CoreFriction(element::Tria) #{{{
 		c_input   = GetInput(element, FrictionCoefficientEnum)
 		H_input   = GetInput(element, ThicknessEnum)
 		b_input   = GetInput(element, BaseEnum)
-		sslope_input   = GetInput(element, SurfaceSlopeEnum)
-		bslope_input   = GetInput(element, BedSlopeEnum)
-		return CoreDNNFriction(dnnChain,dtx,dty,vx_input,vy_input,c_input,b_input,H_input,sslope_input,bslope_input)
+		ssx_input   = GetInput(element, SurfaceSlopeXEnum)
+		ssy_input   = GetInput(element, SurfaceSlopeYEnum)
+		bsx_input   = GetInput(element, BedSlopeXEnum)
+		bsy_input   = GetInput(element, BedSlopeYEnum)
+		return CoreDNNFriction(dnnChain,dtx,dty,vx_input,vy_input,c_input,b_input,H_input,ssx_input,ssy_input,bsx_input,bsy_input)
 	else
 		error("Friction ",typeof(md.friction)," not supported yet")
 	end
@@ -115,10 +119,16 @@ end#}}}
 function Alpha2(friction::CoreDNNFriction, gauss::GaussTria, i::Int64)#{{{
 	b = GetInputValue(friction.b_input, gauss, i)
 	H = GetInputValue(friction.H_input, gauss, i)
-	sslope = GetInputValue(friction.sslope_input, gauss, i)
-	bslope = GetInputValue(friction.bslope_input, gauss, i)
+	vx = GetInputValue(friction.vx_input, gauss, i)
+	vy = GetInputValue(friction.vy_input, gauss, i)
+	ssx = GetInputValue(friction.ssx_input, gauss, i)
+	ssy = GetInputValue(friction.ssy_input, gauss, i)
+	bsx = GetInputValue(friction.bsx_input, gauss, i)
+	bsy = GetInputValue(friction.bsy_input, gauss, i)
 	vmag = VelMag(friction, gauss, i)
-	xin = StatsBase.transform(friction.dtx, (reshape(vcat(vmag, b, H, sslope, bslope), 5, :)))
+
+	# need to change according to the construction of DNN
+	xin = StatsBase.transform(friction.dtx, (reshape(vcat(vx, vy, b, H, ssx, ssy, bsx, bsy), 8, :)))
 	pred = StatsBase.reconstruct(friction.dty, friction.dnnChain(xin))
 	alpha2 = first(pred)
 	if ( (vmag == 0.0) | (alpha2 < 0.0) )
