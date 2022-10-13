@@ -11,33 +11,20 @@ md = model(mat)
 md.friction.coefficient =  mat["friction"]["C"][:];
 md.friction.p=3.0 .* ones(md.mesh.numberofvertices)
 md.friction.q=zeros(md.mesh.numberofvertices)
+md=solve(md,"Stressbalance")
 
-#md=solve(md,"Stressbalance")
-
-
-md2 = model(mat)
-@load "../data/Helheim_Weertman_NN.bson" nn dtx dty
-md2 = model(md2;friction=DNNFriction())
-
-md2.friction.dnnChain = nn;
-md2.friction.coefficient =  mat["friction"]["C"][:];
-md2.friction.dtx = dtx;
-md2.friction.dty = dty;
-
-#md2=solve(md2,"Stressbalance")
-
-md3 = model(mat)
+mdnn = model(mat)
 @load "../data/Helheim_friction_NN.bson" nn dtx dty
-md3 = model(md3;friction=DNNFriction())
+mdnn = model(mdnn;friction=DNNFriction())
 
-md3.friction.dnnChain = nn;
-md3.friction.coefficient =  mat["friction"]["C"][:];
-md3.friction.dtx = dtx;
-md3.friction.dty = dty;
-md3.geometry.ssx = mat["results"]["ssx"][:]
-md3.geometry.ssy = mat["results"]["ssy"][:]
-md3.geometry.bsx = mat["results"]["bsx"][:]
-md3.geometry.bsy = mat["results"]["bsy"][:]
+mdnn.friction.dnnChain = nn;
+mdnn.friction.coefficient =  mat["friction"]["C"][:];
+mdnn.friction.dtx = dtx;
+mdnn.friction.dty = dty;
+mdnn.geometry.ssx = mat["results"]["ssx"][:]
+mdnn.geometry.ssy = mat["results"]["ssy"][:]
+mdnn.geometry.bsx = mat["results"]["bsx"][:]
+mdnn.geometry.bsy = mat["results"]["bsy"][:]
 
-md3=solve(md3,"Stressbalance")
+mdnn=solve(mdnn,"Stressbalance")
 
