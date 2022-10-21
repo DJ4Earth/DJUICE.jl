@@ -1,3 +1,6 @@
+using Enzyme
+using Enzyme_jll
+
 include("./issmenums.jl")
 include("./toolkits.jl")
 include("./gauss.jl")
@@ -23,24 +26,24 @@ include("./modules.jl")
 include("./elementmatrix.jl")
 include("./utils.jl")
 
-function solve(md::model, solution::String) #{{{
+function solve(md::model, solution::Symbol) #{{{
 
 	#Process incoming string
-	if solution=="sb" || solution=="Stressbalance"
-		solutionstring = "StressbalanceSolution"
-	elseif solution=="tr" || solution=="Transient"
-		solutionstring = "TransientSolution"
+	if solution===:sb || solution===:Stressbalance
+		solutionkey = :StressbalanceSolution
+	elseif solution===:tr || solution===:Transient
+		solutionkey = :TransientSolution
 	else
-		error("solutionstring "*solution*" not supported!");
+		error("solutionkey "*solution*" not supported!");
 	end
 
 	#Construct FemModel from md
-	femmodel=ModelProcessor(md, solutionstring)
+	femmodel=ModelProcessor(md, solutionkey)
 
 	#Solve (FIXME: to be improved later...)
-	if(solutionstring=="StressbalanceSolution")
+	if(solutionkey===:StressbalanceSolution)
 		analysis = StressbalanceAnalysis()
-	elseif (solutionstring=="TransientSolution")
+	elseif (solutionkey===:TransientSolution)
 		analysis = TransientAnalysis()
 	else
 		error("not supported")
@@ -48,21 +51,55 @@ function solve(md::model, solution::String) #{{{
 	Core(analysis, femmodel)
 
 	#add results to md.results
-	OutputResultsx(femmodel, md, solutionstring)
+	OutputResultsx(femmodel, md, solutionkey)
 
 	return md
 end# }}}
-function solve2(md::model) #{{{
 
-	#Construct FemModel from md
-	femmodel=ModelProcessor(md, "StressbalanceSolution")
+#Automatic differentiation
+function costfunction(femmodel::FemModel, α::Vector{Float64})
 
-	#Solve model first
+	#Update FemModel accordingly
+	InputUpdateFromVectorx(femmodel, α, FrictionCoefficientEnum, VertexSIdEnum)
+
+	#solve PDE
 	analysis = StressbalanceAnalysis()
 	Core(analysis, femmodel)
 
 	#Compute cost function
 	J = SurfaceAbsVelMisfitx(femmodel)
-	println("MISFIT is ", J)
+
+	#return cost function
 	return J
+end
+function solve2(md::model,isAD::Bool) #{{{
+
+	#Construct FemModel from md
+	femmodel=ModelProcessor(md, :StressbalanceSolution)
+
+	if(isAD)
+		#Active variable
+		α = md.friction.coefficient
+		#initialize derivative as 0
+		∂J_∂α = zero(α)
+
+		#Misc Enzyme options
+		Enzyme.API.looseTypeAnalysis!(true)
+		Enzyme.API.strictAliasing!(false)
+
+		println("CALLING AUTODIFF, prepare to die...")
+		@time autodiff(costfunction, Active,  femmodel, Duplicated(α, ∂J_∂α))
+
+		#Put gradient in results
+		InputUpdateFromVectorx(femmodel, ∂J_∂α, GradientEnum, VertexSIdEnum)
+		RequestedOutputsx(femmodel, [GradientEnum])
+
+	else
+		analysis = StressbalanceAnalysis()
+		Core(analysis, femmodel)
+	end
+
+	OutputResultsx(femmodel, md, :StressbalanceSolution)
+
+	return md
 end# }}}

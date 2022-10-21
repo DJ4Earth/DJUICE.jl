@@ -5,7 +5,7 @@ function FetchDataToInput(md::model,inputs::Inputs,elements::Vector{Tria},data::
 	end
 	return nothing
 end#}}}
-function ModelProcessor(md::model, solutionstring::String) #{{{
+function ModelProcessor(md::model, solutionstring::Symbol) #{{{
 
 	#Initialize structures
 	elements    = Vector{Tria}(undef,0)
@@ -19,15 +19,15 @@ function ModelProcessor(md::model, solutionstring::String) #{{{
 	CreateVertices(vertices, md)
 	CreateParameters(parameters, md)
 	CreateInputs(inputs,elements, md)
-	if solutionstring=="TransientSolution"
+	if solutionstring===:TransientSolution
 		UpdateParameters(TransientAnalysis(), parameters, md)
 	end
 
 	#Now create analysis specific data structure
-	if solutionstring=="StressbalanceSolution"
-		analyses = [StressbalanceAnalysis()]
-	elseif solutionstring=="TransientSolution"
-		analyses = [StressbalanceAnalysis(), MasstransportAnalysis()]
+	if solutionstring===:StressbalanceSolution
+		analyses = Analysis[StressbalanceAnalysis()]
+	elseif solutionstring===:TransientSolution
+		analyses = Analysis[StressbalanceAnalysis(), MasstransportAnalysis()]
 	else
 		error(solutionstring, " not supported by ModelProcessor")
 	end
@@ -126,10 +126,10 @@ function CreateInputs(inputs::Inputs,elements::Vector{Tria},md::model) #{{{
 
 	return nothing
 end# }}}
-function OutputResultsx(femmodel::FemModel, md::model, solution::String)# {{{
+function OutputResultsx(femmodel::FemModel, md::model, solutionkey::Symbol)# {{{
 
 
-	if solution=="TransientSolution"
+	if solutionkey===:TransientSolution
 
 		#Compute maximum number of steps
 		maxstep = 0
@@ -155,7 +155,7 @@ function OutputResultsx(femmodel::FemModel, md::model, solution::String)# {{{
 		end
 	end
 
-	md.results[solution] = output
+	md.results[string(solutionkey)] = output
 
 	return nothing
 end# }}}
@@ -280,6 +280,7 @@ end#}}}
 function SystemMatricesx(femmodel::FemModel,analysis::Analysis)# {{{
 
 	#Allocate matrices
+	println("   Allocating matrices")
 	fsize = NumberOfDofs(femmodel.nodes,FsetEnum)
 	ssize = NumberOfDofs(femmodel.nodes,SsetEnum)
 	Kff = IssmMatrix(fsize,fsize)
@@ -287,6 +288,7 @@ function SystemMatricesx(femmodel::FemModel,analysis::Analysis)# {{{
 	pf  = IssmVector(fsize)
 
 	#Construct Stiffness matrix and load vector from elements
+	println("   Assembling matrices")
 	for i in 1:length(femmodel.elements)
 		Ke = CreateKMatrix(analysis,femmodel.elements[i])
 		pe = CreatePVector(analysis,femmodel.elements[i])

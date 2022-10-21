@@ -201,15 +201,17 @@ return Solverx(A, b)
 end#}}}
 function Solverx(A::IssmMatrix, b::IssmVector) #{{{
 
-#Initialize output
-x = IssmVector(0)
+	println("   Solving matrix system")
 
-#Solve linear system
-prob = LinearProblem(A.matrix, b.vector)
-linsolve = init(prob)
-sol = LinearSolve.solve(linsolve)
-x.vector = sol.u
+	#Initialize output
+	x = IssmVector(0)
 
-return x
+	#Solve linear system
+	prob = LinearProblem(A.matrix, b.vector)
+	linsolve = init(prob)
+	sol = LinearSolve.solve(linsolve)
+	x.vector = sol.u
+
+	return x
 
 end#}}}

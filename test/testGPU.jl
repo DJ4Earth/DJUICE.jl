@@ -320,6 +320,8 @@ function testGPU()
 	end
 
 	#Main loop, allocate a few vectors needed for the computation
+	KVx  = zeros(nbv)
+	KVy  = zeros(nbv)
 
 	for iter in 1:niter # Pseudo-Transient cycles
 
@@ -327,9 +329,9 @@ function testGPU()
 		dvxdx, dvxdy = derive_xy_elem(vx,index,alpha,beta,nbe)
 		dvydx, dvydy = derive_xy_elem(vy,index,alpha,beta,nbe)
 
-		#KV term in equation 22
-		KVx  = zeros(nbv)
-		KVy  = zeros(nbv)
+		#KV term in equation 22 (initialize as 0)
+		KVx .= 0.
+		KVy .= 0.
 		for n in 1:nbe
 
 			#Skip if no ice
