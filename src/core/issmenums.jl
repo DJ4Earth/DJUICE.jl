@@ -603,6 +603,7 @@
 	BedEastGRDEnum
 	BedNorthEnum
 	BedNorthGRDEnum
+	BedSlopeEnum
 	BedSlopeXEnum
 	BedSlopeYEnum
 	BottomPressureEnum
@@ -1023,6 +1024,7 @@
 	SurfaceLogVxVyMisfitEnum
 	SurfaceObservationEnum
 	SurfaceRelVelMisfitEnum
+	SurfaceSlopeEnum
 	SurfaceSlopeXEnum
 	SurfaceSlopeYEnum
 	TemperatureEnum
@@ -2160,6 +2162,7 @@ function EnumToString(enum::IssmEnum)
 	if(enum==BedEastGRDEnum) return "BedEastGRD" end
 	if(enum==BedNorthEnum) return "BedNorth" end
 	if(enum==BedNorthGRDEnum) return "BedNorthGRD" end
+	if(enum==BedSlopeEnum) return "BedSlope" end
 	if(enum==BedSlopeXEnum) return "BedSlopeX" end
 	if(enum==BedSlopeYEnum) return "BedSlopeY" end
 	if(enum==BottomPressureEnum) return "BottomPressure" end
@@ -2580,6 +2583,7 @@ function EnumToString(enum::IssmEnum)
 	if(enum==SurfaceLogVxVyMisfitEnum) return "SurfaceLogVxVyMisfit" end
 	if(enum==SurfaceObservationEnum) return "SurfaceObservation" end
 	if(enum==SurfaceRelVelMisfitEnum) return "SurfaceRelVelMisfit" end
+	if(enum==SurfaceSlopeEnum) return "SurfaceSlope" end
 	if(enum==SurfaceSlopeXEnum) return "SurfaceSlopeX" end
 	if(enum==SurfaceSlopeYEnum) return "SurfaceSlopeY" end
 	if(enum==TemperatureEnum) return "Temperature" end

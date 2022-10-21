@@ -1,12 +1,16 @@
 import ColorSchemes.jet
 using GLMakie
 
-function plotmodel( md::model, data::Vector, showvertices::Bool=false, showfacets::Bool=true) #{{{
+function plotmodel( md::model, data::Vector; showvertices::Bool=false, showfacets::Bool=false, caxis::Tuple{Float64, Float64}=(0.0, 0.0)) #{{{
 
 	vertexcolor  = :black
 	facetcolor   = :blue
 
 	if data isa AbstractVector
+		# use default caxis
+		if caxis[1] >= caxis[2]
+			caxis = (minimum(data), maximum(data))
+		end
 
 		if length(data)==md.mesh.numberofelements
 			# vector of polygons
@@ -16,12 +20,12 @@ function plotmodel( md::model, data::Vector, showvertices::Bool=false, showfacet
 			ps = [Makie.GeometryBasics.Polygon([Point2(x[index[i,1]], y[index[i,1]]), Point2(x[index[i,2]], y[index[i,2]]), Point2(x[index[i,3]], y[index[i,3]])])
 					for i in 1:md.mesh.numberofelements]
 
-			fig, ax, h = Makie.poly(ps, color = data, colormap = jet)
+			fig, ax, h = Makie.poly(ps, color = data, colormap = jet, colorrange = caxis)
 
 			#Add colorbar
-			Colorbar(fig[1, 2], limits = (minimum(data), maximum(data)), colormap = jet)
+			Colorbar(fig[1, 2], limits = caxis, colormap = jet)
 		elseif length(data)==md.mesh.numberofvertices
-			fig, ax, h = Makie.mesh( [md.mesh.x md.mesh.y], md.mesh.elements, shading = false, color = data, colormap = jet)
+			fig, ax, h = Makie.mesh( [md.mesh.x md.mesh.y], md.mesh.elements, shading = false, color = data, colormap = jet, colorrange = caxis)
 
 			#Add colorbar
 			Colorbar(fig[1, 2], h, width=25)
