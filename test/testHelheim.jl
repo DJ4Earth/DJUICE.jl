@@ -14,7 +14,7 @@ md.friction.q=zeros(md.mesh.numberofvertices)
 md=solve(md, :Stressbalance)
 
 mdnn = model(mat)
-@load "../data/Helheim_friction_NN_bedonly.bson" nn dtx dty
+@load "../data/Helheim_friction_NN_Schoof.bson" nn dtx dty
 mdnn = model(mdnn;friction=DNNFriction())
 
 mdnn.friction.dnnChain = nn;
