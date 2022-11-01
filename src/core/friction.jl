@@ -128,7 +128,8 @@ function Alpha2(friction::CoreDNNFriction, gauss::GaussTria, i::Int64)#{{{
 	vmag = VelMag(friction, gauss, i)
 
 	# need to change according to the construction of DNN
-	xin = StatsBase.transform(friction.dtx, (reshape(vcat(vx, vy, b, H, ssx, ssy, bsx, bsy), 8, :)))
+	#xin = StatsBase.transform(friction.dtx, (reshape(vcat(vx, vy, b, H, ssx, ssy, bsx, bsy), 8, :)))
+	xin = StatsBase.transform(friction.dtx, (reshape(vcat(vmag, b, H, ssx, ssy, bsx, bsy), 7, :)))
 	#xin = StatsBase.transform(friction.dtx, (reshape(vcat(vx, vy, b, bsx, bsy), 5, :)))
 	pred = StatsBase.reconstruct(friction.dty, friction.dnnChain(xin))
 	alpha2 = first(pred)
