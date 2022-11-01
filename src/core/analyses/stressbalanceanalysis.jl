@@ -85,6 +85,8 @@ function UpdateParameters(analysis::StressbalanceAnalysis,parameters::Parameters
 		AddParam(parameters, md.friction.dnnChain, FrictionDNNChainEnum)
 		AddParam(parameters, md.friction.dtx, FrictionDNNdtxEnum)
 		AddParam(parameters, md.friction.dty, FrictionDNNdtyEnum)
+		AddParam(parameters, md.friction.velThreshold, VelThresholdEnum)
+		AddParam(parameters, md.friction.Cmax, FrictionCmaxEnum)
 	else
 		error("Friction ", typeof(md.friction), " not supported yet")
 	end

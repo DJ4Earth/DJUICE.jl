@@ -21,11 +21,14 @@ mdnn.friction.dnnChain = nn;
 mdnn.friction.coefficient =  mat["friction"]["C"][:];
 mdnn.friction.dtx = dtx;
 mdnn.friction.dty = dty;
+mdnn.friction.Cmax = 0.8
+mdnn.friction.velThreshold = 10e6./mdnn.constants.yts
 mdnn.geometry.ssx = mat["results"]["ssx"][:]
 mdnn.geometry.ssy = mat["results"]["ssy"][:]
 mdnn.geometry.bsx = mat["results"]["bsx"][:]
 mdnn.geometry.bsy = mat["results"]["bsy"][:]
-mdnn.stressbalance.restol = 0.015;
+mdnn.stressbalance.restol = 0.01;
+mdnn.stressbalance.reltol = NaN;
 
 mdnn=solve(mdnn, :Stressbalance)
 

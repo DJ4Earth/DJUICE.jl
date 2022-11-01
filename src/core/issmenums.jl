@@ -1044,6 +1044,7 @@
 	ThicknessResidualEnum
 	TransientAccumulatedDeltaIceThicknessEnum
 	VelEnum
+	VelThresholdEnum
 	VxAverageEnum
 	VxBaseEnum
 	VxEnum
@@ -2603,6 +2604,7 @@ function EnumToString(enum::IssmEnum)
 	if(enum==ThicknessResidualEnum) return "ThicknessResidual" end
 	if(enum==TransientAccumulatedDeltaIceThicknessEnum) return "TransientAccumulatedDeltaIceThickness" end
 	if(enum==VelEnum) return "Vel" end
+	if(enum==VelThresholdEnum) return "VelThreshold" end
 	if(enum==VxAverageEnum) return "VxAverage" end
 	if(enum==VxBaseEnum) return "VxBase" end
 	if(enum==VxEnum) return "Vx" end
