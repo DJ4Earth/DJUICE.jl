@@ -57,6 +57,10 @@ function UpdateElements(analysis::StressbalanceAnalysis,elements::Vector{Tria}, 
 	elseif typeof(md.friction) == WeertmanFriction
 		FetchDataToInput(md,inputs,elements,md.friction.C,FrictionCEnum)
 		FetchDataToInput(md,inputs,elements,md.friction.m,FrictionMEnum)
+	elseif typeof(md.friction) == SchoofFriction
+		FetchDataToInput(md,inputs,elements,md.friction.C,FrictionCEnum)
+		FetchDataToInput(md,inputs,elements,md.friction.m,FrictionMEnum)
+		FetchDataToInput(md,inputs,elements,md.friction.Cmax,FrictionCmaxEnum)
 	elseif typeof(md.friction) == DNNFriction
 		FetchDataToInput(md,inputs,elements,md.friction.coefficient,FrictionCoefficientEnum)
 		FetchDataToInput(md,inputs,elements,md.geometry.ssx,SurfaceSlopeXEnum)
@@ -80,8 +84,10 @@ function UpdateParameters(analysis::StressbalanceAnalysis,parameters::Parameters
 		AddParam(parameters, 1, FrictionLawEnum)
 	elseif typeof(md.friction)==WeertmanFriction
 		AddParam(parameters, 2, FrictionLawEnum)
+	elseif typeof(md.friction)==SchoofFriction
+		AddParam(parameters, 11, FrictionLawEnum)
 	elseif typeof(md.friction)==DNNFriction
-		AddParam(parameters, 10, FrictionLawEnum)
+		AddParam(parameters, 20, FrictionLawEnum)
 		AddParam(parameters, md.friction.dnnChain, FrictionDNNChainEnum)
 		AddParam(parameters, md.friction.dtx, FrictionDNNdtxEnum)
 		AddParam(parameters, md.friction.dty, FrictionDNNdtyEnum)

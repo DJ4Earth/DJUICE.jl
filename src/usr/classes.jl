@@ -156,6 +156,17 @@ end# }}}
 function Base.show(io::IO, this::WeertmanFriction)# {{{
    IssmStructDisp(io, this)
 end# }}}
+mutable struct SchoofFriction <: AbstractFriction
+	C::Vector{Float64}
+	m::Vector{Float64}
+	Cmax::Vector{Float64}
+end
+function SchoofFriction() #{{{
+	return SchoofFriction(Vector{Float64}(undef,0),Vector{Float64}(undef,0),Vector{Float64}(undef,0))
+end# }}}
+function Base.show(io::IO, this::SchoofFriction)# {{{
+   IssmStructDisp(io, this)
+end# }}}
 mutable struct DNNFriction <: AbstractFriction
 	coefficient::Vector{Float64}
 	dnnChain::Flux.Chain{}

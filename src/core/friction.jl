@@ -19,6 +19,18 @@ struct CoreWeertmanFriction <: CoreFriction#{{{
 	vy_input::Input
 	m_input::Input
 end# }}}
+struct CoreSchoofFriction <: CoreFriction #{{{
+	c_input::Input
+	vx_input::Input
+	vy_input::Input
+	m_input::Input
+	Cmax_input::Input
+	H_input::Input
+	b_input::Input
+	rho_ice::Float64
+	rho_water::Float64
+	g::Float64
+end# }}}
 struct CoreDNNFriction <: CoreFriction#{{{
 	dnnChain::Flux.Chain
 	dtx::StatsBase.ZScoreTransform
@@ -61,7 +73,19 @@ function CoreFriction(element::Tria) #{{{
 		c_input   = GetInput(element, FrictionCEnum)
 		m_input   = GetInput(element, FrictionMEnum)
 		return CoreWeertmanFriction(c_input,vx_input,vy_input,m_input)
-	elseif frictionlaw==10
+	elseif frictionlaw==11
+		H_input  = GetInput(element, ThicknessEnum)
+		b_input  = GetInput(element, BaseEnum)
+		c_input   = GetInput(element, FrictionCEnum)
+		m_input   = GetInput(element, FrictionMEnum)
+		Cmax_input   = GetInput(element, FrictionCmaxEnum)
+
+		rho_ice   = FindParam(Float64, element, MaterialsRhoIceEnum)
+		rho_water = FindParam(Float64, element, MaterialsRhoSeawaterEnum)
+		g         = FindParam(Float64, element, ConstantsGEnum)
+
+		return CoreSchoofFriction(c_input, vx_input, vy_input, m_input, Cmax_input, H_input, b_input, rho_ice, rho_water, g)
+	elseif frictionlaw==20
 		dnnChain  = FindParam(Flux.Chain, element, FrictionDNNChainEnum)
 		dtx  = FindParam(StatsBase.ZScoreTransform, element, FrictionDNNdtxEnum)
 		dty  = FindParam(StatsBase.ZScoreTransform, element, FrictionDNNdtyEnum)
@@ -127,6 +151,25 @@ function Alpha2(friction::CoreWeertmanFriction, gauss::GaussTria, i::Int64)#{{{
 		return c^2*vmag^(m-1)
 	end
 end#}}}
+function Alpha2(friction::CoreSchoofFriction, gauss::GaussTria, i::Int64) #{{{
+
+	# Recover parameters
+	m = GetInputValue(friction.m_input, gauss, i)
+	c = GetInputValue(friction.c_input, gauss, i)
+	Cmax = GetInputValue(friction.Cmax_input, gauss, i)
+
+	# Get effective pressure
+	N = EffectivePressure(friction, gauss, i)
+	# Get the velocity
+	vmag = VelMag(friction, gauss, i)
+
+	if ((vmag<1.0e-20) || (N == 0.0))
+		alpha2 = 0.0
+	else
+		alpha2 = (c^2 * vmag^(m-1)) / ((1.0 + (c^2/(Cmax*N))^(1.0/m)*vmag)^m)
+	end
+	return alpha2
+end #}}}
 function Alpha2(friction::CoreDNNFriction, gauss::GaussTria, i::Int64)#{{{
 	b = GetInputValue(friction.b_input, gauss, i)
 	H = GetInputValue(friction.H_input, gauss, i)

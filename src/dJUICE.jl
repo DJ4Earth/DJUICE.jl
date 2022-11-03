@@ -8,7 +8,7 @@ const userdir = "./usr"
 const coredir = "./core"
 
 include("$userdir/classes.jl")
-export model, WeertmanFriction, DNNFriction
+export model, WeertmanFriction, SchoofFriction, DNNFriction
 include("$userdir/exp.jl")
 export expread, ContourToNodes
 include("$userdir/utils.jl")

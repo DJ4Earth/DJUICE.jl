@@ -22,4 +22,7 @@ end
 
 	md = model(md; friction=DNNFriction())
 	@test (typeof(md.friction)) == dJUICE.DNNFriction
+
+	md = model(md; friction=SchoofFriction())
+	@test (typeof(md.friction)) == dJUICE.SchoofFriction
 end
