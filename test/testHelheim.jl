@@ -3,14 +3,16 @@ using Flux
 using MAT
 using BSON: @load
 using StatsBase
+using Random
 
 file = matopen("/Users/gongcheng/Dartmouth/myJulia/DATA/Helheim_model.mat")
 mat  = read(file, "md")
 close(file)
 md = model(mat)
-md.friction.coefficient =  mat["friction"]["C"][:];
-md.friction.p=3.0 .* ones(md.mesh.numberofvertices)
-md.friction.q=zeros(md.mesh.numberofvertices)
+md = model(md;friction=dJUICE.SchoofFriction())
+md.friction.C =  mat["friction"]["C"][:];
+md.friction.m =  mat["friction"]["m"][:];
+md.friction.Cmax =  mat["friction"]["Cmax"][:];
 md=solve(md, :Stressbalance)
 
 mdnn = model(mat)
