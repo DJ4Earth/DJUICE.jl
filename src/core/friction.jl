@@ -182,6 +182,9 @@ function Alpha2(friction::CoreDNNFriction, gauss::GaussTria, i::Int64)#{{{
 
 	# Get the velocity
 	vmag = VelMag(friction, gauss, i)
+	if vmag > friction.velThreshold
+		vmag = friction.velThreshold
+	end
 	# Get effective pressure
 	Neff = EffectivePressure(friction, gauss, i)
 
@@ -191,8 +194,8 @@ function Alpha2(friction::CoreDNNFriction, gauss::GaussTria, i::Int64)#{{{
 	alpha2 = first(pred)
 	if ( (vmag == 0.0) | (alpha2 < 0.0) )
 		alpha2 = 0.0
-	elseif vmag > friction.velThreshold
-		alpha2 = friction.Cmax .* Neff ./ vmag
+#	elseif vmag > friction.velThreshold
+#		alpha2 = friction.Cmax .* Neff ./ vmag
 	else
 		alpha2 = alpha2 ./ vmag
 	end
