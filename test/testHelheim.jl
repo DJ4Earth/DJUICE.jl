@@ -29,8 +29,8 @@ mdnn.geometry.ssx = mat["results"]["ssx"][:]
 mdnn.geometry.ssy = mat["results"]["ssy"][:]
 mdnn.geometry.bsx = mat["results"]["bsx"][:]
 mdnn.geometry.bsy = mat["results"]["bsy"][:]
-mdnn.stressbalance.restol = 0.01;
-mdnn.stressbalance.reltol = NaN;
+mdnn.stressbalance.restol = 0.02;
+mdnn.stressbalance.reltol = 0.2;
 
 mdnn=solve(mdnn, :Stressbalance)
 
