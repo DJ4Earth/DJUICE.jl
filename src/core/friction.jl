@@ -197,7 +197,7 @@ function Alpha2(friction::CoreDNNFriction, gauss::GaussTria, i::Int64)#{{{
 #	elseif vmag > friction.velThreshold
 #		alpha2 = friction.Cmax .* Neff ./ vmag
 	else
-		alpha2 = alpha2 ./ vmag
+		alpha2 = alpha2 .* Neff ./ vmag
 	end
 	return alpha2
 end#}}}

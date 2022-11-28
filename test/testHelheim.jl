@@ -5,7 +5,7 @@ using BSON: @load
 using StatsBase
 using Random
 
-file = matopen("/Users/gongcheng/Dartmouth/myJulia/DATA/Helheim_model.mat")
+file = matopen(pwd()*"/../DATA/Helheim_model.mat")
 mat  = read(file, "md")
 close(file)
 md = model(mat)
@@ -16,15 +16,15 @@ md.friction.Cmax =  mat["friction"]["Cmax"][:];
 md=solve(md, :Stressbalance)
 
 mdnn = model(mat)
-@load "../data/Helheim_friction_NN_Schoof.bson" nn dtx dty
+@load pwd()*"/../DATA/Helheim_friction_NN_Schoof.bson" nn dtx dty
 mdnn = model(mdnn;friction=DNNFriction())
 
 mdnn.friction.dnnChain = nn;
 mdnn.friction.coefficient =  mat["friction"]["C"][:];
 mdnn.friction.dtx = dtx;
 mdnn.friction.dty = dty;
-mdnn.friction.Cmax = 0.8
-mdnn.friction.velThreshold = 30e5./mdnn.constants.yts
+mdnn.friction.Cmax = 0.5
+mdnn.friction.velThreshold = 100e6./mdnn.constants.yts
 mdnn.geometry.ssx = mat["results"]["ssx"][:]
 mdnn.geometry.ssy = mat["results"]["ssy"][:]
 mdnn.geometry.bsx = mat["results"]["bsx"][:]
