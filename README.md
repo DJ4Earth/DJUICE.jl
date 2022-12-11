@@ -1,10 +1,10 @@
-# dJUICE
+# dJUICE.jl
 [![][build-stable-img]][build-url]
 
-Differentiable Julia ICE model
+differentiable JUlia ICE model
 
 Authors:
- - Mathieu Morlighem, Dartmouth College
+ - Mathieu Morlighem, Dartmouth
 
 License: MIT
 
