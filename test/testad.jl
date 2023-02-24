@@ -30,10 +30,10 @@ md = model(mat)
 md.stressbalance.maxiter = 1
 
 #Call cost once to compile it
-@time println("\n\nInitial cost function is J = ", cost(md, md.friction.coefficient), " m/yr (1st call)")
+#@time println("\n\nInitial cost function is J = ", cost(md, md.friction.coefficient), " m/yr (1st call)")
 
 #Call cost again to test how long it takes to run
-@time println("\n\nInitial cost function is J = ", cost(md, md.friction.coefficient), " m/yr (2d call)")
+#@time println("\n\nInitial cost function is J = ", cost(md, md.friction.coefficient), " m/yr (2d call)")
 
 #Now call AD!
 md.inversion.iscontrol = 1

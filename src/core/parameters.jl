@@ -14,11 +14,11 @@ struct BoolParam <: Parameter #{{{
 end# }}}
 struct FluxChainParam <: Parameter #{{{
 	enum::IssmEnum
-	value::Flux.Chain
+	value::Vector{Flux.Chain{}}
 end# }}}
 struct StatsBaseTransformParam <: Parameter #{{{
 	enum::IssmEnum
-	value::StatsBase.ZScoreTransform
+	value::Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64}} } 
 end# }}}
 
 #Parameters dataset class definition
@@ -66,13 +66,13 @@ function AddParam(parameters::Parameters,value::Bool, enum::IssmEnum) #{{{
 
 	return nothing
 end#}}}
-function AddParam(parameters::Parameters,value::Flux.Chain, enum::IssmEnum) #{{{
+function AddParam(parameters::Parameters,value::Vector{Flux.Chain{}}, enum::IssmEnum) #{{{
 
 	parameters.lookup[enum] = FluxChainParam(enum,value)
 
 	return nothing
 end#}}}
-function AddParam(parameters::Parameters,value::StatsBase.ZScoreTransform, enum::IssmEnum) #{{{
+function AddParam(parameters::Parameters,value::Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64}} }, enum::IssmEnum) #{{{
 
 	parameters.lookup[enum] = StatsBaseTransformParam(enum,value)
 

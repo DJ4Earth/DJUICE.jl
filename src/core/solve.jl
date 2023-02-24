@@ -84,11 +84,12 @@ function solve2(md::model,isAD::Bool) #{{{
 		∂J_∂α = zero(α)
 
 		#Misc Enzyme options
-		Enzyme.API.looseTypeAnalysis!(true)
+		Enzyme.API.looseTypeAnalysis!(false)
 		Enzyme.API.strictAliasing!(false)
 
 		println("CALLING AUTODIFF, prepare to die...")
-		@time autodiff(costfunction, Active,  femmodel, Duplicated(α, ∂J_∂α))
+		dfemmodel = deepcopy(femmodel)
+		@time autodiff(Enzyme.Reverse, costfunction, Duplicated(femmodel, dfemmodel), Duplicated(α, ∂J_∂α))
 
 		#Put gradient in results
 		InputUpdateFromVectorx(femmodel, ∂J_∂α, GradientEnum, VertexSIdEnum)

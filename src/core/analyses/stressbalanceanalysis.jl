@@ -62,7 +62,6 @@ function UpdateElements(analysis::StressbalanceAnalysis,elements::Vector{Tria}, 
 		FetchDataToInput(md,inputs,elements,md.friction.m,FrictionMEnum)
 		FetchDataToInput(md,inputs,elements,md.friction.Cmax,FrictionCmaxEnum)
 	elseif typeof(md.friction) == DNNFriction
-		FetchDataToInput(md,inputs,elements,md.friction.coefficient,FrictionCoefficientEnum)
 		FetchDataToInput(md,inputs,elements,md.geometry.ssx,SurfaceSlopeXEnum)
 		FetchDataToInput(md,inputs,elements,md.geometry.ssy,SurfaceSlopeYEnum)
 		FetchDataToInput(md,inputs,elements,md.geometry.bsx,BedSlopeXEnum)
@@ -91,8 +90,6 @@ function UpdateParameters(analysis::StressbalanceAnalysis,parameters::Parameters
 		AddParam(parameters, md.friction.dnnChain, FrictionDNNChainEnum)
 		AddParam(parameters, md.friction.dtx, FrictionDNNdtxEnum)
 		AddParam(parameters, md.friction.dty, FrictionDNNdtyEnum)
-		AddParam(parameters, md.friction.velThreshold, VelThresholdEnum)
-		AddParam(parameters, md.friction.Cmax, FrictionCmaxEnum)
 	else
 		error("Friction ", typeof(md.friction), " not supported yet")
 	end
