@@ -15,7 +15,7 @@ md = model(md;friction=dJUICE.SchoofFriction())
 md.friction.C =  mat["friction"]["C"][:];
 md.friction.m =  mat["friction"]["m"][:];
 md.friction.Cmax =  mat["friction"]["Cmax"][:];
-md=solve(md, :Stressbalance)
+#md=solve(md, :Stressbalance)
 
 mdnn = model(mat)
 mdnn.geometry.ssx = mat["results"]["ssx"][:]
@@ -30,7 +30,7 @@ mdnn = model(mdnn;friction=DNNFriction())
 fileList =  readdir(pwd()*"/../DATA/meanDNNs/")
 
 for i in 1:length(fileList)
-	@load pwd()*"/../DATA/Helheim_friction_NN_Schoof.bson" nn dtx dty
+	@load pwd()*"/../DATA/meanDNNs/"*fileList[i] nn dtx dty
 	push!(mdnn.friction.dnnChain, nn)
 	push!(mdnn.friction.dtx, dtx)
 	push!(mdnn.friction.dty, dty)
