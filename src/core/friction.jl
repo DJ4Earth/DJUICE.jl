@@ -35,14 +35,11 @@ struct CoreDNNFriction <: CoreFriction#{{{
 	dnnChain::Vector{Flux.Chain}
 	dtx::Vector{StatsBase.ZScoreTransform}
 	dty::Vector{StatsBase.ZScoreTransform}
+	xyz_list::Matrix{Float64}
 	vx_input::Input
 	vy_input::Input
    b_input::Input
    H_input::Input
-   ssx_input::Input
-   ssy_input::Input
-   bsx_input::Input
-   bsy_input::Input
 	rho_ice::Float64
 	rho_water::Float64
 	g::Float64
@@ -93,11 +90,13 @@ function CoreFriction(element::Tria) #{{{
 		bsx_input   = GetInput(element, BedSlopeXEnum)
 		bsy_input   = GetInput(element, BedSlopeYEnum)
 
+      xyz_list = GetVerticesCoordinates(element.vertices)
+		
 		rho_ice   = FindParam(Float64, element, MaterialsRhoIceEnum)
 		rho_water = FindParam(Float64, element, MaterialsRhoSeawaterEnum)
 		g         = FindParam(Float64, element, ConstantsGEnum)
 
-		return CoreDNNFriction(dnnChain,dtx,dty,vx_input,vy_input,b_input,H_input,ssx_input,ssy_input,bsx_input,bsy_input, rho_ice, rho_water, g)
+		return CoreDNNFriction(dnnChain,dtx,dty,xyz_list,vx_input,vy_input,b_input,H_input,rho_ice,rho_water,g)
 	else
 		error("Friction ",typeof(md.friction)," not supported yet")
 	end
@@ -164,17 +163,22 @@ function Alpha2(friction::CoreSchoofFriction, gauss::GaussTria, i::Int64) #{{{
 	return alpha2
 end #}}}
 function Alpha2(friction::CoreDNNFriction, gauss::GaussTria, i::Int64)#{{{
-	b = GetInputValue(friction.b_input, gauss, i)
+	bed = GetInputValue(friction.b_input, gauss, i)
 	H = GetInputValue(friction.H_input, gauss, i)
 	vx = GetInputValue(friction.vx_input, gauss, i)
 	vy = GetInputValue(friction.vy_input, gauss, i)
-	ssx = GetInputValue(friction.ssx_input, gauss, i)
-	ssy = GetInputValue(friction.ssy_input, gauss, i)
-	bsx = GetInputValue(friction.bsx_input, gauss, i)
-	bsy = GetInputValue(friction.bsy_input, gauss, i)
+	h = bed + H
 
 	# Get the velocity
 	vmag = VelMag(friction, gauss, i)
+
+	# velocity gradients
+	dvx = GetInputDerivativeValue(friction.vx_input,friction.xyz_list,gauss,i)
+	dvy = GetInputDerivativeValue(friction.vy_input,friction.xyz_list,gauss,i)
+	vxdx = dvx[1]
+	vxdy = dvx[2]
+	vydx = dvy[1]
+	vydy = dvy[2]
 
 	# Get effective pressure
 	Neff = EffectivePressure(friction, gauss, i)
@@ -182,7 +186,7 @@ function Alpha2(friction::CoreDNNFriction, gauss::GaussTria, i::Int64)#{{{
 	# need to change according to the construction of DNN
 	alpha2 = 0.0
 	for i in 1:length(friction.dnnChain)
-		xin = StatsBase.transform(friction.dtx[i], (reshape(vcat(vmag, b, H, ssx, ssy, bsx, bsy), 7, :)))
+		xin = StatsBase.transform(friction.dtx[i], (reshape(vcat(vx, vy, vxdx, vxdy, vydx, vydy, bed, h), 8, :)))
 		pred = StatsBase.reconstruct(friction.dty[i], friction.dnnChain[i](xin))
 		alpha2 += first(pred)
 	end
