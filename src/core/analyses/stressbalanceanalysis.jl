@@ -118,15 +118,18 @@ function Core(analysis::StressbalanceAnalysis,femmodel::FemModel)# {{{
 
 	return nothing
 end #}}}
-function CreateKMatrix(analysis::StressbalanceAnalysis,element::Tria)# {{{
 
-	if(!IsIceInElement(element)) return end
+function CreateKMatrix(analysis::StressbalanceAnalysis, element::Tria)
+	frictionlaw = FindParam(Int64, element, FrictionLawEnum)
+	CreateKMatrix(analysis, element, Val(frictionlaw))::dJUICE.ElementMatrix
+end
 
+function CreateKMatrix(analysis::StressbalanceAnalysis,element::Tria, ::Val{frictionlaw}) where frictionlaw# {{{
 	#Internmediaries
 	numnodes = 3
 	
 	#Initialize Element matrix and basis function derivatives
-	Ke = ElementMatrix(element.nodes)
+	Ke = ElementMatrix(element.nodes)::dJUICE.ElementMatrix
 	dbasis = Matrix{Float64}(undef,numnodes,2)
 
 	#Retrieve all inputs and parameters
@@ -161,7 +164,7 @@ function CreateKMatrix(analysis::StressbalanceAnalysis,element::Tria)# {{{
 
 	if(phi>0)
 		basis = Vector{Float64}(undef,numnodes)
-		friction = CoreFriction(element)
+		friction = CoreFriction(element, Val(frictionlaw))
 
 		#Start integrating
 		gauss = GaussTria(2)
@@ -184,9 +187,6 @@ function CreateKMatrix(analysis::StressbalanceAnalysis,element::Tria)# {{{
 	return Ke
 end #}}}
 function CreatePVector(analysis::StressbalanceAnalysis,element::Tria)# {{{
-
-	if(!IsIceInElement(element)) return end
-
 	#Internmediaries
 	numnodes = 3
 

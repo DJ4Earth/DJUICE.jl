@@ -45,9 +45,8 @@ mutable struct CoreDNNFriction <: CoreFriction#{{{
 	g::Float64
 end# }}}
 
-function CoreFriction(element::Tria) #{{{
+function CoreFriction(element::Tria, ::Val{frictionlaw}) where frictionlaw #{{{
 
-	frictionlaw = FindParam(Int64, element, FrictionLawEnum)
 	vx_input  = GetInput(element, VxEnum)
 	vy_input  = GetInput(element, VyEnum)
 
@@ -103,7 +102,7 @@ function CoreFriction(element::Tria) #{{{
 end#}}}
 
 #vertices functions
-function Alpha2(friction::CoreBuddFriction, gauss::GaussTria, i::Int64) #{{{
+@inline function Alpha2(friction::CoreBuddFriction, gauss::GaussTria, i::Int64) #{{{
 
 	# Recover parameters
 	p = GetInputValue(friction.p_input, gauss, i)
@@ -132,7 +131,7 @@ function Alpha2(friction::CoreBuddFriction, gauss::GaussTria, i::Int64) #{{{
 	end
 	return alpha2
 end #}}}
-function Alpha2(friction::CoreWeertmanFriction, gauss::GaussTria, i::Int64)#{{{
+@inline function Alpha2(friction::CoreWeertmanFriction, gauss::GaussTria, i::Int64)#{{{
 	c = GetInputValue(friction.c_input, gauss, i)
 	m = GetInputValue(friction.m_input, gauss, i)
 	vmag = VelMag(friction, gauss, i)
@@ -143,7 +142,7 @@ function Alpha2(friction::CoreWeertmanFriction, gauss::GaussTria, i::Int64)#{{{
 		return c^2*vmag^(m-1)
 	end
 end#}}}
-function Alpha2(friction::CoreSchoofFriction, gauss::GaussTria, i::Int64) #{{{
+@inline function Alpha2(friction::CoreSchoofFriction, gauss::GaussTria, i::Int64) #{{{
 
 	# Recover parameters
 	m = GetInputValue(friction.m_input, gauss, i)
@@ -162,7 +161,7 @@ function Alpha2(friction::CoreSchoofFriction, gauss::GaussTria, i::Int64) #{{{
 	end
 	return alpha2
 end #}}}
-function Alpha2(friction::CoreDNNFriction, gauss::GaussTria, i::Int64)#{{{
+@inline function Alpha2(friction::CoreDNNFriction, gauss::GaussTria, i::Int64)#{{{
 	bed = GetInputValue(friction.b_input, gauss, i)
 	H = GetInputValue(friction.H_input, gauss, i)
 	vx = GetInputValue(friction.vx_input, gauss, i)
@@ -199,12 +198,12 @@ function Alpha2(friction::CoreDNNFriction, gauss::GaussTria, i::Int64)#{{{
 	end
 	return alpha2
 end#}}}
-function VelMag(friction::CoreFriction, gauss::GaussTria, i::Int64) #{{{
+@inline function VelMag(friction::CoreFriction, gauss::GaussTria, i::Int64) #{{{
 	vx = GetInputValue(friction.vx_input, gauss, i)
 	vy = GetInputValue(friction.vy_input, gauss, i)
 	vmag = sqrt(vx^2+vy^2)
 end #}}}
-function EffectivePressure(friction::CoreFriction, gauss::GaussTria, i::Int64) #{{{
+@inline function EffectivePressure(friction::CoreFriction, gauss::GaussTria, i::Int64) #{{{
 	# Get effective pressure
 	H = GetInputValue(friction.H_input, gauss, i)
 	b = GetInputValue(friction.b_input, gauss, i)

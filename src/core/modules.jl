@@ -290,11 +290,14 @@ function SystemMatricesx(femmodel::FemModel,analysis::Analysis)# {{{
 	#Construct Stiffness matrix and load vector from elements
 	println("   Assembling matrices")
 	for i in 1:length(femmodel.elements)
-		Ke = CreateKMatrix(analysis,femmodel.elements[i])
-		pe = CreatePVector(analysis,femmodel.elements[i])
-
-		if(!isnothing(Ke)) AddToGlobal!(Ke,Kff,Kfs) end
-		if(!isnothing(pe)) AddToGlobal!(pe,pf) end
+		
+		if IsIceInElement(femmodel.elements[i])
+			Ke = CreateKMatrix(analysis,femmodel.elements[i])
+			AddToGlobal!(Ke,Kff,Kfs)
+		
+			pe = CreatePVector(analysis,femmodel.elements[i])
+		   AddToGlobal!(pe,pf)
+		end
 	end
 
 	Assemble!(Kff)
