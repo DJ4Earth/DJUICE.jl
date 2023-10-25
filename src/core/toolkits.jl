@@ -1,4 +1,3 @@
-using LinearSolve
 
 #Matrix
 
@@ -44,7 +43,7 @@ function Assemble!(matrix::IssmMatrix)#{{{
 end#}}}
 =#
 
-#Toolkit #2: dense matrix (for ensyme)
+#Toolkit #2: dense matrix (for enzyme)
 mutable struct IssmMatrix #{{{
 	M::Int64
 	N::Int64
@@ -207,10 +206,7 @@ function Solverx(A::IssmMatrix, b::IssmVector) #{{{
 	x = IssmVector(0)
 
 	#Solve linear system
-	prob = LinearProblem(A.matrix, b.vector)
-	linsolve = init(prob)
-	sol = LinearSolve.solve(linsolve)
-	x.vector = sol.u
+	x.vector = A.matrix \ b.vector
 
 	return x
 

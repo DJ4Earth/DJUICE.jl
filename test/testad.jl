@@ -1,8 +1,6 @@
 #!/Applications/Julia-1.8.app/Contents/Resources/julia/bin/julia --project
 using dJUICE
 using MAT
-using Enzyme
-using Enzyme_jll
 
 #define cost function
 function cost(md::model, frictioncoeff::Vector{Float64})

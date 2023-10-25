@@ -1,7 +1,7 @@
 #Friction class definition
 
 abstract type CoreFriction end
-struct CoreBuddFriction <: CoreFriction #{{{
+mutable struct CoreBuddFriction <: CoreFriction #{{{
 	c_input::Input
 	vx_input::Input
 	vy_input::Input
@@ -19,7 +19,7 @@ struct CoreWeertmanFriction <: CoreFriction#{{{
 	vy_input::Input
 	m_input::Input
 end# }}}
-struct CoreSchoofFriction <: CoreFriction #{{{
+mutable struct CoreSchoofFriction <: CoreFriction #{{{
 	c_input::Input
 	vx_input::Input
 	vy_input::Input
@@ -31,7 +31,7 @@ struct CoreSchoofFriction <: CoreFriction #{{{
 	rho_water::Float64
 	g::Float64
 end# }}}
-struct CoreDNNFriction <: CoreFriction#{{{
+mutable struct CoreDNNFriction <: CoreFriction#{{{
 	dnnChain::Vector{Flux.Chain}
 	dtx::Vector{StatsBase.ZScoreTransform}
 	dty::Vector{StatsBase.ZScoreTransform}

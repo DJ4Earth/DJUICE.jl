@@ -7,11 +7,9 @@ version = "0.1.0"
 ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
 Cthulhu = "f68482b8-f384-11e8-15f7-abe071a5a75f"
 Enzyme = "7da242da-08ed-463a-9acd-ee780be4f1d9"
-EnzymeCore = "f151be2c-9106-41f4-ab19-57ee4f262869"
-Enzyme_jll = "7cc45869-7501-5eee-bdea-0790c847d4ef"
 Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
 GLMakie = "e9467ef8-e4e7-5192-8a1a-b1aee30e663a"
-LinearSolve = "7ed4a6bd-45f5-4d41-b270-4a48e9bafcae"
+Interpolations = "a98d9a8b-a2ab-59e6-89dd-64a1c18fca59"
 MAT = "23992714-dd62-5051-b70f-ba57cb901cac"
 Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
@@ -23,7 +21,6 @@ UnPack = "3a884ed6-31ef-47d7-9d2a-63182c4928ed"
 
 [extras]
 Enzyme = "7da242da-08ed-463a-9acd-ee780be4f1d9"
-Enzyme_jll = "7cc45869-7501-5eee-bdea-0790c847d4ef"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]

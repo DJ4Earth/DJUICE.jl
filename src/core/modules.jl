@@ -330,7 +330,9 @@ function RequestedOutputsx(femmodel::FemModel,outputlist::Vector{IssmEnum})# {{{
 
 			#Create Result
 			input  = GetInput(femmodel.inputs, outputlist[i])
-			result = Result(outputlist[i], step, time, copy(input.values))
+			input_copy = Vector{Float64}(undef, length(input.values))
+			copyto!(input_copy, input.values)
+			result = Result(outputlist[i], step, time, input_copy)
 
 			#Add to femmodel.results dataset
 			push!(femmodel.results, result)

@@ -1,5 +1,7 @@
 using Enzyme
-using Enzyme_jll
+Enzyme.API.looseTypeAnalysis!(false)
+Enzyme.API.strictAliasing!(false)
+Enzyme.API.typeWarning!(false)
 
 include("./issmenums.jl")
 include("./toolkits.jl")
@@ -84,9 +86,6 @@ function solve2(md::model,isAD::Bool) #{{{
 		∂J_∂α = zero(α)
 
 		#Misc Enzyme options
-		Enzyme.API.looseTypeAnalysis!(false)
-		Enzyme.API.strictAliasing!(false)
-
 		println("CALLING AUTODIFF, prepare to die...")
 		dfemmodel = deepcopy(femmodel)
 		@time autodiff(Enzyme.Reverse, costfunction, Duplicated(femmodel, dfemmodel), Duplicated(α, ∂J_∂α))
