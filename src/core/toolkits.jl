@@ -172,30 +172,9 @@ function AXPY!(y::IssmVector,alpha::Float64,x::IssmVector) #{{{
 
 	return nothing
 end#}}}
-#= DEACTIVATED FOR NOW: backslash operator
 function Solverx(A::IssmMatrix, b::IssmVector, xold::IssmVector) #{{{
 
-	#Initialize output
-	#x = IssmVector(GetSize(xold))
-	
 	return Solverx(A, b)
-
-end#}}}
-function Solverx(A::IssmMatrix, b::IssmVector) #{{{
-
-	#Initialize output
-	x = IssmVector(0)
-
-	#Solve linear system
-	x.vector = A.matrix\b.vector
-
-	return x
-
-end#}}}
-=#
-function Solverx(A::IssmMatrix, b::IssmVector, xold::IssmVector) #{{{
-
-return Solverx(A, b)
 
 end#}}}
 function Solverx(A::IssmMatrix, b::IssmVector) #{{{
