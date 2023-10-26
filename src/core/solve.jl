@@ -17,6 +17,7 @@ include("./matice.jl")
 include("./friction.jl")
 include("./analyses/analysis.jl")
 include("./femmodel.jl")
+include("./costfunctions.jl")
 
 #All analyses
 include("./analyses/stressbalanceanalysis.jl")
@@ -59,36 +60,6 @@ function solve(md::model, solution::Symbol) #{{{
 end# }}}
 
 #Automatic differentiation
-function costfunction(femmodel::FemModel, α::Vector{Float64}) #{{{
-
-	#Update FemModel accordingly
-	InputUpdateFromVectorx(femmodel, α, FrictionCoefficientEnum, VertexSIdEnum)
-
-	#solve PDE
-	analysis = StressbalanceAnalysis()
-	Core(analysis, femmodel)
-
-	#Compute cost function
-	J = SurfaceAbsVelMisfitx(femmodel)
-
-	#return cost function
-	return J
-end#}}}
-function costfunction3(femmodel::FemModel, α::Vector{Float64}) #{{{
-
-	#Update FemModel accordingly
-	InputUpdateFromVectorx(femmodel, α, MaterialsRheologyBEnum, VertexSIdEnum)
-
-	#solve PDE
-	analysis = StressbalanceAnalysis()
-	Core(analysis, femmodel)
-
-	#Compute cost function
-	J = SurfaceAbsVelMisfitx(femmodel)
-
-	#return cost function
-	return J
-end#}}}
 function solve2(md::model,isAD::Bool) #{{{
 
 	#Construct FemModel from md

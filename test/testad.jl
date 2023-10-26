@@ -11,7 +11,7 @@ close(file)
 md = model(mat)
 
 #make model run faster 
-md.stressbalance.maxiter = 1
+md.stressbalance.maxiter = 20
 
 #Now call AD!
 md.inversion.iscontrol = 1
