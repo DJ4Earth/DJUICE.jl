@@ -43,4 +43,4 @@ pos = findall(md.mesh.vertexonboundary)
 md.stressbalance.spcvx[pos] .= 0.0
 md.stressbalance.spcvy[pos] .= 0.0
 
-md=solve(md,"Stressbalance")
+md=solve(md,:Stressbalance)

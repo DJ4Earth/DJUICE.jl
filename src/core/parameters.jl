@@ -12,11 +12,11 @@ struct BoolParam <: Parameter #{{{
 	enum::IssmEnum
 	value::Bool
 end# }}}
-struct FluxChainParam <: Parameter #{{{
+mutable struct FluxChainParam <: Parameter #{{{
 	enum::IssmEnum
 	value::Vector{Flux.Chain{}}
 end# }}}
-struct StatsBaseTransformParam <: Parameter #{{{
+mutable struct StatsBaseTransformParam <: Parameter #{{{
 	enum::IssmEnum
 	value::Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64}} } 
 end# }}}
@@ -32,19 +32,19 @@ end # }}}
 
 #Parameter functions
 function GetParameterValue(param::DoubleParam) #{{{
-	return param.value
+	return param.value::Float64
 end#}}}
 function GetParameterValue(param::IntParam) #{{{
-	return param.value
+	return param.value::Int64
 end#}}}
 function GetParameterValue(param::BoolParam) #{{{
-	return param.value
+	return param.value::Bool
 end#}}}
 function GetParameterValue(param::FluxChainParam) #{{{
-	return param.value
+	return param.value::Vector{Flux.Chain{}}
 end#}}}
 function GetParameterValue(param::StatsBaseTransformParam) #{{{
-	return param.value
+	return param.value::Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64}}}
 end#}}}
 
 #Parameters functions

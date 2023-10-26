@@ -36,4 +36,5 @@ md.stressbalance.maxiter = 1
 #Now call AD!
 md.inversion.iscontrol = 1
 md = solve2(md, true)
+#md = dJUICE.solve3(md, true)
 #print(∂f_∂α[1:10])

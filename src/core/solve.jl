@@ -59,7 +59,7 @@ function solve(md::model, solution::Symbol) #{{{
 end# }}}
 
 #Automatic differentiation
-function costfunction(femmodel::FemModel, α::Vector{Float64})
+function costfunction(femmodel::FemModel, α::Vector{Float64}) #{{{
 
 	#Update FemModel accordingly
 	InputUpdateFromVectorx(femmodel, α, FrictionCoefficientEnum, VertexSIdEnum)
@@ -73,7 +73,22 @@ function costfunction(femmodel::FemModel, α::Vector{Float64})
 
 	#return cost function
 	return J
-end
+end#}}}
+function costfunction3(femmodel::FemModel, α::Vector{Float64}) #{{{
+
+	#Update FemModel accordingly
+	InputUpdateFromVectorx(femmodel, α, MaterialsRheologyBEnum, VertexSIdEnum)
+
+	#solve PDE
+	analysis = StressbalanceAnalysis()
+	Core(analysis, femmodel)
+
+	#Compute cost function
+	J = SurfaceAbsVelMisfitx(femmodel)
+
+	#return cost function
+	return J
+end#}}}
 function solve2(md::model,isAD::Bool) #{{{
 
 	#Construct FemModel from md
@@ -89,6 +104,35 @@ function solve2(md::model,isAD::Bool) #{{{
 		println("CALLING AUTODIFF, prepare to die...")
 		dfemmodel = deepcopy(femmodel)
 		@time autodiff(Enzyme.Reverse, costfunction, Duplicated(femmodel, dfemmodel), Duplicated(α, ∂J_∂α))
+
+		#Put gradient in results
+		InputUpdateFromVectorx(femmodel, ∂J_∂α, GradientEnum, VertexSIdEnum)
+		RequestedOutputsx(femmodel, [GradientEnum])
+
+	else
+		analysis = StressbalanceAnalysis()
+		Core(analysis, femmodel)
+	end
+
+	OutputResultsx(femmodel, md, :StressbalanceSolution)
+
+	return md
+end# }}}
+function solve3(md::model,isAD::Bool) #{{{
+
+	#Construct FemModel from md
+	femmodel=ModelProcessor(md, :StressbalanceSolution)
+
+	if(isAD)
+		#Active variable
+		α = md.materials.rheology_B
+		#initialize derivative as 0
+		∂J_∂α = zero(α)
+
+		#Misc Enzyme options
+		println("CALLING AUTODIFF, prepare to die...")
+		dfemmodel = deepcopy(femmodel)
+		@time autodiff(Enzyme.Reverse, costfunction3, Duplicated(femmodel, dfemmodel), Duplicated(α, ∂J_∂α))
 
 		#Put gradient in results
 		InputUpdateFromVectorx(femmodel, ∂J_∂α, GradientEnum, VertexSIdEnum)

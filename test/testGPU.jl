@@ -72,7 +72,7 @@ function testGPU()
 	damp       = 0.2;
 
 	md = model()
-	md = triangle2(md,issmdir()*"/test/Exp/Square.exp",50000.)
+	md = triangle(md,issmdir()*"/test/Exp/Square.exp",50000.)
 	md = setmask(md,"all","")
 
 	#Geometry
