@@ -149,7 +149,7 @@ function OutputResultsx(femmodel::FemModel, md::model, solutionkey::Symbol)# {{{
 		end
 	else
 		output = Dict()
-		for i in length(femmodel.results)
+		for i in 1:length(femmodel.results)
 			result = femmodel.results[i]
 			output[EnumToString(result.enum)] = result.value
 		end
@@ -339,7 +339,6 @@ function RequestedOutputsx(femmodel::FemModel,outputlist::Vector{IssmEnum})# {{{
 
 			#Add to femmodel.results dataset
 			push!(femmodel.results, result)
-
 		else
 			println("Output ",outputlist[i]," not supported yet")
 		end
