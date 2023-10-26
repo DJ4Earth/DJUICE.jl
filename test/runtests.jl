@@ -1,28 +1,24 @@
 using dJUICE
 using Test
 
-
-@testset "Testing dJUICE" begin
-# include("cost.jl")
-# include("test.jl")
-# include("test101.jl")
-# include("test201.jl")
-# include("test208.jl")
-# include("test301.jl")
-# include("test501.jl")
-# include("testad.jl")
+function searchdir(path,key) 
+	filter(x->occursin(key,x), readdir(path))
 end
 
-@testset "Model sturct tests" begin
-	md = model()
-	@test (typeof(md.mesh)) <: dJUICE.AbstractMesh
-	@test (typeof(md.mesh)) == dJUICE.Mesh2dTriangle
-	@test (typeof(md.friction)) <: dJUICE.AbstractFriction
-	@test (typeof(md.friction)) <: dJUICE.BuddFriction
+@time begin
+	@time @testset "Model Struct Tests" begin include("modelstructtests.jl") end
 
-	md = model(md; friction=DNNFriction())
-	@test (typeof(md.friction)) == dJUICE.DNNFriction
+	# test each individual cases, name with test[0-9]*.jl
+	testsolutions = searchdir("./", r"test[0-9]*.jl")
+	@time @testset "Model Solution Tests" begin
+		for tf in testsolutions
+			include(tf)
+		end
+	end
 
-	md = model(md; friction=SchoofFriction())
-	@test (typeof(md.friction)) == dJUICE.SchoofFriction
+	# AD test
+	@time include("testad.jl")
+
+	# GPU test
+	#@time include("testGPU.jl")
 end
