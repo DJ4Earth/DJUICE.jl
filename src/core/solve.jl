@@ -73,9 +73,9 @@ function solve2(md::model,isAD::Bool) #{{{
 
 		#Misc Enzyme options
 		println("CALLING AUTODIFF, prepare to die...")
-		dfemmodel = deepcopy(femmodel)
+		dfemmodel = Enzyme.Compiler.make_zero(Base.Core.Typeof(femmodel), IdDict(), femmodel)
 		@time autodiff(Enzyme.Reverse, costfunction, Duplicated(femmodel, dfemmodel), Duplicated(α, ∂J_∂α))
-
+       
 		#Put gradient in results
 		InputUpdateFromVectorx(femmodel, ∂J_∂α, GradientEnum, VertexSIdEnum)
 		RequestedOutputsx(femmodel, [GradientEnum])

@@ -17,7 +17,7 @@ md.stressbalance.maxiter = 20
 md.inversion.iscontrol = 1
 md = solve2(md, true)
 
-addJ = md.results["StressbalanceSolution"]["Gradient"] - md.friction.coefficient
+addJ = md.results["StressbalanceSolution"]["Gradient"] 
 
 @testset "AD results" begin
 	for i in 1:md.mesh.numberofvertices
