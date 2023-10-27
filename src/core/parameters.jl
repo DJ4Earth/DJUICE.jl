@@ -12,6 +12,10 @@ struct BoolParam <: Parameter #{{{
 	enum::IssmEnum
 	value::Bool
 end# }}}
+struct StringParam <: Parameter #{{{
+	enum::IssmEnum
+	value::String
+end# }}}
 mutable struct FluxChainParam <: Parameter #{{{
 	enum::IssmEnum
 	value::Vector{Flux.Chain{}}
@@ -40,6 +44,9 @@ end#}}}
 function GetParameterValue(param::BoolParam) #{{{
 	return param.value::Bool
 end#}}}
+function GetParameterValue(param::StringParam) #{{{
+	return param.value::String
+end#}}}
 function GetParameterValue(param::FluxChainParam) #{{{
 	return param.value::Vector{Flux.Chain{}}
 end#}}}
@@ -63,6 +70,12 @@ end#}}}
 function AddParam(parameters::Parameters,value::Bool, enum::IssmEnum) #{{{
 
 	parameters.lookup[enum] = BoolParam(enum,value)
+
+	return nothing
+end#}}}
+function AddParam(parameters::Parameters,value::String, enum::IssmEnum) #{{{
+
+	parameters.lookup[enum] = StringParam(enum,value)
 
 	return nothing
 end#}}}

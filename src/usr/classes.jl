@@ -251,9 +251,10 @@ mutable struct Inversion
 	iscontrol::Bool
 	vx_obs::Vector{Float64}
 	vy_obs::Vector{Float64}
+	independent::String
 end
 function Inversion() #{{{
-	return Inversion( false, Vector{Float64}(undef,0), Vector{Float64}(undef,0))
+	return Inversion( false, Vector{Float64}(undef,0), Vector{Float64}(undef,0), "Friction")
 end# }}}
 function Base.show(io::IO, this::Inversion)# {{{
 	IssmStructDisp(io, this)

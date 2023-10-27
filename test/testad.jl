@@ -15,6 +15,8 @@ md.stressbalance.maxiter = 20
 
 #Now call AD!
 md.inversion.iscontrol = 1
+md.inversion.independent = "FrictionC"
+
 md = solve2(md, true)
 
 addJ = md.results["StressbalanceSolution"]["Gradient"] 
@@ -30,7 +32,7 @@ addJ = md.results["StressbalanceSolution"]["Gradient"]
 		J2 = dJUICE.costfunction(femmodel, md.friction.coefficient+dα)
 		dJ = (J2-J1)/delta
 
-		@test abs(dJ - addJ[i])< 1e-3
+		@test abs(dJ - addJ[i])< 1e-6
 	end
 end
 

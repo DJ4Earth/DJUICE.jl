@@ -55,6 +55,7 @@ function ModelProcessor(md::model, solutionstring::Symbol) #{{{
 	if md.inversion.iscontrol
 		FetchDataToInput(md, inputs, elements, md.inversion.vx_obs./md.constants.yts,VxObsEnum)
 		FetchDataToInput(md, inputs, elements, md.inversion.vy_obs./md.constants.yts,VyObsEnum)
+		AddParam(parameters, md.inversion.independent, InversionControlParametersEnum)
 	end
 
 	#Build FemModel
