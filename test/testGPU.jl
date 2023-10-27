@@ -1,6 +1,6 @@
 #!/Applications/Julia-1.8.app/Contents/Resources/julia/bin/julia --project
 using dJUICE
-using Statistics #Needed for mean :(
+import Statistics: mean
 using Printf
 
 function NodalCoeffs(index,x,y,nbe)# {{{
