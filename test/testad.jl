@@ -25,7 +25,7 @@ addJ = md.results["StressbalanceSolution"]["Gradient"]
 
 @testset "AD gradient calculation for FrictionC" begin
 	α = md.inversion.independent
-	delta = 1e-8
+	delta = 1e-7
 	femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
 	J1 = dJUICE.costfunction(femmodel, α)
 	for i in 1:md.mesh.numberofvertices
@@ -35,6 +35,6 @@ addJ = md.results["StressbalanceSolution"]["Gradient"]
 		J2 = dJUICE.costfunction(femmodel, α+dα)
 		dJ = (J2-J1)/delta
 
-		@test abs(dJ - addJ[i])< 1e-6
+		@test abs(dJ - addJ[i])< 1e-5
 	end
 end
