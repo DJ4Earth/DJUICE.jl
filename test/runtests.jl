@@ -1,14 +1,24 @@
 using dJUICE
 using Test
 
+function searchdir(path,key) 
+	filter(x->occursin(key,x), readdir(path))
+end
 
-@testset "Testing dJUICE" begin
-include("cost.jl")
-include("test.jl")
-# include("test101.jl")
-# include("test201.jl")
-# include("test208.jl")
-# include("test301.jl")
-# include("test501.jl")
-# include("testad.jl")
+@time begin
+	@time @testset "Model Struct Tests" begin include("modelstructtests.jl") end
+
+	# test each individual cases, name with test[0-9]*.jl
+	testsolutions = searchdir("./", r"test[0-9]*.jl")
+	@time @testset "Model Solution Tests" begin
+		for tf in testsolutions
+			include(tf)
+		end
+	end
+
+	# AD test
+	@time include("testad.jl")
+
+	# GPU test
+	#@time include("testGPU.jl")
 end

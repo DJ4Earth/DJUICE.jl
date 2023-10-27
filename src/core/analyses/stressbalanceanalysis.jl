@@ -57,8 +57,15 @@ function UpdateElements(analysis::StressbalanceAnalysis,elements::Vector{Tria}, 
 	elseif typeof(md.friction) == WeertmanFriction
 		FetchDataToInput(md,inputs,elements,md.friction.C,FrictionCEnum)
 		FetchDataToInput(md,inputs,elements,md.friction.m,FrictionMEnum)
+	elseif typeof(md.friction) == SchoofFriction
+		FetchDataToInput(md,inputs,elements,md.friction.C,FrictionCEnum)
+		FetchDataToInput(md,inputs,elements,md.friction.m,FrictionMEnum)
+		FetchDataToInput(md,inputs,elements,md.friction.Cmax,FrictionCmaxEnum)
 	elseif typeof(md.friction) == DNNFriction
-		FetchDataToInput(md,inputs,elements,md.friction.coefficient,FrictionCoefficientEnum)
+		FetchDataToInput(md,inputs,elements,md.geometry.ssx,SurfaceSlopeXEnum)
+		FetchDataToInput(md,inputs,elements,md.geometry.ssy,SurfaceSlopeYEnum)
+		FetchDataToInput(md,inputs,elements,md.geometry.bsx,BedSlopeXEnum)
+		FetchDataToInput(md,inputs,elements,md.geometry.bsy,BedSlopeYEnum)
 	else
 		error("Friction ", typeof(md.friction), " not supported yet")
 	end
@@ -76,9 +83,13 @@ function UpdateParameters(analysis::StressbalanceAnalysis,parameters::Parameters
 		AddParam(parameters, 1, FrictionLawEnum)
 	elseif typeof(md.friction)==WeertmanFriction
 		AddParam(parameters, 2, FrictionLawEnum)
+	elseif typeof(md.friction)==SchoofFriction
+		AddParam(parameters, 11, FrictionLawEnum)
 	elseif typeof(md.friction)==DNNFriction
-		AddParam(parameters, 10, FrictionLawEnum)
+		AddParam(parameters, 20, FrictionLawEnum)
 		AddParam(parameters, md.friction.dnnChain, FrictionDNNChainEnum)
+		AddParam(parameters, md.friction.dtx, FrictionDNNdtxEnum)
+		AddParam(parameters, md.friction.dty, FrictionDNNdtyEnum)
 	else
 		error("Friction ", typeof(md.friction), " not supported yet")
 	end
@@ -107,15 +118,18 @@ function Core(analysis::StressbalanceAnalysis,femmodel::FemModel)# {{{
 
 	return nothing
 end #}}}
-function CreateKMatrix(analysis::StressbalanceAnalysis,element::Tria)# {{{
 
-	if(!IsIceInElement(element)) return end
+function CreateKMatrix(analysis::StressbalanceAnalysis, element::Tria)
+	frictionlaw = FindParam(Int64, element, FrictionLawEnum)
+	CreateKMatrix(analysis, element, Val(frictionlaw))::dJUICE.ElementMatrix
+end
 
+function CreateKMatrix(analysis::StressbalanceAnalysis,element::Tria, ::Val{frictionlaw}) where frictionlaw# {{{
 	#Internmediaries
 	numnodes = 3
 	
 	#Initialize Element matrix and basis function derivatives
-	Ke = ElementMatrix(element.nodes)
+	Ke = ElementMatrix(element.nodes)::dJUICE.ElementMatrix
 	dbasis = Matrix{Float64}(undef,numnodes,2)
 
 	#Retrieve all inputs and parameters
@@ -150,7 +164,7 @@ function CreateKMatrix(analysis::StressbalanceAnalysis,element::Tria)# {{{
 
 	if(phi>0)
 		basis = Vector{Float64}(undef,numnodes)
-		friction = CoreFriction(element)
+		friction = CoreFriction(element, Val(frictionlaw))
 
 		#Start integrating
 		gauss = GaussTria(2)
@@ -173,9 +187,6 @@ function CreateKMatrix(analysis::StressbalanceAnalysis,element::Tria)# {{{
 	return Ke
 end #}}}
 function CreatePVector(analysis::StressbalanceAnalysis,element::Tria)# {{{
-
-	if(!IsIceInElement(element)) return end
-
 	#Internmediaries
 	numnodes = 3
 

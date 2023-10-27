@@ -57,4 +57,4 @@ md.basalforcings.groundedice_melting_rate = zeros(md.mesh.numberofvertices)
 md.basalforcings.floatingice_melting_rate = ones(md.mesh.numberofvertices)
 md.masstransport.spcthickness = NaN*ones(md.mesh.numberofvertices)
 
-md=solve(md,"Transient")
+md=solve(md,:Transient)

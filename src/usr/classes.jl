@@ -1,5 +1,6 @@
 using Printf
 using Flux
+using StatsBase
 
 #Model fields
 #Mesh {{{
@@ -40,9 +41,15 @@ mutable struct Geometry
 	base::Vector{Float64}
 	thickness::Vector{Float64}
 	bed::Vector{Float64}
+	ssx::Vector{Float64}
+	ssy::Vector{Float64}
+	bsx::Vector{Float64}
+	bsy::Vector{Float64}
 end
 function Geometry() #{{{
-	return Geometry( Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0))
+	return Geometry( Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), 
+						 Vector{Float64}(undef,0), Vector{Float64}(undef,0),
+						 Vector{Float64}(undef,0), Vector{Float64}(undef,0))
 end# }}}
 function Base.show(io::IO, this::Geometry)# {{{
 	IssmStructDisp(io, this)
@@ -149,12 +156,26 @@ end# }}}
 function Base.show(io::IO, this::WeertmanFriction)# {{{
    IssmStructDisp(io, this)
 end# }}}
+mutable struct SchoofFriction <: AbstractFriction
+	C::Vector{Float64}
+	m::Vector{Float64}
+	Cmax::Vector{Float64}
+end
+function SchoofFriction() #{{{
+	return SchoofFriction(Vector{Float64}(undef,0),Vector{Float64}(undef,0),Vector{Float64}(undef,0))
+end# }}}
+function Base.show(io::IO, this::SchoofFriction)# {{{
+   IssmStructDisp(io, this)
+end# }}}
 mutable struct DNNFriction <: AbstractFriction
-	coefficient::Vector{Float64}
-	dnnChain::Flux.Chain{}
+	dnnChain::Vector{Flux.Chain{}}
+	dtx::Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64}} }
+	dty::Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64}} }
 end
 function DNNFriction() #{{{
-	return DNNFriction(Vector{Float64}(undef,0), Flux.Chain{}())
+	return DNNFriction(Vector{Flux.Chain{}}(undef,0),
+							 Vector{StatsBase.ZScoreTransform{ Float64, Vector{Float64} }}(undef,0),
+							 Vector{StatsBase.ZScoreTransform{ Float64, Vector{Float64} }}(undef,0))
 end# }}}
 function Base.show(io::IO, this::DNNFriction)# {{{
 	IssmStructDisp(io, this)
@@ -230,9 +251,10 @@ mutable struct Inversion
 	iscontrol::Bool
 	vx_obs::Vector{Float64}
 	vy_obs::Vector{Float64}
+	independent::String
 end
 function Inversion() #{{{
-	return Inversion( false, Vector{Float64}(undef,0), Vector{Float64}(undef,0))
+	return Inversion( false, Vector{Float64}(undef,0), Vector{Float64}(undef,0), "Friction")
 end# }}}
 function Base.show(io::IO, this::Inversion)# {{{
 	IssmStructDisp(io, this)
@@ -258,16 +280,16 @@ mutable struct model{Mesh<:AbstractMesh, Friction<:AbstractFriction}
 	inversion::Inversion
 end
 function model() #{{{
-	return model( Mesh2dTriangle(), Geometry(), Mask(), Materials(),
-					 Initialization(),Stressbalance(), Constants(), Dict(),
-					 BuddFriction(), Basalforcings(), SMBforcings(), Timestepping(),
-					 Masstransport(), Transient(), Inversion())
+      return model( Mesh2dTriangle(), Geometry(), Mask(), Materials(),
+                                       Initialization(),Stressbalance(), Constants(), Dict(),
+                                       BuddFriction(), Basalforcings(), SMBforcings(), Timestepping(),
+                                       Masstransport(), Transient(), Inversion())
 end#}}}
-function model2() #{{{
-	return model( Mesh2dTriangle(), Geometry(), Mask(), Materials(),
-					 Initialization(),Stressbalance(), Constants(), Dict(),
-					 DNNFriction(), Basalforcings(), SMBforcings(), Timestepping(),
-					 Masstransport(), Transient(), Inversion())
+function model(md::model; mesh::AbstractMesh=md.mesh, friction::AbstractFriction=md.friction) #{{{
+	return model(mesh, md.geometry, md.mask, md.materials, 
+					 md.initialization, md.stressbalance, md.constants, md.results, 
+					 friction, md.basalforcings, md.smb, md.timestepping, 
+					 md.masstransport, md.transient, md.inversion)
 end#}}}
 function model(matmd::Dict,verbose::Bool=true) #{{{
 
@@ -299,6 +321,10 @@ function model(matmd::Dict,verbose::Bool=true) #{{{
 			elseif typeof(value_matlab)==Float64 && typeof(value_julia)==Bool
 				setfield!(mdfield, Symbol(name2), Bool(value_matlab))
 
+				# TODO: temporarily fix the issue when loading one value from matlab to a vector in Julia
+			elseif typeof(value_matlab)==Float64 && typeof(value_julia)==Vector{Float64}
+				setfield!(mdfield, Symbol(name2), [value_matlab])
+
 			elseif typeof(value_matlab)==Matrix{Float64} && typeof(value_julia)==Vector{Float64}
 				if(size(value_matlab,2)!=1) error("only one column expected") end
 				setfield!(mdfield, Symbol(name2), value_matlab[:,1])
@@ -315,7 +341,7 @@ function model(matmd::Dict,verbose::Bool=true) #{{{
 				setfield!(mdfield, Symbol(name2), vector)
 
 			else
-				error("Don't know how to convert ",typeof(value_matlab)," to ",typeof(value_julia))
+				error("Don't know how to convert ", name2, " from ",typeof(value_matlab)," to ",typeof(value_julia))
 			end
 		end
 	end

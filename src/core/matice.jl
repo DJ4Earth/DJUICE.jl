@@ -40,5 +40,5 @@ function ViscositySSA(matice::Matice, xyz_list::Matrix{Float64}, gauss::GaussTri
 		mu = B/(2*eps_eff^((n-1)/n))
 	end
 
-	return mu
+	return mu::Float64
 end #}}}

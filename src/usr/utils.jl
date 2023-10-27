@@ -212,6 +212,8 @@ function IssmStructDisp(io::IO, modelfield::Any) # {{{
 			println(io, a)
 		elseif isa(a, Flux.Chain)
 			println(io, "Flux.", a)
+		elseif isa(a, StatsBase.ZScoreTransform)
+			println(io, "Normalization: ", a)
 		elseif length(a)>1
 			if !isempty(a)
 				println(io, typeof(a), " of size ", size(a))

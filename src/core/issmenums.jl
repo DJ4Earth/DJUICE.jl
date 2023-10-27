@@ -158,6 +158,8 @@
 	FrictionCouplingEnum
 	FrictionDeltaEnum
 	FrictionDNNChainEnum
+	FrictionDNNdtxEnum
+	FrictionDNNdtyEnum
 	FrictionEffectivePressureLimitEnum
 	FrictionFEnum
 	FrictionGammaEnum
@@ -601,6 +603,7 @@
 	BedEastGRDEnum
 	BedNorthEnum
 	BedNorthGRDEnum
+	BedSlopeEnum
 	BedSlopeXEnum
 	BedSlopeYEnum
 	BottomPressureEnum
@@ -1021,6 +1024,7 @@
 	SurfaceLogVxVyMisfitEnum
 	SurfaceObservationEnum
 	SurfaceRelVelMisfitEnum
+	SurfaceSlopeEnum
 	SurfaceSlopeXEnum
 	SurfaceSlopeYEnum
 	TemperatureEnum
@@ -1040,6 +1044,7 @@
 	ThicknessResidualEnum
 	TransientAccumulatedDeltaIceThicknessEnum
 	VelEnum
+	VelThresholdEnum
 	VxAverageEnum
 	VxBaseEnum
 	VxEnum
@@ -1713,6 +1718,8 @@ function EnumToString(enum::IssmEnum)
 	if(enum==FrictionCouplingEnum) return "FrictionCoupling" end
 	if(enum==FrictionDeltaEnum) return "FrictionDelta" end
 	if(enum==FrictionDNNChainEnum) return "FrictionDNNChain" end
+	if(enum==FrictionDNNdtxEnum) return "FrictionDNNdtx" end
+	if(enum==FrictionDNNdtyEnum) return "FrictionDNNdty" end
 	if(enum==FrictionEffectivePressureLimitEnum) return "FrictionEffectivePressureLimit" end
 	if(enum==FrictionFEnum) return "FrictionF" end
 	if(enum==FrictionGammaEnum) return "FrictionGamma" end
@@ -2156,6 +2163,7 @@ function EnumToString(enum::IssmEnum)
 	if(enum==BedEastGRDEnum) return "BedEastGRD" end
 	if(enum==BedNorthEnum) return "BedNorth" end
 	if(enum==BedNorthGRDEnum) return "BedNorthGRD" end
+	if(enum==BedSlopeEnum) return "BedSlope" end
 	if(enum==BedSlopeXEnum) return "BedSlopeX" end
 	if(enum==BedSlopeYEnum) return "BedSlopeY" end
 	if(enum==BottomPressureEnum) return "BottomPressure" end
@@ -2576,6 +2584,7 @@ function EnumToString(enum::IssmEnum)
 	if(enum==SurfaceLogVxVyMisfitEnum) return "SurfaceLogVxVyMisfit" end
 	if(enum==SurfaceObservationEnum) return "SurfaceObservation" end
 	if(enum==SurfaceRelVelMisfitEnum) return "SurfaceRelVelMisfit" end
+	if(enum==SurfaceSlopeEnum) return "SurfaceSlope" end
 	if(enum==SurfaceSlopeXEnum) return "SurfaceSlopeX" end
 	if(enum==SurfaceSlopeYEnum) return "SurfaceSlopeY" end
 	if(enum==TemperatureEnum) return "Temperature" end
@@ -2595,6 +2604,7 @@ function EnumToString(enum::IssmEnum)
 	if(enum==ThicknessResidualEnum) return "ThicknessResidual" end
 	if(enum==TransientAccumulatedDeltaIceThicknessEnum) return "TransientAccumulatedDeltaIceThickness" end
 	if(enum==VelEnum) return "Vel" end
+	if(enum==VelThresholdEnum) return "VelThreshold" end
 	if(enum==VxAverageEnum) return "VxAverage" end
 	if(enum==VxBaseEnum) return "VxBase" end
 	if(enum==VxEnum) return "Vx" end

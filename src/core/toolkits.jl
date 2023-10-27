@@ -1,4 +1,3 @@
-using LinearSolve
 
 #Matrix
 
@@ -44,7 +43,7 @@ function Assemble!(matrix::IssmMatrix)#{{{
 end#}}}
 =#
 
-#Toolkit #2: dense matrix (for ensyme)
+#Toolkit #2: dense matrix (for enzyme)
 mutable struct IssmMatrix #{{{
 	M::Int64
 	N::Int64
@@ -173,43 +172,21 @@ function AXPY!(y::IssmVector,alpha::Float64,x::IssmVector) #{{{
 
 	return nothing
 end#}}}
-#= DEACTIVATED FOR NOW: backslash operator
 function Solverx(A::IssmMatrix, b::IssmVector, xold::IssmVector) #{{{
 
-	#Initialize output
-	#x = IssmVector(GetSize(xold))
-	
 	return Solverx(A, b)
 
 end#}}}
 function Solverx(A::IssmMatrix, b::IssmVector) #{{{
 
+	println("   Solving matrix system")
+
 	#Initialize output
 	x = IssmVector(0)
 
 	#Solve linear system
-	x.vector = A.matrix\b.vector
+	x.vector = A.matrix \ b.vector
 
 	return x
-
-end#}}}
-=#
-function Solverx(A::IssmMatrix, b::IssmVector, xold::IssmVector) #{{{
-
-return Solverx(A, b)
-
-end#}}}
-function Solverx(A::IssmMatrix, b::IssmVector) #{{{
-
-#Initialize output
-x = IssmVector(0)
-
-#Solve linear system
-prob = LinearProblem(A.matrix, b.vector)
-linsolve = init(prob)
-sol = LinearSolve.solve(linsolve)
-x.vector = sol.u
-
-return x
 
 end#}}}

@@ -1,5 +1,5 @@
 #Input class definition
-struct Input#{{{
+mutable struct Input#{{{
 	enum::IssmEnum
 	interp::IssmEnum
 	values::Vector{Float64}

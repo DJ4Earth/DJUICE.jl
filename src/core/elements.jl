@@ -34,7 +34,7 @@ function InputCreate(element::Tria,inputs::Inputs,data::Vector{Float64},enum::Is
 	elseif size(data,1)==inputs.numberofvertices
 		SetTriaInput(inputs,enum,P1Enum,element.vertexids,data[element.vertexids])
 	else
-		error("size ",size(data,1)," not supported yet");
+		error("size ",size(data,1)," not supported for ", enum);
 	end
 
 	return nothing
@@ -145,6 +145,24 @@ function GetInputListOnNodes!(element::Tria, vector::Vector{Float64}, enum::Issm
 	end
 
 	return nothing
+end # }}}
+function GetInputValue(element::Tria, vector::Vector{Float64}, gauss::GaussTria, ig::Int64, enum::IssmEnum) # {{{
+
+	# Allocate basis functions
+	basis = Vector{Float64}(undef, 3)
+	# Fetch number of nodes
+	numnodes = NumberofNodesTria(enum)
+	@assert numnodes <= 3
+	# Get basis functions at this point
+	NodalFunctions(element, basis, gauss, ig, enum)
+	
+	# Calculate parameter for this Gauss point
+	value::Float64 = 0.0
+	for i = 1:3
+		value += basis[i] * vector[i]
+	end
+
+	return value
 end # }}}
 function GetInputListOnVertices!(element::Tria, vector::Vector{Float64}, enum::IssmEnum) # {{{
 
@@ -354,6 +372,30 @@ function MigrateGroundingLine(element::Tria) #{{{
 	AddInput(element,BaseEnum,b,P1Enum)
 
 	return nothing
+end#}}}
+function GetXcoord(element::Tria, xyz_list::Matrix{Float64}, gauss::GaussTria, ig::Int64) #{{{
+
+	# create a list of x
+	x_list = Vector{Float64}(undef,3)
+
+	for i in 1:3
+		x_list[i] = xyz_list[i,1]
+	end
+
+   # Get value at gauss point
+   return GetInputValue(element, x_list, gauss, ig, P1Enum);
+end#}}}
+function GetYcoord(element::Tria, xyz_list::Matrix{Float64}, gauss::GaussTria, ig::Int64) #{{{
+
+	# create a list of y
+	y_list = Vector{Float64}(undef,3)
+
+	for i in 1:3
+		y_list[i] = xyz_list[i,2]
+	end
+
+   # Get value at gauss point
+   return GetInputValue(element, y_list, gauss, ig, P1Enum);
 end#}}}
 
 #Finite Element stuff

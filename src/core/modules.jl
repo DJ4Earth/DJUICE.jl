@@ -5,7 +5,7 @@ function FetchDataToInput(md::model,inputs::Inputs,elements::Vector{Tria},data::
 	end
 	return nothing
 end#}}}
-function ModelProcessor(md::model, solutionstring::String) #{{{
+function ModelProcessor(md::model, solutionstring::Symbol) #{{{
 
 	#Initialize structures
 	elements    = Vector{Tria}(undef,0)
@@ -19,15 +19,15 @@ function ModelProcessor(md::model, solutionstring::String) #{{{
 	CreateVertices(vertices, md)
 	CreateParameters(parameters, md)
 	CreateInputs(inputs,elements, md)
-	if solutionstring=="TransientSolution"
+	if solutionstring===:TransientSolution
 		UpdateParameters(TransientAnalysis(), parameters, md)
 	end
 
 	#Now create analysis specific data structure
-	if solutionstring=="StressbalanceSolution"
-		analyses = [StressbalanceAnalysis()]
-	elseif solutionstring=="TransientSolution"
-		analyses = [StressbalanceAnalysis(), MasstransportAnalysis()]
+	if solutionstring===:StressbalanceSolution
+		analyses = Analysis[StressbalanceAnalysis()]
+	elseif solutionstring===:TransientSolution
+		analyses = Analysis[StressbalanceAnalysis(), MasstransportAnalysis()]
 	else
 		error(solutionstring, " not supported by ModelProcessor")
 	end
@@ -55,6 +55,7 @@ function ModelProcessor(md::model, solutionstring::String) #{{{
 	if md.inversion.iscontrol
 		FetchDataToInput(md, inputs, elements, md.inversion.vx_obs./md.constants.yts,VxObsEnum)
 		FetchDataToInput(md, inputs, elements, md.inversion.vy_obs./md.constants.yts,VyObsEnum)
+		AddParam(parameters, md.inversion.independent, InversionControlParametersEnum)
 	end
 
 	#Build FemModel
@@ -126,10 +127,10 @@ function CreateInputs(inputs::Inputs,elements::Vector{Tria},md::model) #{{{
 
 	return nothing
 end# }}}
-function OutputResultsx(femmodel::FemModel, md::model, solution::String)# {{{
+function OutputResultsx(femmodel::FemModel, md::model, solutionkey::Symbol)# {{{
 
 
-	if solution=="TransientSolution"
+	if solutionkey===:TransientSolution
 
 		#Compute maximum number of steps
 		maxstep = 0
@@ -149,13 +150,13 @@ function OutputResultsx(femmodel::FemModel, md::model, solution::String)# {{{
 		end
 	else
 		output = Dict()
-		for i in length(femmodel.results)
+		for i in 1:length(femmodel.results)
 			result = femmodel.results[i]
 			output[EnumToString(result.enum)] = result.value
 		end
 	end
 
-	md.results[solution] = output
+	md.results[string(solutionkey)] = output
 
 	return nothing
 end# }}}
@@ -280,6 +281,7 @@ end#}}}
 function SystemMatricesx(femmodel::FemModel,analysis::Analysis)# {{{
 
 	#Allocate matrices
+	println("   Allocating matrices")
 	fsize = NumberOfDofs(femmodel.nodes,FsetEnum)
 	ssize = NumberOfDofs(femmodel.nodes,SsetEnum)
 	Kff = IssmMatrix(fsize,fsize)
@@ -287,12 +289,16 @@ function SystemMatricesx(femmodel::FemModel,analysis::Analysis)# {{{
 	pf  = IssmVector(fsize)
 
 	#Construct Stiffness matrix and load vector from elements
+	println("   Assembling matrices")
 	for i in 1:length(femmodel.elements)
-		Ke = CreateKMatrix(analysis,femmodel.elements[i])
-		pe = CreatePVector(analysis,femmodel.elements[i])
-
-		if(!isnothing(Ke)) AddToGlobal!(Ke,Kff,Kfs) end
-		if(!isnothing(pe)) AddToGlobal!(pe,pf) end
+		
+		if IsIceInElement(femmodel.elements[i])
+			Ke = CreateKMatrix(analysis,femmodel.elements[i])
+			AddToGlobal!(Ke,Kff,Kfs)
+		
+			pe = CreatePVector(analysis,femmodel.elements[i])
+		   AddToGlobal!(pe,pf)
+		end
 	end
 
 	Assemble!(Kff)
@@ -328,11 +334,12 @@ function RequestedOutputsx(femmodel::FemModel,outputlist::Vector{IssmEnum})# {{{
 
 			#Create Result
 			input  = GetInput(femmodel.inputs, outputlist[i])
-			result = Result(outputlist[i], step, time, copy(input.values))
+			input_copy = Vector{Float64}(undef, length(input.values))
+			copyto!(input_copy, input.values)
+			result = Result(outputlist[i], step, time, input_copy)
 
 			#Add to femmodel.results dataset
 			push!(femmodel.results, result)
-
 		else
 			println("Output ",outputlist[i]," not supported yet")
 		end

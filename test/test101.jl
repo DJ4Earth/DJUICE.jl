@@ -1,8 +1,9 @@
 #!/Applications/Julia-1.8.app/Contents/Resources/julia/bin/julia --project
 using dJUICE
+#using JET
 
 md = model()
-md = triangle2(md,issmdir()*"/test/Exp/Square.exp",50000.)
+md = triangle(md,issmdir()*"/test/Exp/Square.exp",50000.)
 md = setmask(md,"all","")
 
 #Geometry
@@ -43,4 +44,4 @@ pos = findall(md.mesh.vertexonboundary)
 md.stressbalance.spcvx[pos] .= 0.0
 md.stressbalance.spcvy[pos] .= 0.0
 
-md=solve(md,"Stressbalance")
+md=solve(md,:Stressbalance)
