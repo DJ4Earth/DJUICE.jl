@@ -118,13 +118,12 @@ function Core(analysis::StressbalanceAnalysis,femmodel::FemModel)# {{{
 
 	return nothing
 end #}}}
-
-function CreateKMatrix(analysis::StressbalanceAnalysis, element::Tria)
+function CreateKMatrix(analysis::StressbalanceAnalysis, element::Tria) #{{{
+	# a wrapper for Enzyme to know the type of friction law
 	frictionlaw = FindParam(Int64, element, FrictionLawEnum)
 	CreateKMatrix(analysis, element, Val(frictionlaw))::dJUICE.ElementMatrix
-end
-
-function CreateKMatrix(analysis::StressbalanceAnalysis,element::Tria, ::Val{frictionlaw}) where frictionlaw# {{{
+end #}}}
+function CreateKMatrix(analysis::StressbalanceAnalysis, element::Tria, ::Val{frictionlaw}) where frictionlaw# {{{
 	#Internmediaries
 	numnodes = 3
 	
@@ -186,7 +185,7 @@ function CreateKMatrix(analysis::StressbalanceAnalysis,element::Tria, ::Val{fric
 
 	return Ke
 end #}}}
-function CreatePVector(analysis::StressbalanceAnalysis,element::Tria)# {{{
+function CreatePVector(analysis::StressbalanceAnalysis, element::Tria)# {{{
 	#Internmediaries
 	numnodes = 3
 
