@@ -16,25 +16,25 @@ md.stressbalance.maxiter = 20
 #Now call AD!
 md.inversion.iscontrol = 1
 md.inversion.independent = md.friction.coefficient
-md.inversion.independent_string = "FrictionC"
+md.inversion.independent_string = "FrictionCoefficient"
 
 md = solve(md, :sb)
 
 # compute gradient by finite differences at each node
 addJ = md.results["StressbalanceSolution"]["Gradient"]
-α = md.inversion.independent
 
 @testset "AD gradient calculation for FrictionC" begin
-   for i in 1:md.mesh.numberofvertices
-      delta = 1e-8
-      femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
-      J1 = dJUICE.costfunction(femmodel, α)
-      dα = zero(md.friction.coefficient)
-      dα[i] = delta
-      femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
-      J2 = dJUICE.costfunction(femmodel, α+dα)
-      dJ = (J2-J1)/delta
+	α = md.inversion.independent
+	delta = 1e-8
+	femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
+	J1 = dJUICE.costfunction(femmodel, α)
+	for i in 1:md.mesh.numberofvertices
+		dα = zero(md.friction.coefficient)
+		dα[i] = delta
+		femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
+		J2 = dJUICE.costfunction(femmodel, α+dα)
+		dJ = (J2-J1)/delta
 
-      @test abs(dJ - addJ[i])< 1e-6
-   end
+		@test abs(dJ - addJ[i])< 1e-6
+	end
 end

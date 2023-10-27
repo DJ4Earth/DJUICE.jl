@@ -5,6 +5,9 @@
 @enum IssmEnum begin
 	ParametersSTARTEnum
 	AdolcParamEnum
+	AgeStabilizationEnum
+	AgeNumRequestedOutputsEnum
+	AgeRequestedOutputsEnum
 	AmrDeviatoricErrorGroupThresholdEnum
 	AmrDeviatoricErrorMaximumEnum
 	AmrDeviatoricErrorResolutionEnum
@@ -52,6 +55,11 @@
 	AutodiffXpEnum
 	BalancethicknessStabilizationEnum
 	BarystaticContributionsEnum
+	BasalforcingsAutoregressionInitialTimeEnum
+	BasalforcingsAutoregressionTimestepEnum
+	BasalforcingsAutoregressiveOrderEnum
+	BasalforcingsBeta0Enum
+	BasalforcingsBeta1Enum
 	BasalforcingsBottomplumedepthEnum
 	BasalforcingsCrustthicknessEnum
 	BasalforcingsDeepwaterElevationEnum
@@ -65,9 +73,11 @@
 	BasalforcingsIsmip6IsLocalEnum
 	BasalforcingsIsmip6NumBasinsEnum
 	BasalforcingsIsmip6TfDepthsEnum
+	BasalforcingsLinearNumBasinsEnum
 	BasalforcingsLowercrustheatEnum
 	BasalforcingsMantleconductivityEnum
 	BasalforcingsNusseltEnum
+	BasalforcingsPhiEnum
 	BasalforcingsPicoAverageOverturningEnum
 	BasalforcingsPicoAverageSalinityEnum
 	BasalforcingsPicoAverageTemperatureEnum
@@ -93,6 +103,15 @@
 	CalvingHeightAboveFloatationEnum
 	CalvingLawEnum
 	CalvingMinthicknessEnum
+	CalvingTestSpeedfactorEnum
+	CalvingTestIndependentRateEnum
+	CalvingUseParamEnum
+	CalvingThetaEnum
+	CalvingAlphaEnum
+	CalvingXoffsetEnum
+	CalvingYoffsetEnum
+	CalvingVelLowerboundEnum
+	CalvingVelUpperboundEnum
 	ConfigurationTypeEnum
 	ConstantsGEnum
 	ConstantsNewtonGravityEnum
@@ -150,16 +169,13 @@
 	FlowequationIsFSEnum
 	FlowequationIsHOEnum
 	FlowequationIsL1L2Enum
-	FlowequationIsMLHOEnum
+	FlowequationIsMOLHOEnum
 	FlowequationIsSIAEnum
 	FlowequationIsSSAEnum
 	FlowequationIsNitscheEnum
 	FeFSNitscheGammaEnum
 	FrictionCouplingEnum
 	FrictionDeltaEnum
-	FrictionDNNChainEnum
-	FrictionDNNdtxEnum
-	FrictionDNNdtyEnum
 	FrictionEffectivePressureLimitEnum
 	FrictionFEnum
 	FrictionGammaEnum
@@ -180,6 +196,8 @@
 	GroundinglineFrictionInterpolationEnum
 	GroundinglineMeltInterpolationEnum
 	GroundinglineMigrationEnum
+	GroundinglineNumRequestedOutputsEnum
+	GroundinglineRequestedOutputsEnum
 	HydrologyAveragingEnum
 	HydrologyCavitySpacingEnum
 	HydrologyChannelConductivityEnum
@@ -215,6 +233,7 @@
 	HydrologydcSedimentPoreWaterMassEnum
 	HydrologydcSedimentPorosityEnum
 	HydrologydcSedimentThicknessEnum
+	HydrologyStepAdaptEnum
 	HydrologydcTransferFlagEnum
 	HydrologydcUnconfinedFlagEnum
 	HydrologyshreveStabilizationEnum
@@ -254,6 +273,7 @@
 	LevelsetStabilizationEnum
 	LockFileNameEnum
 	LoveAllowLayerDeletionEnum
+	LoveChandlerWobbleEnum
 	LoveCoreMantleBoundaryEnum
 	LoveEarthMassEnum
 	LoveForcingTypeEnum
@@ -263,7 +283,10 @@
 	LoveGravitationalConstantEnum
 	LoveInnerCoreBoundaryEnum
 	LoveComplexComputationEnum
+	LoveQuadPrecisionEnum
 	LoveIntStepsPerLayerEnum
+	LoveMinIntegrationStepsEnum
+	LoveMaxIntegrationdrEnum
 	LoveKernelsEnum
 	LoveMu0Enum
 	LoveNfreqEnum
@@ -274,6 +297,10 @@
 	LoveShNminEnum
 	LoveStartingLayerEnum
 	LoveUnderflowTolEnum
+	LovePostWidderThresholdEnum
+	LoveDebugEnum
+	LoveHypergeomNZEnum
+	LoveHypergeomNAlphaEnum
 	MassFluxSegmentsEnum
 	MassFluxSegmentsPresentEnum
 	MasstransportHydrostaticAdjustmentEnum
@@ -343,12 +370,10 @@
 	RootPathEnum
 	ModelnameEnum
 	SamplingAlphaEnum
-	SamplingPhiEnum
 	SamplingNumRequestedOutputsEnum
 	SamplingRequestedOutputsEnum
 	SamplingRobinEnum
 	SamplingSeedEnum
-	SamplingTauEnum
 	SaveResultsEnum
 	SolidearthPartitionIceEnum
 	SolidearthPartitionHydroEnum
@@ -360,14 +385,23 @@
 	SolidearthPlanetAreaEnum
 	SolidearthSettingsAbstolEnum
 	SolidearthSettingsCrossSectionShapeEnum
-	RotationalAngularVelocityEnum
 	SolidearthSettingsElasticEnum
 	SolidearthSettingsViscousEnum
+	SolidearthSettingsSatelliteGraviEnum
+	SolidearthSettingsDegreeAccuracyEnum
 	SealevelchangeGeometryDoneEnum
 	SealevelchangeViscousNumStepsEnum
 	SealevelchangeViscousTimesEnum
 	SealevelchangeViscousIndexEnum
+	SealevelchangeViscousPolarMotionEnum
+	SealevelchangeRunCountEnum
+	SealevelchangeTransitionsEnum
+	SealevelchangeRequestedOutputsEnum
+	RotationalAngularVelocityEnum
 	RotationalEquatorialMoiEnum
+	RotationalPolarMoiEnum
+	LovePolarMotionTransferFunctionColinearEnum
+	LovePolarMotionTransferFunctionOrthogonalEnum
 	TidalLoveHEnum
 	TidalLoveKEnum
 	TidalLoveLEnum
@@ -377,13 +411,23 @@
 	LoadLoveLEnum
 	LoveTimeFreqEnum
 	LoveIsTimeEnum
+	LoveHypergeomZEnum
+	LoveHypergeomTable1Enum
+	LoveHypergeomTable2Enum
 	SealevelchangeGSelfAttractionEnum
 	SealevelchangeGViscoElasticEnum
+	SealevelchangeUViscoElasticEnum
+	SealevelchangeHViscoElasticEnum
+	SealevelchangePolarMotionTransferFunctionColinearEnum
+	SealevelchangePolarMotionTransferFunctionOrthogonalEnum
+	SealevelchangePolarMotionTransferFunctionZEnum
+	SealevelchangeTidalK2Enum
+	SealevelchangeTidalH2Enum
+	SealevelchangeTidalL2Enum
 	SolidearthSettingsSealevelLoadingEnum
 	SolidearthSettingsGRDEnum
 	SolidearthSettingsRunFrequencyEnum
 	SolidearthSettingsTimeAccEnum
-	SealevelchangeHViscoElasticEnum
 	SolidearthSettingsHorizEnum
 	SolidearthSettingsMaxiterEnum
 	SolidearthSettingsGrdOceanEnum
@@ -395,17 +439,14 @@
 	StochasticForcingIsEffectivePressureEnum
 	StochasticForcingIsStochasticForcingEnum
 	StochasticForcingIsWaterPressureEnum
+	StochasticForcingNoisetermsEnum
 	StochasticForcingNumFieldsEnum
 	StochasticForcingRandomflagEnum
-	RotationalPolarMoiEnum
+	StochasticForcingTimestepEnum
 	SolidearthSettingsReltolEnum
-	SealevelchangeRequestedOutputsEnum
 	SolidearthSettingsSelfAttractionEnum
 	SolidearthSettingsRotationEnum
 	SolidearthSettingsMaxSHCoeffEnum
-	SealevelchangeRunCountEnum
-	SealevelchangeTransitionsEnum
-	SealevelchangeUViscoElasticEnum
 	SettingsIoGatherEnum
 	SettingsNumResultsOnNodesEnum
 	SettingsOutputFrequencyEnum
@@ -430,6 +471,7 @@
 	SmbDesfacEnum
 	SmbDpermilEnum
 	SmbDsnowIdxEnum
+	SmbElevationBinsEnum
 	SmbCldFracEnum
 	SmbDelta18oEnum
 	SmbDelta18oSurfaceEnum
@@ -457,11 +499,14 @@
 	SmbIsthermalEnum
 	SmbIsturbulentfluxEnum
 	SmbKEnum
+	SmbLapseRatesEnum
 	SmbNumBasinsEnum
+	SmbNumElevationBinsEnum
 	SmbNumRequestedOutputsEnum
 	SmbPfacEnum
 	SmbPhiEnum
 	SmbRdlEnum
+	SmbRefElevationEnum
 	SmbRequestedOutputsEnum
 	SmbRlapsEnum
 	SmbRlapslgmEnum
@@ -473,6 +518,7 @@
 	SmbSwIdxEnum
 	SmbT0dryEnum
 	SmbT0wetEnum
+	SmbTcIdxEnum
 	SmbTeThreshEnum
 	SmbTdiffEnum
 	SmbThermoDeltaTScalingEnum
@@ -510,6 +556,7 @@
 	ThermalStabilizationEnum
 	ThermalWatercolumnUpperlimitEnum
 	TimeEnum
+	TimesteppingAverageForcingEnum
 	TimesteppingCflCoefficientEnum
 	TimesteppingCouplingTimeEnum
 	TimesteppingFinalTimeEnum
@@ -526,6 +573,7 @@
 	ToolkitsOptionsStringsEnum
 	ToolkitsTypesEnum
 	TransientAmrFrequencyEnum
+	TransientIsageEnum
 	TransientIsdamageevolutionEnum
 	TransientIsesaEnum
 	TransientIsgiaEnum
@@ -562,6 +610,7 @@
 	AdjointyBaseEnum
 	AdjointyShearEnum
 	AdjointzEnum
+	AgeEnum
 	AirEnum
 	ApproximationEnum
 	BalancethicknessMisfitEnum
@@ -570,10 +619,18 @@
 	BalancethicknessSpcthicknessEnum
 	BalancethicknessThickeningRateEnum
 	BasalCrevasseEnum
+	BasalforcingsDeepwaterMeltingRateAutoregressionEnum
+	BasalforcingsDeepwaterMeltingRateNoiseEnum
+	BasalforcingsDeepwaterMeltingRateValuesAutoregressionEnum
 	BasalforcingsFloatingiceMeltingRateEnum
 	BasalforcingsGeothermalfluxEnum
 	BasalforcingsGroundediceMeltingRateEnum
+	BasalforcingsLinearBasinIdEnum
 	BasalforcingsPerturbationMeltingRateEnum
+	BasalforcingsSpatialDeepwaterElevationEnum
+	BasalforcingsSpatialDeepwaterMeltingRateEnum
+	BasalforcingsSpatialUpperwaterElevationEnum
+	BasalforcingsSpatialUpperwaterMeltingRateEnum
 	BasalforcingsIsmip6BasinIdEnum
 	BasalforcingsIsmip6TfEnum
 	BasalforcingsIsmip6TfShelfEnum
@@ -595,28 +652,28 @@
 	BaseSlopeXEnum
 	BaseSlopeYEnum
 	BaselineBasalforcingsFloatingiceMeltingRateEnum
+	BaselineBasalforcingsSpatialDeepwaterMeltingRateEnum
 	BaselineCalvingCalvingrateEnum
 	BaselineFrictionEffectivePressureEnum
+	BaselineSmbMassBalanceEnum
 	BedEnum
 	BedGRDEnum
 	BedEastEnum
 	BedEastGRDEnum
 	BedNorthEnum
 	BedNorthGRDEnum
-	BedSlopeEnum
 	BedSlopeXEnum
 	BedSlopeYEnum
 	BottomPressureEnum
 	BottomPressureOldEnum
 	CalvingCalvingrateEnum
 	CalvingHabFractionEnum
+	CalvingAblationrateEnum
 	CalvingMeltingrateEnum
 	CalvingStressThresholdFloatingiceEnum
 	CalvingStressThresholdGroundediceEnum
 	CalvinglevermannCoeffEnum
-	CalvingratexAverageEnum
 	CalvingratexEnum
-	CalvingrateyAverageEnum
 	CalvingrateyEnum
 	CalvingFluxLevelsetEnum
 	CalvingMeltingFluxLevelsetEnum
@@ -683,6 +740,7 @@
 	FrictionCmaxEnum
 	FrictionCoefficientEnum
 	FrictionCoefficientcoulombEnum
+	FrictionCoulombWaterPressureEnum
 	FrictionEffectivePressureEnum
 	FrictionMEnum
 	FrictionPEnum
@@ -690,7 +748,9 @@
 	FrictionQEnum
 	FrictionSedimentCompressibilityCoefficientEnum
 	FrictionTillFrictionAngleEnum
+	FrictionSchoofWaterPressureEnum
 	FrictionWaterLayerEnum
+	FrictionWaterPressureEnum
 	FrictionfEnum
 	FrontalForcingsBasinIdEnum
 	FrontalForcingsSubglacialDischargeEnum
@@ -795,10 +855,15 @@
 	RheologyBInitialguessMisfitEnum
 	RheologyBbarAbsGradientEnum
 	SampleEnum
+	SampleOldEnum
+	SampleNoiseEnum
 	SamplingBetaEnum
 	SamplingKappaEnum
+	SamplingPhiEnum
+	SamplingTauEnum
 	SealevelEnum
 	SealevelGRDEnum
+	SatGraviGRDEnum
 	SealevelBarystaticMaskEnum
 	SealevelBarystaticIceMaskEnum
 	SealevelBarystaticIceWeightsEnum
@@ -831,18 +896,6 @@
 	BslcOceanEnum
 	BslcRateEnum
 	GmtslcEnum
-	SealevelGrotm1Enum
-	SealevelGrotm2Enum
-	SealevelGrotm3Enum
-	SealevelGUrotm1Enum
-	SealevelGUrotm2Enum
-	SealevelGUrotm3Enum
-	SealevelGNrotm1Enum
-	SealevelGNrotm2Enum
-	SealevelGNrotm3Enum
-	SealevelGErotm1Enum
-	SealevelGErotm2Enum
-	SealevelGErotm3Enum
 	SealevelRSLBarystaticEnum
 	SealevelRSLRateEnum
 	SealevelUGrdEnum
@@ -850,23 +903,21 @@
 	SealevelUEastEsaEnum
 	SealevelUNorthEsaEnum
 	SealevelchangeIndicesEnum
-	SealevelchangeGEnum
-	SealevelchangeGUEnum
-	SealevelchangeGEEnum
-	SealevelchangeGNEnum
-	SealevelchangeGsubelOceanEnum
-	SealevelchangeGUsubelOceanEnum
-	SealevelchangeGEsubelOceanEnum
-	SealevelchangeGNsubelOceanEnum
-	SealevelchangeGsubelIceEnum
-	SealevelchangeGUsubelIceEnum
-	SealevelchangeGEsubelIceEnum
-	SealevelchangeGNsubelIceEnum
-	SealevelchangeGsubelHydroEnum
-	SealevelchangeGUsubelHydroEnum
-	SealevelchangeGEsubelHydroEnum
-	SealevelchangeGNsubelHydroEnum
+	SealevelchangeAlphaIndexEnum
+	SealevelchangeAzimuthIndexEnum
+	SealevelchangeGrotEnum
+	SealevelchangeGSatGravirotEnum
+	SealevelchangeGUrotEnum
+	SealevelchangeGNrotEnum
+	SealevelchangeGErotEnum
+	SealevelchangeAlphaIndexOceanEnum
+	SealevelchangeAlphaIndexIceEnum
+	SealevelchangeAlphaIndexHydroEnum
+	SealevelchangeAzimuthIndexOceanEnum
+	SealevelchangeAzimuthIndexIceEnum
+	SealevelchangeAzimuthIndexHydroEnum
 	SealevelchangeViscousRSLEnum
+	SealevelchangeViscousSGEnum
 	SealevelchangeViscousUEnum
 	SealevelchangeViscousNEnum
 	SealevelchangeViscousEEnum
@@ -1024,7 +1075,6 @@
 	SurfaceLogVxVyMisfitEnum
 	SurfaceObservationEnum
 	SurfaceRelVelMisfitEnum
-	SurfaceSlopeEnum
 	SurfaceSlopeXEnum
 	SurfaceSlopeYEnum
 	TemperatureEnum
@@ -1044,7 +1094,6 @@
 	ThicknessResidualEnum
 	TransientAccumulatedDeltaIceThicknessEnum
 	VelEnum
-	VelThresholdEnum
 	VxAverageEnum
 	VxBaseEnum
 	VxEnum
@@ -1070,8 +1119,6 @@
 	WaterfractionDrainageIntegratedEnum
 	WaterfractionEnum
 	WaterheightEnum
-	FrictionWaterPressureEnum
-	FrictionWaterPressureNoiseEnum
 	WeightsLevelsetObservationEnum
 	WeightsSurfaceObservationEnum
 	OldAccumulatedDeltaBottomPressureEnum
@@ -1183,12 +1230,14 @@
 	AdjointBalancethickness2AnalysisEnum
 	AdjointBalancethicknessAnalysisEnum
 	AdjointHorizAnalysisEnum
+	AgeAnalysisEnum
 	AggressiveMigrationEnum
 	AmrBamgEnum
 	AmrNeopzEnum
 	AndroidFrictionCoefficientEnum
 	ArrheniusEnum
 	AutodiffJacobianEnum
+	AutoregressionLinearFloatingMeltRateEnum
 	Balancethickness2AnalysisEnum
 	Balancethickness2SolutionEnum
 	BalancethicknessAnalysisEnum
@@ -1212,6 +1261,8 @@
 	CalvingDev2Enum
 	CalvingHabEnum
 	CalvingLevermannEnum
+	CalvingTestEnum
+	CalvingParameterizationEnum
 	CalvingVonmisesEnum
 	CfdragcoeffabsgradEnum
 	CfsurfacelogvelEnum
@@ -1250,6 +1301,7 @@
 	Domain3DsurfaceEnum
 	DoubleArrayInputEnum
 	ArrayInputEnum
+	IntArrayInputEnum
 	DoubleExternalResultEnum
 	DoubleMatArrayParamEnum
 	DoubleMatExternalResultEnum
@@ -1314,6 +1366,8 @@
 	HydrologyShaktiAnalysisEnum
 	HydrologyShreveAnalysisEnum
 	HydrologySolutionEnum
+	HydrologySubstepsEnum
+	HydrologySubTimeEnum
 	HydrologydcEnum
 	HydrologypismEnum
 	HydrologyshaktiEnum
@@ -1340,7 +1394,7 @@
 	InversionVzObsEnum
 	JEnum
 	L1L2ApproximationEnum
-	MLHOApproximationEnum
+	MOLHOApproximationEnum
 	L2ProjectionBaseAnalysisEnum
 	L2ProjectionEPLAnalysisEnum
 	LACrouzeixRaviartEnum
@@ -1352,14 +1406,21 @@
 	LliboutryDuvalEnum
 	LoadsEnum
 	LoveAnalysisEnum
-	LoveHiEnum
-	LoveHrEnum
+	LoveHfEnum
+	LoveHtEnum
 	LoveKernelsImagEnum
 	LoveKernelsRealEnum
-	LoveKiEnum
-	LoveKrEnum
-	LoveLiEnum
-	LoveLrEnum
+	LoveKfEnum
+	LoveKtEnum
+	LoveLfEnum
+	LoveLtEnum
+	LoveTidalHtEnum
+	LoveTidalKtEnum
+	LoveTidalLtEnum
+	LovePMTF1tEnum
+	LovePMTF2tEnum
+	LoveYiEnum
+	LoveRhsEnum
 	LoveSolutionEnum
 	MINIEnum
 	MINIcondensedEnum
@@ -1471,9 +1532,9 @@
 	ScaledEnum
 	SealevelAbsoluteEnum
 	SealevelEmotionEnum
-	SealevelInertiaTensorXZEnum
-	SealevelInertiaTensorYZEnum
-	SealevelInertiaTensorZZEnum
+	SealevelchangePolarMotionXEnum
+	SealevelchangePolarMotionYEnum
+	SealevelchangePolarMotionZEnum
 	SealevelchangePolarMotionEnum
 	SealevelNmotionEnum
 	SealevelUmotionEnum
@@ -1565,6 +1626,9 @@ end
 function EnumToString(enum::IssmEnum)
 	if(enum==ParametersSTARTEnum) return "ParametersSTART" end
 	if(enum==AdolcParamEnum) return "AdolcParam" end
+	if(enum==AgeStabilizationEnum) return "AgeStabilization" end
+	if(enum==AgeNumRequestedOutputsEnum) return "AgeNumRequestedOutputs" end
+	if(enum==AgeRequestedOutputsEnum) return "AgeRequestedOutputs" end
 	if(enum==AmrDeviatoricErrorGroupThresholdEnum) return "AmrDeviatoricErrorGroupThreshold" end
 	if(enum==AmrDeviatoricErrorMaximumEnum) return "AmrDeviatoricErrorMaximum" end
 	if(enum==AmrDeviatoricErrorResolutionEnum) return "AmrDeviatoricErrorResolution" end
@@ -1612,6 +1676,11 @@ function EnumToString(enum::IssmEnum)
 	if(enum==AutodiffXpEnum) return "AutodiffXp" end
 	if(enum==BalancethicknessStabilizationEnum) return "BalancethicknessStabilization" end
 	if(enum==BarystaticContributionsEnum) return "BarystaticContributions" end
+	if(enum==BasalforcingsAutoregressionInitialTimeEnum) return "BasalforcingsAutoregressionInitialTime" end
+	if(enum==BasalforcingsAutoregressionTimestepEnum) return "BasalforcingsAutoregressionTimestep" end
+	if(enum==BasalforcingsAutoregressiveOrderEnum) return "BasalforcingsAutoregressiveOrder" end
+	if(enum==BasalforcingsBeta0Enum) return "BasalforcingsBeta0" end
+	if(enum==BasalforcingsBeta1Enum) return "BasalforcingsBeta1" end
 	if(enum==BasalforcingsBottomplumedepthEnum) return "BasalforcingsBottomplumedepth" end
 	if(enum==BasalforcingsCrustthicknessEnum) return "BasalforcingsCrustthickness" end
 	if(enum==BasalforcingsDeepwaterElevationEnum) return "BasalforcingsDeepwaterElevation" end
@@ -1625,9 +1694,11 @@ function EnumToString(enum::IssmEnum)
 	if(enum==BasalforcingsIsmip6IsLocalEnum) return "BasalforcingsIsmip6IsLocal" end
 	if(enum==BasalforcingsIsmip6NumBasinsEnum) return "BasalforcingsIsmip6NumBasins" end
 	if(enum==BasalforcingsIsmip6TfDepthsEnum) return "BasalforcingsIsmip6TfDepths" end
+	if(enum==BasalforcingsLinearNumBasinsEnum) return "BasalforcingsLinearNumBasins" end
 	if(enum==BasalforcingsLowercrustheatEnum) return "BasalforcingsLowercrustheat" end
 	if(enum==BasalforcingsMantleconductivityEnum) return "BasalforcingsMantleconductivity" end
 	if(enum==BasalforcingsNusseltEnum) return "BasalforcingsNusselt" end
+	if(enum==BasalforcingsPhiEnum) return "BasalforcingsPhi" end
 	if(enum==BasalforcingsPicoAverageOverturningEnum) return "BasalforcingsPicoAverageOverturning" end
 	if(enum==BasalforcingsPicoAverageSalinityEnum) return "BasalforcingsPicoAverageSalinity" end
 	if(enum==BasalforcingsPicoAverageTemperatureEnum) return "BasalforcingsPicoAverageTemperature" end
@@ -1653,6 +1724,15 @@ function EnumToString(enum::IssmEnum)
 	if(enum==CalvingHeightAboveFloatationEnum) return "CalvingHeightAboveFloatation" end
 	if(enum==CalvingLawEnum) return "CalvingLaw" end
 	if(enum==CalvingMinthicknessEnum) return "CalvingMinthickness" end
+	if(enum==CalvingTestSpeedfactorEnum) return "CalvingTestSpeedfactor" end
+	if(enum==CalvingTestIndependentRateEnum) return "CalvingTestIndependentRate" end
+	if(enum==CalvingUseParamEnum) return "CalvingUseParam" end
+	if(enum==CalvingThetaEnum) return "CalvingTheta" end
+	if(enum==CalvingAlphaEnum) return "CalvingAlpha" end
+	if(enum==CalvingXoffsetEnum) return "CalvingXoffset" end
+	if(enum==CalvingYoffsetEnum) return "CalvingYoffset" end
+	if(enum==CalvingVelLowerboundEnum) return "CalvingVelLowerbound" end
+	if(enum==CalvingVelUpperboundEnum) return "CalvingVelUpperbound" end
 	if(enum==ConfigurationTypeEnum) return "ConfigurationType" end
 	if(enum==ConstantsGEnum) return "ConstantsG" end
 	if(enum==ConstantsNewtonGravityEnum) return "ConstantsNewtonGravity" end
@@ -1710,16 +1790,13 @@ function EnumToString(enum::IssmEnum)
 	if(enum==FlowequationIsFSEnum) return "FlowequationIsFS" end
 	if(enum==FlowequationIsHOEnum) return "FlowequationIsHO" end
 	if(enum==FlowequationIsL1L2Enum) return "FlowequationIsL1L2" end
-	if(enum==FlowequationIsMLHOEnum) return "FlowequationIsMLHO" end
+	if(enum==FlowequationIsMOLHOEnum) return "FlowequationIsMOLHO" end
 	if(enum==FlowequationIsSIAEnum) return "FlowequationIsSIA" end
 	if(enum==FlowequationIsSSAEnum) return "FlowequationIsSSA" end
 	if(enum==FlowequationIsNitscheEnum) return "FlowequationIsNitsche" end
 	if(enum==FeFSNitscheGammaEnum) return "FeFSNitscheGamma" end
 	if(enum==FrictionCouplingEnum) return "FrictionCoupling" end
 	if(enum==FrictionDeltaEnum) return "FrictionDelta" end
-	if(enum==FrictionDNNChainEnum) return "FrictionDNNChain" end
-	if(enum==FrictionDNNdtxEnum) return "FrictionDNNdtx" end
-	if(enum==FrictionDNNdtyEnum) return "FrictionDNNdty" end
 	if(enum==FrictionEffectivePressureLimitEnum) return "FrictionEffectivePressureLimit" end
 	if(enum==FrictionFEnum) return "FrictionF" end
 	if(enum==FrictionGammaEnum) return "FrictionGamma" end
@@ -1740,6 +1817,8 @@ function EnumToString(enum::IssmEnum)
 	if(enum==GroundinglineFrictionInterpolationEnum) return "GroundinglineFrictionInterpolation" end
 	if(enum==GroundinglineMeltInterpolationEnum) return "GroundinglineMeltInterpolation" end
 	if(enum==GroundinglineMigrationEnum) return "GroundinglineMigration" end
+	if(enum==GroundinglineNumRequestedOutputsEnum) return "GroundinglineNumRequestedOutputs" end
+	if(enum==GroundinglineRequestedOutputsEnum) return "GroundinglineRequestedOutputs" end
 	if(enum==HydrologyAveragingEnum) return "HydrologyAveraging" end
 	if(enum==HydrologyCavitySpacingEnum) return "HydrologyCavitySpacing" end
 	if(enum==HydrologyChannelConductivityEnum) return "HydrologyChannelConductivity" end
@@ -1775,6 +1854,7 @@ function EnumToString(enum::IssmEnum)
 	if(enum==HydrologydcSedimentPoreWaterMassEnum) return "HydrologydcSedimentPoreWaterMass" end
 	if(enum==HydrologydcSedimentPorosityEnum) return "HydrologydcSedimentPorosity" end
 	if(enum==HydrologydcSedimentThicknessEnum) return "HydrologydcSedimentThickness" end
+	if(enum==HydrologyStepAdaptEnum) return "HydrologyStepAdapt" end
 	if(enum==HydrologydcTransferFlagEnum) return "HydrologydcTransferFlag" end
 	if(enum==HydrologydcUnconfinedFlagEnum) return "HydrologydcUnconfinedFlag" end
 	if(enum==HydrologyshreveStabilizationEnum) return "HydrologyshreveStabilization" end
@@ -1814,6 +1894,7 @@ function EnumToString(enum::IssmEnum)
 	if(enum==LevelsetStabilizationEnum) return "LevelsetStabilization" end
 	if(enum==LockFileNameEnum) return "LockFileName" end
 	if(enum==LoveAllowLayerDeletionEnum) return "LoveAllowLayerDeletion" end
+	if(enum==LoveChandlerWobbleEnum) return "LoveChandlerWobble" end
 	if(enum==LoveCoreMantleBoundaryEnum) return "LoveCoreMantleBoundary" end
 	if(enum==LoveEarthMassEnum) return "LoveEarthMass" end
 	if(enum==LoveForcingTypeEnum) return "LoveForcingType" end
@@ -1823,7 +1904,10 @@ function EnumToString(enum::IssmEnum)
 	if(enum==LoveGravitationalConstantEnum) return "LoveGravitationalConstant" end
 	if(enum==LoveInnerCoreBoundaryEnum) return "LoveInnerCoreBoundary" end
 	if(enum==LoveComplexComputationEnum) return "LoveComplexComputation" end
+	if(enum==LoveQuadPrecisionEnum) return "LoveQuadPrecision" end
 	if(enum==LoveIntStepsPerLayerEnum) return "LoveIntStepsPerLayer" end
+	if(enum==LoveMinIntegrationStepsEnum) return "LoveMinIntegrationSteps" end
+	if(enum==LoveMaxIntegrationdrEnum) return "LoveMaxIntegrationdr" end
 	if(enum==LoveKernelsEnum) return "LoveKernels" end
 	if(enum==LoveMu0Enum) return "LoveMu0" end
 	if(enum==LoveNfreqEnum) return "LoveNfreq" end
@@ -1834,6 +1918,10 @@ function EnumToString(enum::IssmEnum)
 	if(enum==LoveShNminEnum) return "LoveShNmin" end
 	if(enum==LoveStartingLayerEnum) return "LoveStartingLayer" end
 	if(enum==LoveUnderflowTolEnum) return "LoveUnderflowTol" end
+	if(enum==LovePostWidderThresholdEnum) return "LovePostWidderThreshold" end
+	if(enum==LoveDebugEnum) return "LoveDebug" end
+	if(enum==LoveHypergeomNZEnum) return "LoveHypergeomNZ" end
+	if(enum==LoveHypergeomNAlphaEnum) return "LoveHypergeomNAlpha" end
 	if(enum==MassFluxSegmentsEnum) return "MassFluxSegments" end
 	if(enum==MassFluxSegmentsPresentEnum) return "MassFluxSegmentsPresent" end
 	if(enum==MasstransportHydrostaticAdjustmentEnum) return "MasstransportHydrostaticAdjustment" end
@@ -1903,12 +1991,10 @@ function EnumToString(enum::IssmEnum)
 	if(enum==RootPathEnum) return "RootPath" end
 	if(enum==ModelnameEnum) return "Modelname" end
 	if(enum==SamplingAlphaEnum) return "SamplingAlpha" end
-	if(enum==SamplingPhiEnum) return "SamplingPhi" end
 	if(enum==SamplingNumRequestedOutputsEnum) return "SamplingNumRequestedOutputs" end
 	if(enum==SamplingRequestedOutputsEnum) return "SamplingRequestedOutputs" end
 	if(enum==SamplingRobinEnum) return "SamplingRobin" end
 	if(enum==SamplingSeedEnum) return "SamplingSeed" end
-	if(enum==SamplingTauEnum) return "SamplingTau" end
 	if(enum==SaveResultsEnum) return "SaveResults" end
 	if(enum==SolidearthPartitionIceEnum) return "SolidearthPartitionIce" end
 	if(enum==SolidearthPartitionHydroEnum) return "SolidearthPartitionHydro" end
@@ -1920,14 +2006,23 @@ function EnumToString(enum::IssmEnum)
 	if(enum==SolidearthPlanetAreaEnum) return "SolidearthPlanetArea" end
 	if(enum==SolidearthSettingsAbstolEnum) return "SolidearthSettingsAbstol" end
 	if(enum==SolidearthSettingsCrossSectionShapeEnum) return "SolidearthSettingsCrossSectionShape" end
-	if(enum==RotationalAngularVelocityEnum) return "RotationalAngularVelocity" end
 	if(enum==SolidearthSettingsElasticEnum) return "SolidearthSettingsElastic" end
 	if(enum==SolidearthSettingsViscousEnum) return "SolidearthSettingsViscous" end
+	if(enum==SolidearthSettingsSatelliteGraviEnum) return "SolidearthSettingsSatelliteGravi" end
+	if(enum==SolidearthSettingsDegreeAccuracyEnum) return "SolidearthSettingsDegreeAccuracy" end
 	if(enum==SealevelchangeGeometryDoneEnum) return "SealevelchangeGeometryDone" end
 	if(enum==SealevelchangeViscousNumStepsEnum) return "SealevelchangeViscousNumSteps" end
 	if(enum==SealevelchangeViscousTimesEnum) return "SealevelchangeViscousTimes" end
 	if(enum==SealevelchangeViscousIndexEnum) return "SealevelchangeViscousIndex" end
+	if(enum==SealevelchangeViscousPolarMotionEnum) return "SealevelchangeViscousPolarMotion" end
+	if(enum==SealevelchangeRunCountEnum) return "SealevelchangeRunCount" end
+	if(enum==SealevelchangeTransitionsEnum) return "SealevelchangeTransitions" end
+	if(enum==SealevelchangeRequestedOutputsEnum) return "SealevelchangeRequestedOutputs" end
+	if(enum==RotationalAngularVelocityEnum) return "RotationalAngularVelocity" end
 	if(enum==RotationalEquatorialMoiEnum) return "RotationalEquatorialMoi" end
+	if(enum==RotationalPolarMoiEnum) return "RotationalPolarMoi" end
+	if(enum==LovePolarMotionTransferFunctionColinearEnum) return "LovePolarMotionTransferFunctionColinear" end
+	if(enum==LovePolarMotionTransferFunctionOrthogonalEnum) return "LovePolarMotionTransferFunctionOrthogonal" end
 	if(enum==TidalLoveHEnum) return "TidalLoveH" end
 	if(enum==TidalLoveKEnum) return "TidalLoveK" end
 	if(enum==TidalLoveLEnum) return "TidalLoveL" end
@@ -1937,13 +2032,23 @@ function EnumToString(enum::IssmEnum)
 	if(enum==LoadLoveLEnum) return "LoadLoveL" end
 	if(enum==LoveTimeFreqEnum) return "LoveTimeFreq" end
 	if(enum==LoveIsTimeEnum) return "LoveIsTime" end
+	if(enum==LoveHypergeomZEnum) return "LoveHypergeomZ" end
+	if(enum==LoveHypergeomTable1Enum) return "LoveHypergeomTable1" end
+	if(enum==LoveHypergeomTable2Enum) return "LoveHypergeomTable2" end
 	if(enum==SealevelchangeGSelfAttractionEnum) return "SealevelchangeGSelfAttraction" end
 	if(enum==SealevelchangeGViscoElasticEnum) return "SealevelchangeGViscoElastic" end
+	if(enum==SealevelchangeUViscoElasticEnum) return "SealevelchangeUViscoElastic" end
+	if(enum==SealevelchangeHViscoElasticEnum) return "SealevelchangeHViscoElastic" end
+	if(enum==SealevelchangePolarMotionTransferFunctionColinearEnum) return "SealevelchangePolarMotionTransferFunctionColinear" end
+	if(enum==SealevelchangePolarMotionTransferFunctionOrthogonalEnum) return "SealevelchangePolarMotionTransferFunctionOrthogonal" end
+	if(enum==SealevelchangePolarMotionTransferFunctionZEnum) return "SealevelchangePolarMotionTransferFunctionZ" end
+	if(enum==SealevelchangeTidalK2Enum) return "SealevelchangeTidalK2" end
+	if(enum==SealevelchangeTidalH2Enum) return "SealevelchangeTidalH2" end
+	if(enum==SealevelchangeTidalL2Enum) return "SealevelchangeTidalL2" end
 	if(enum==SolidearthSettingsSealevelLoadingEnum) return "SolidearthSettingsSealevelLoading" end
 	if(enum==SolidearthSettingsGRDEnum) return "SolidearthSettingsGRD" end
 	if(enum==SolidearthSettingsRunFrequencyEnum) return "SolidearthSettingsRunFrequency" end
 	if(enum==SolidearthSettingsTimeAccEnum) return "SolidearthSettingsTimeAcc" end
-	if(enum==SealevelchangeHViscoElasticEnum) return "SealevelchangeHViscoElastic" end
 	if(enum==SolidearthSettingsHorizEnum) return "SolidearthSettingsHoriz" end
 	if(enum==SolidearthSettingsMaxiterEnum) return "SolidearthSettingsMaxiter" end
 	if(enum==SolidearthSettingsGrdOceanEnum) return "SolidearthSettingsGrdOcean" end
@@ -1955,17 +2060,14 @@ function EnumToString(enum::IssmEnum)
 	if(enum==StochasticForcingIsEffectivePressureEnum) return "StochasticForcingIsEffectivePressure" end
 	if(enum==StochasticForcingIsStochasticForcingEnum) return "StochasticForcingIsStochasticForcing" end
 	if(enum==StochasticForcingIsWaterPressureEnum) return "StochasticForcingIsWaterPressure" end
+	if(enum==StochasticForcingNoisetermsEnum) return "StochasticForcingNoiseterms" end
 	if(enum==StochasticForcingNumFieldsEnum) return "StochasticForcingNumFields" end
 	if(enum==StochasticForcingRandomflagEnum) return "StochasticForcingRandomflag" end
-	if(enum==RotationalPolarMoiEnum) return "RotationalPolarMoi" end
+	if(enum==StochasticForcingTimestepEnum) return "StochasticForcingTimestep" end
 	if(enum==SolidearthSettingsReltolEnum) return "SolidearthSettingsReltol" end
-	if(enum==SealevelchangeRequestedOutputsEnum) return "SealevelchangeRequestedOutputs" end
 	if(enum==SolidearthSettingsSelfAttractionEnum) return "SolidearthSettingsSelfAttraction" end
 	if(enum==SolidearthSettingsRotationEnum) return "SolidearthSettingsRotation" end
 	if(enum==SolidearthSettingsMaxSHCoeffEnum) return "SolidearthSettingsMaxSHCoeff" end
-	if(enum==SealevelchangeRunCountEnum) return "SealevelchangeRunCount" end
-	if(enum==SealevelchangeTransitionsEnum) return "SealevelchangeTransitions" end
-	if(enum==SealevelchangeUViscoElasticEnum) return "SealevelchangeUViscoElastic" end
 	if(enum==SettingsIoGatherEnum) return "SettingsIoGather" end
 	if(enum==SettingsNumResultsOnNodesEnum) return "SettingsNumResultsOnNodes" end
 	if(enum==SettingsOutputFrequencyEnum) return "SettingsOutputFrequency" end
@@ -1990,6 +2092,7 @@ function EnumToString(enum::IssmEnum)
 	if(enum==SmbDesfacEnum) return "SmbDesfac" end
 	if(enum==SmbDpermilEnum) return "SmbDpermil" end
 	if(enum==SmbDsnowIdxEnum) return "SmbDsnowIdx" end
+	if(enum==SmbElevationBinsEnum) return "SmbElevationBins" end
 	if(enum==SmbCldFracEnum) return "SmbCldFrac" end
 	if(enum==SmbDelta18oEnum) return "SmbDelta18o" end
 	if(enum==SmbDelta18oSurfaceEnum) return "SmbDelta18oSurface" end
@@ -2017,11 +2120,14 @@ function EnumToString(enum::IssmEnum)
 	if(enum==SmbIsthermalEnum) return "SmbIsthermal" end
 	if(enum==SmbIsturbulentfluxEnum) return "SmbIsturbulentflux" end
 	if(enum==SmbKEnum) return "SmbK" end
+	if(enum==SmbLapseRatesEnum) return "SmbLapseRates" end
 	if(enum==SmbNumBasinsEnum) return "SmbNumBasins" end
+	if(enum==SmbNumElevationBinsEnum) return "SmbNumElevationBins" end
 	if(enum==SmbNumRequestedOutputsEnum) return "SmbNumRequestedOutputs" end
 	if(enum==SmbPfacEnum) return "SmbPfac" end
 	if(enum==SmbPhiEnum) return "SmbPhi" end
 	if(enum==SmbRdlEnum) return "SmbRdl" end
+	if(enum==SmbRefElevationEnum) return "SmbRefElevation" end
 	if(enum==SmbRequestedOutputsEnum) return "SmbRequestedOutputs" end
 	if(enum==SmbRlapsEnum) return "SmbRlaps" end
 	if(enum==SmbRlapslgmEnum) return "SmbRlapslgm" end
@@ -2033,6 +2139,7 @@ function EnumToString(enum::IssmEnum)
 	if(enum==SmbSwIdxEnum) return "SmbSwIdx" end
 	if(enum==SmbT0dryEnum) return "SmbT0dry" end
 	if(enum==SmbT0wetEnum) return "SmbT0wet" end
+	if(enum==SmbTcIdxEnum) return "SmbTcIdx" end
 	if(enum==SmbTeThreshEnum) return "SmbTeThresh" end
 	if(enum==SmbTdiffEnum) return "SmbTdiff" end
 	if(enum==SmbThermoDeltaTScalingEnum) return "SmbThermoDeltaTScaling" end
@@ -2070,6 +2177,7 @@ function EnumToString(enum::IssmEnum)
 	if(enum==ThermalStabilizationEnum) return "ThermalStabilization" end
 	if(enum==ThermalWatercolumnUpperlimitEnum) return "ThermalWatercolumnUpperlimit" end
 	if(enum==TimeEnum) return "Time" end
+	if(enum==TimesteppingAverageForcingEnum) return "TimesteppingAverageForcing" end
 	if(enum==TimesteppingCflCoefficientEnum) return "TimesteppingCflCoefficient" end
 	if(enum==TimesteppingCouplingTimeEnum) return "TimesteppingCouplingTime" end
 	if(enum==TimesteppingFinalTimeEnum) return "TimesteppingFinalTime" end
@@ -2086,6 +2194,7 @@ function EnumToString(enum::IssmEnum)
 	if(enum==ToolkitsOptionsStringsEnum) return "ToolkitsOptionsStrings" end
 	if(enum==ToolkitsTypesEnum) return "ToolkitsTypes" end
 	if(enum==TransientAmrFrequencyEnum) return "TransientAmrFrequency" end
+	if(enum==TransientIsageEnum) return "TransientIsage" end
 	if(enum==TransientIsdamageevolutionEnum) return "TransientIsdamageevolution" end
 	if(enum==TransientIsesaEnum) return "TransientIsesa" end
 	if(enum==TransientIsgiaEnum) return "TransientIsgia" end
@@ -2122,6 +2231,7 @@ function EnumToString(enum::IssmEnum)
 	if(enum==AdjointyBaseEnum) return "AdjointyBase" end
 	if(enum==AdjointyShearEnum) return "AdjointyShear" end
 	if(enum==AdjointzEnum) return "Adjointz" end
+	if(enum==AgeEnum) return "Age" end
 	if(enum==AirEnum) return "Air" end
 	if(enum==ApproximationEnum) return "Approximation" end
 	if(enum==BalancethicknessMisfitEnum) return "BalancethicknessMisfit" end
@@ -2130,10 +2240,18 @@ function EnumToString(enum::IssmEnum)
 	if(enum==BalancethicknessSpcthicknessEnum) return "BalancethicknessSpcthickness" end
 	if(enum==BalancethicknessThickeningRateEnum) return "BalancethicknessThickeningRate" end
 	if(enum==BasalCrevasseEnum) return "BasalCrevasse" end
+	if(enum==BasalforcingsDeepwaterMeltingRateAutoregressionEnum) return "BasalforcingsDeepwaterMeltingRateAutoregression" end
+	if(enum==BasalforcingsDeepwaterMeltingRateNoiseEnum) return "BasalforcingsDeepwaterMeltingRateNoise" end
+	if(enum==BasalforcingsDeepwaterMeltingRateValuesAutoregressionEnum) return "BasalforcingsDeepwaterMeltingRateValuesAutoregression" end
 	if(enum==BasalforcingsFloatingiceMeltingRateEnum) return "BasalforcingsFloatingiceMeltingRate" end
 	if(enum==BasalforcingsGeothermalfluxEnum) return "BasalforcingsGeothermalflux" end
 	if(enum==BasalforcingsGroundediceMeltingRateEnum) return "BasalforcingsGroundediceMeltingRate" end
+	if(enum==BasalforcingsLinearBasinIdEnum) return "BasalforcingsLinearBasinId" end
 	if(enum==BasalforcingsPerturbationMeltingRateEnum) return "BasalforcingsPerturbationMeltingRate" end
+	if(enum==BasalforcingsSpatialDeepwaterElevationEnum) return "BasalforcingsSpatialDeepwaterElevation" end
+	if(enum==BasalforcingsSpatialDeepwaterMeltingRateEnum) return "BasalforcingsSpatialDeepwaterMeltingRate" end
+	if(enum==BasalforcingsSpatialUpperwaterElevationEnum) return "BasalforcingsSpatialUpperwaterElevation" end
+	if(enum==BasalforcingsSpatialUpperwaterMeltingRateEnum) return "BasalforcingsSpatialUpperwaterMeltingRate" end
 	if(enum==BasalforcingsIsmip6BasinIdEnum) return "BasalforcingsIsmip6BasinId" end
 	if(enum==BasalforcingsIsmip6TfEnum) return "BasalforcingsIsmip6Tf" end
 	if(enum==BasalforcingsIsmip6TfShelfEnum) return "BasalforcingsIsmip6TfShelf" end
@@ -2155,28 +2273,28 @@ function EnumToString(enum::IssmEnum)
 	if(enum==BaseSlopeXEnum) return "BaseSlopeX" end
 	if(enum==BaseSlopeYEnum) return "BaseSlopeY" end
 	if(enum==BaselineBasalforcingsFloatingiceMeltingRateEnum) return "BaselineBasalforcingsFloatingiceMeltingRate" end
+	if(enum==BaselineBasalforcingsSpatialDeepwaterMeltingRateEnum) return "BaselineBasalforcingsSpatialDeepwaterMeltingRate" end
 	if(enum==BaselineCalvingCalvingrateEnum) return "BaselineCalvingCalvingrate" end
 	if(enum==BaselineFrictionEffectivePressureEnum) return "BaselineFrictionEffectivePressure" end
+	if(enum==BaselineSmbMassBalanceEnum) return "BaselineSmbMassBalance" end
 	if(enum==BedEnum) return "Bed" end
 	if(enum==BedGRDEnum) return "BedGRD" end
 	if(enum==BedEastEnum) return "BedEast" end
 	if(enum==BedEastGRDEnum) return "BedEastGRD" end
 	if(enum==BedNorthEnum) return "BedNorth" end
 	if(enum==BedNorthGRDEnum) return "BedNorthGRD" end
-	if(enum==BedSlopeEnum) return "BedSlope" end
 	if(enum==BedSlopeXEnum) return "BedSlopeX" end
 	if(enum==BedSlopeYEnum) return "BedSlopeY" end
 	if(enum==BottomPressureEnum) return "BottomPressure" end
 	if(enum==BottomPressureOldEnum) return "BottomPressureOld" end
 	if(enum==CalvingCalvingrateEnum) return "CalvingCalvingrate" end
 	if(enum==CalvingHabFractionEnum) return "CalvingHabFraction" end
+	if(enum==CalvingAblationrateEnum) return "CalvingAblationrate" end
 	if(enum==CalvingMeltingrateEnum) return "CalvingMeltingrate" end
 	if(enum==CalvingStressThresholdFloatingiceEnum) return "CalvingStressThresholdFloatingice" end
 	if(enum==CalvingStressThresholdGroundediceEnum) return "CalvingStressThresholdGroundedice" end
 	if(enum==CalvinglevermannCoeffEnum) return "CalvinglevermannCoeff" end
-	if(enum==CalvingratexAverageEnum) return "CalvingratexAverage" end
 	if(enum==CalvingratexEnum) return "Calvingratex" end
-	if(enum==CalvingrateyAverageEnum) return "CalvingrateyAverage" end
 	if(enum==CalvingrateyEnum) return "Calvingratey" end
 	if(enum==CalvingFluxLevelsetEnum) return "CalvingFluxLevelset" end
 	if(enum==CalvingMeltingFluxLevelsetEnum) return "CalvingMeltingFluxLevelset" end
@@ -2243,6 +2361,7 @@ function EnumToString(enum::IssmEnum)
 	if(enum==FrictionCmaxEnum) return "FrictionCmax" end
 	if(enum==FrictionCoefficientEnum) return "FrictionCoefficient" end
 	if(enum==FrictionCoefficientcoulombEnum) return "FrictionCoefficientcoulomb" end
+	if(enum==FrictionCoulombWaterPressureEnum) return "FrictionCoulombWaterPressure" end
 	if(enum==FrictionEffectivePressureEnum) return "FrictionEffectivePressure" end
 	if(enum==FrictionMEnum) return "FrictionM" end
 	if(enum==FrictionPEnum) return "FrictionP" end
@@ -2250,7 +2369,9 @@ function EnumToString(enum::IssmEnum)
 	if(enum==FrictionQEnum) return "FrictionQ" end
 	if(enum==FrictionSedimentCompressibilityCoefficientEnum) return "FrictionSedimentCompressibilityCoefficient" end
 	if(enum==FrictionTillFrictionAngleEnum) return "FrictionTillFrictionAngle" end
+	if(enum==FrictionSchoofWaterPressureEnum) return "FrictionSchoofWaterPressure" end
 	if(enum==FrictionWaterLayerEnum) return "FrictionWaterLayer" end
+	if(enum==FrictionWaterPressureEnum) return "FrictionWaterPressure" end
 	if(enum==FrictionfEnum) return "Frictionf" end
 	if(enum==FrontalForcingsBasinIdEnum) return "FrontalForcingsBasinId" end
 	if(enum==FrontalForcingsSubglacialDischargeEnum) return "FrontalForcingsSubglacialDischarge" end
@@ -2355,10 +2476,15 @@ function EnumToString(enum::IssmEnum)
 	if(enum==RheologyBInitialguessMisfitEnum) return "RheologyBInitialguessMisfit" end
 	if(enum==RheologyBbarAbsGradientEnum) return "RheologyBbarAbsGradient" end
 	if(enum==SampleEnum) return "Sample" end
+	if(enum==SampleOldEnum) return "SampleOld" end
+	if(enum==SampleNoiseEnum) return "SampleNoise" end
 	if(enum==SamplingBetaEnum) return "SamplingBeta" end
 	if(enum==SamplingKappaEnum) return "SamplingKappa" end
+	if(enum==SamplingPhiEnum) return "SamplingPhi" end
+	if(enum==SamplingTauEnum) return "SamplingTau" end
 	if(enum==SealevelEnum) return "Sealevel" end
 	if(enum==SealevelGRDEnum) return "SealevelGRD" end
+	if(enum==SatGraviGRDEnum) return "SatGraviGRD" end
 	if(enum==SealevelBarystaticMaskEnum) return "SealevelBarystaticMask" end
 	if(enum==SealevelBarystaticIceMaskEnum) return "SealevelBarystaticIceMask" end
 	if(enum==SealevelBarystaticIceWeightsEnum) return "SealevelBarystaticIceWeights" end
@@ -2391,18 +2517,6 @@ function EnumToString(enum::IssmEnum)
 	if(enum==BslcOceanEnum) return "BslcOcean" end
 	if(enum==BslcRateEnum) return "BslcRate" end
 	if(enum==GmtslcEnum) return "Gmtslc" end
-	if(enum==SealevelGrotm1Enum) return "SealevelGrotm1" end
-	if(enum==SealevelGrotm2Enum) return "SealevelGrotm2" end
-	if(enum==SealevelGrotm3Enum) return "SealevelGrotm3" end
-	if(enum==SealevelGUrotm1Enum) return "SealevelGUrotm1" end
-	if(enum==SealevelGUrotm2Enum) return "SealevelGUrotm2" end
-	if(enum==SealevelGUrotm3Enum) return "SealevelGUrotm3" end
-	if(enum==SealevelGNrotm1Enum) return "SealevelGNrotm1" end
-	if(enum==SealevelGNrotm2Enum) return "SealevelGNrotm2" end
-	if(enum==SealevelGNrotm3Enum) return "SealevelGNrotm3" end
-	if(enum==SealevelGErotm1Enum) return "SealevelGErotm1" end
-	if(enum==SealevelGErotm2Enum) return "SealevelGErotm2" end
-	if(enum==SealevelGErotm3Enum) return "SealevelGErotm3" end
 	if(enum==SealevelRSLBarystaticEnum) return "SealevelRSLBarystatic" end
 	if(enum==SealevelRSLRateEnum) return "SealevelRSLRate" end
 	if(enum==SealevelUGrdEnum) return "SealevelUGrd" end
@@ -2410,23 +2524,21 @@ function EnumToString(enum::IssmEnum)
 	if(enum==SealevelUEastEsaEnum) return "SealevelUEastEsa" end
 	if(enum==SealevelUNorthEsaEnum) return "SealevelUNorthEsa" end
 	if(enum==SealevelchangeIndicesEnum) return "SealevelchangeIndices" end
-	if(enum==SealevelchangeGEnum) return "SealevelchangeG" end
-	if(enum==SealevelchangeGUEnum) return "SealevelchangeGU" end
-	if(enum==SealevelchangeGEEnum) return "SealevelchangeGE" end
-	if(enum==SealevelchangeGNEnum) return "SealevelchangeGN" end
-	if(enum==SealevelchangeGsubelOceanEnum) return "SealevelchangeGsubelOcean" end
-	if(enum==SealevelchangeGUsubelOceanEnum) return "SealevelchangeGUsubelOcean" end
-	if(enum==SealevelchangeGEsubelOceanEnum) return "SealevelchangeGEsubelOcean" end
-	if(enum==SealevelchangeGNsubelOceanEnum) return "SealevelchangeGNsubelOcean" end
-	if(enum==SealevelchangeGsubelIceEnum) return "SealevelchangeGsubelIce" end
-	if(enum==SealevelchangeGUsubelIceEnum) return "SealevelchangeGUsubelIce" end
-	if(enum==SealevelchangeGEsubelIceEnum) return "SealevelchangeGEsubelIce" end
-	if(enum==SealevelchangeGNsubelIceEnum) return "SealevelchangeGNsubelIce" end
-	if(enum==SealevelchangeGsubelHydroEnum) return "SealevelchangeGsubelHydro" end
-	if(enum==SealevelchangeGUsubelHydroEnum) return "SealevelchangeGUsubelHydro" end
-	if(enum==SealevelchangeGEsubelHydroEnum) return "SealevelchangeGEsubelHydro" end
-	if(enum==SealevelchangeGNsubelHydroEnum) return "SealevelchangeGNsubelHydro" end
+	if(enum==SealevelchangeAlphaIndexEnum) return "SealevelchangeAlphaIndex" end
+	if(enum==SealevelchangeAzimuthIndexEnum) return "SealevelchangeAzimuthIndex" end
+	if(enum==SealevelchangeGrotEnum) return "SealevelchangeGrot" end
+	if(enum==SealevelchangeGSatGravirotEnum) return "SealevelchangeGSatGravirot" end
+	if(enum==SealevelchangeGUrotEnum) return "SealevelchangeGUrot" end
+	if(enum==SealevelchangeGNrotEnum) return "SealevelchangeGNrot" end
+	if(enum==SealevelchangeGErotEnum) return "SealevelchangeGErot" end
+	if(enum==SealevelchangeAlphaIndexOceanEnum) return "SealevelchangeAlphaIndexOcean" end
+	if(enum==SealevelchangeAlphaIndexIceEnum) return "SealevelchangeAlphaIndexIce" end
+	if(enum==SealevelchangeAlphaIndexHydroEnum) return "SealevelchangeAlphaIndexHydro" end
+	if(enum==SealevelchangeAzimuthIndexOceanEnum) return "SealevelchangeAzimuthIndexOcean" end
+	if(enum==SealevelchangeAzimuthIndexIceEnum) return "SealevelchangeAzimuthIndexIce" end
+	if(enum==SealevelchangeAzimuthIndexHydroEnum) return "SealevelchangeAzimuthIndexHydro" end
 	if(enum==SealevelchangeViscousRSLEnum) return "SealevelchangeViscousRSL" end
+	if(enum==SealevelchangeViscousSGEnum) return "SealevelchangeViscousSG" end
 	if(enum==SealevelchangeViscousUEnum) return "SealevelchangeViscousU" end
 	if(enum==SealevelchangeViscousNEnum) return "SealevelchangeViscousN" end
 	if(enum==SealevelchangeViscousEEnum) return "SealevelchangeViscousE" end
@@ -2584,7 +2696,6 @@ function EnumToString(enum::IssmEnum)
 	if(enum==SurfaceLogVxVyMisfitEnum) return "SurfaceLogVxVyMisfit" end
 	if(enum==SurfaceObservationEnum) return "SurfaceObservation" end
 	if(enum==SurfaceRelVelMisfitEnum) return "SurfaceRelVelMisfit" end
-	if(enum==SurfaceSlopeEnum) return "SurfaceSlope" end
 	if(enum==SurfaceSlopeXEnum) return "SurfaceSlopeX" end
 	if(enum==SurfaceSlopeYEnum) return "SurfaceSlopeY" end
 	if(enum==TemperatureEnum) return "Temperature" end
@@ -2604,7 +2715,6 @@ function EnumToString(enum::IssmEnum)
 	if(enum==ThicknessResidualEnum) return "ThicknessResidual" end
 	if(enum==TransientAccumulatedDeltaIceThicknessEnum) return "TransientAccumulatedDeltaIceThickness" end
 	if(enum==VelEnum) return "Vel" end
-	if(enum==VelThresholdEnum) return "VelThreshold" end
 	if(enum==VxAverageEnum) return "VxAverage" end
 	if(enum==VxBaseEnum) return "VxBase" end
 	if(enum==VxEnum) return "Vx" end
@@ -2630,8 +2740,6 @@ function EnumToString(enum::IssmEnum)
 	if(enum==WaterfractionDrainageIntegratedEnum) return "WaterfractionDrainageIntegrated" end
 	if(enum==WaterfractionEnum) return "Waterfraction" end
 	if(enum==WaterheightEnum) return "Waterheight" end
-	if(enum==FrictionWaterPressureEnum) return "FrictionWaterPressure" end
-	if(enum==FrictionWaterPressureNoiseEnum) return "FrictionWaterPressureNoise" end
 	if(enum==WeightsLevelsetObservationEnum) return "WeightsLevelsetObservation" end
 	if(enum==WeightsSurfaceObservationEnum) return "WeightsSurfaceObservation" end
 	if(enum==OldAccumulatedDeltaBottomPressureEnum) return "OldAccumulatedDeltaBottomPressure" end
@@ -2743,12 +2851,14 @@ function EnumToString(enum::IssmEnum)
 	if(enum==AdjointBalancethickness2AnalysisEnum) return "AdjointBalancethickness2Analysis" end
 	if(enum==AdjointBalancethicknessAnalysisEnum) return "AdjointBalancethicknessAnalysis" end
 	if(enum==AdjointHorizAnalysisEnum) return "AdjointHorizAnalysis" end
+	if(enum==AgeAnalysisEnum) return "AgeAnalysis" end
 	if(enum==AggressiveMigrationEnum) return "AggressiveMigration" end
 	if(enum==AmrBamgEnum) return "AmrBamg" end
 	if(enum==AmrNeopzEnum) return "AmrNeopz" end
 	if(enum==AndroidFrictionCoefficientEnum) return "AndroidFrictionCoefficient" end
 	if(enum==ArrheniusEnum) return "Arrhenius" end
 	if(enum==AutodiffJacobianEnum) return "AutodiffJacobian" end
+	if(enum==AutoregressionLinearFloatingMeltRateEnum) return "AutoregressionLinearFloatingMeltRate" end
 	if(enum==Balancethickness2AnalysisEnum) return "Balancethickness2Analysis" end
 	if(enum==Balancethickness2SolutionEnum) return "Balancethickness2Solution" end
 	if(enum==BalancethicknessAnalysisEnum) return "BalancethicknessAnalysis" end
@@ -2772,6 +2882,8 @@ function EnumToString(enum::IssmEnum)
 	if(enum==CalvingDev2Enum) return "CalvingDev2" end
 	if(enum==CalvingHabEnum) return "CalvingHab" end
 	if(enum==CalvingLevermannEnum) return "CalvingLevermann" end
+	if(enum==CalvingTestEnum) return "CalvingTest" end
+	if(enum==CalvingParameterizationEnum) return "CalvingParameterization" end
 	if(enum==CalvingVonmisesEnum) return "CalvingVonmises" end
 	if(enum==CfdragcoeffabsgradEnum) return "Cfdragcoeffabsgrad" end
 	if(enum==CfsurfacelogvelEnum) return "Cfsurfacelogvel" end
@@ -2810,6 +2922,7 @@ function EnumToString(enum::IssmEnum)
 	if(enum==Domain3DsurfaceEnum) return "Domain3Dsurface" end
 	if(enum==DoubleArrayInputEnum) return "DoubleArrayInput" end
 	if(enum==ArrayInputEnum) return "ArrayInput" end
+	if(enum==IntArrayInputEnum) return "IntArrayInput" end
 	if(enum==DoubleExternalResultEnum) return "DoubleExternalResult" end
 	if(enum==DoubleMatArrayParamEnum) return "DoubleMatArrayParam" end
 	if(enum==DoubleMatExternalResultEnum) return "DoubleMatExternalResult" end
@@ -2874,6 +2987,8 @@ function EnumToString(enum::IssmEnum)
 	if(enum==HydrologyShaktiAnalysisEnum) return "HydrologyShaktiAnalysis" end
 	if(enum==HydrologyShreveAnalysisEnum) return "HydrologyShreveAnalysis" end
 	if(enum==HydrologySolutionEnum) return "HydrologySolution" end
+	if(enum==HydrologySubstepsEnum) return "HydrologySubsteps" end
+	if(enum==HydrologySubTimeEnum) return "HydrologySubTime" end
 	if(enum==HydrologydcEnum) return "Hydrologydc" end
 	if(enum==HydrologypismEnum) return "Hydrologypism" end
 	if(enum==HydrologyshaktiEnum) return "Hydrologyshakti" end
@@ -2900,7 +3015,7 @@ function EnumToString(enum::IssmEnum)
 	if(enum==InversionVzObsEnum) return "InversionVzObs" end
 	if(enum==JEnum) return "J" end
 	if(enum==L1L2ApproximationEnum) return "L1L2Approximation" end
-	if(enum==MLHOApproximationEnum) return "MLHOApproximation" end
+	if(enum==MOLHOApproximationEnum) return "MOLHOApproximation" end
 	if(enum==L2ProjectionBaseAnalysisEnum) return "L2ProjectionBaseAnalysis" end
 	if(enum==L2ProjectionEPLAnalysisEnum) return "L2ProjectionEPLAnalysis" end
 	if(enum==LACrouzeixRaviartEnum) return "LACrouzeixRaviart" end
@@ -2912,14 +3027,21 @@ function EnumToString(enum::IssmEnum)
 	if(enum==LliboutryDuvalEnum) return "LliboutryDuval" end
 	if(enum==LoadsEnum) return "Loads" end
 	if(enum==LoveAnalysisEnum) return "LoveAnalysis" end
-	if(enum==LoveHiEnum) return "LoveHi" end
-	if(enum==LoveHrEnum) return "LoveHr" end
+	if(enum==LoveHfEnum) return "LoveHf" end
+	if(enum==LoveHtEnum) return "LoveHt" end
 	if(enum==LoveKernelsImagEnum) return "LoveKernelsImag" end
 	if(enum==LoveKernelsRealEnum) return "LoveKernelsReal" end
-	if(enum==LoveKiEnum) return "LoveKi" end
-	if(enum==LoveKrEnum) return "LoveKr" end
-	if(enum==LoveLiEnum) return "LoveLi" end
-	if(enum==LoveLrEnum) return "LoveLr" end
+	if(enum==LoveKfEnum) return "LoveKf" end
+	if(enum==LoveKtEnum) return "LoveKt" end
+	if(enum==LoveLfEnum) return "LoveLf" end
+	if(enum==LoveLtEnum) return "LoveLt" end
+	if(enum==LoveTidalHtEnum) return "LoveTidalHt" end
+	if(enum==LoveTidalKtEnum) return "LoveTidalKt" end
+	if(enum==LoveTidalLtEnum) return "LoveTidalLt" end
+	if(enum==LovePMTF1tEnum) return "LovePMTF1t" end
+	if(enum==LovePMTF2tEnum) return "LovePMTF2t" end
+	if(enum==LoveYiEnum) return "LoveYi" end
+	if(enum==LoveRhsEnum) return "LoveRhs" end
 	if(enum==LoveSolutionEnum) return "LoveSolution" end
 	if(enum==MINIEnum) return "MINI" end
 	if(enum==MINIcondensedEnum) return "MINIcondensed" end
@@ -3031,9 +3153,9 @@ function EnumToString(enum::IssmEnum)
 	if(enum==ScaledEnum) return "Scaled" end
 	if(enum==SealevelAbsoluteEnum) return "SealevelAbsolute" end
 	if(enum==SealevelEmotionEnum) return "SealevelEmotion" end
-	if(enum==SealevelInertiaTensorXZEnum) return "SealevelInertiaTensorXZ" end
-	if(enum==SealevelInertiaTensorYZEnum) return "SealevelInertiaTensorYZ" end
-	if(enum==SealevelInertiaTensorZZEnum) return "SealevelInertiaTensorZZ" end
+	if(enum==SealevelchangePolarMotionXEnum) return "SealevelchangePolarMotionX" end
+	if(enum==SealevelchangePolarMotionYEnum) return "SealevelchangePolarMotionY" end
+	if(enum==SealevelchangePolarMotionZEnum) return "SealevelchangePolarMotionZ" end
 	if(enum==SealevelchangePolarMotionEnum) return "SealevelchangePolarMotion" end
 	if(enum==SealevelNmotionEnum) return "SealevelNmotion" end
 	if(enum==SealevelUmotionEnum) return "SealevelUmotion" end
@@ -3120,4 +3242,1625 @@ function EnumToString(enum::IssmEnum)
 	if(enum==TimesteppingTimeAdaptEnum) return "TimesteppingTimeAdapt" end
 	if(enum==TriangleInterpEnum) return "TriangleInterp" end
 	if(enum==MaximumNumberOfDefinitionsEnum) return "MaximumNumberOfDefinitions" end
+end
+
+function StringToEnum(name::String)
+	if(name=="ParametersSTART") return ParametersSTARTEnum  end
+	if(name=="AdolcParam") return AdolcParamEnum  end
+	if(name=="AgeStabilization") return AgeStabilizationEnum  end
+	if(name=="AgeNumRequestedOutputs") return AgeNumRequestedOutputsEnum  end
+	if(name=="AgeRequestedOutputs") return AgeRequestedOutputsEnum  end
+	if(name=="AmrDeviatoricErrorGroupThreshold") return AmrDeviatoricErrorGroupThresholdEnum  end
+	if(name=="AmrDeviatoricErrorMaximum") return AmrDeviatoricErrorMaximumEnum  end
+	if(name=="AmrDeviatoricErrorResolution") return AmrDeviatoricErrorResolutionEnum  end
+	if(name=="AmrDeviatoricErrorThreshold") return AmrDeviatoricErrorThresholdEnum  end
+	if(name=="AmrErr") return AmrErrEnum  end
+	if(name=="AmrField") return AmrFieldEnum  end
+	if(name=="AmrGradation") return AmrGradationEnum  end
+	if(name=="AmrGroundingLineDistance") return AmrGroundingLineDistanceEnum  end
+	if(name=="AmrGroundingLineResolution") return AmrGroundingLineResolutionEnum  end
+	if(name=="AmrHmax") return AmrHmaxEnum  end
+	if(name=="AmrHmin") return AmrHminEnum  end
+	if(name=="AmrIceFrontDistance") return AmrIceFrontDistanceEnum  end
+	if(name=="AmrIceFrontResolution") return AmrIceFrontResolutionEnum  end
+	if(name=="AmrKeepMetric") return AmrKeepMetricEnum  end
+	if(name=="AmrLag") return AmrLagEnum  end
+	if(name=="AmrLevelMax") return AmrLevelMaxEnum  end
+	if(name=="AmrRestart") return AmrRestartEnum  end
+	if(name=="AmrThicknessErrorGroupThreshold") return AmrThicknessErrorGroupThresholdEnum  end
+	if(name=="AmrThicknessErrorMaximum") return AmrThicknessErrorMaximumEnum  end
+	if(name=="AmrThicknessErrorResolution") return AmrThicknessErrorResolutionEnum  end
+	if(name=="AmrThicknessErrorThreshold") return AmrThicknessErrorThresholdEnum  end
+	if(name=="AmrType") return AmrTypeEnum  end
+	if(name=="AnalysisCounter") return AnalysisCounterEnum  end
+	if(name=="AnalysisType") return AnalysisTypeEnum  end
+	if(name=="AugmentedLagrangianR") return AugmentedLagrangianREnum  end
+	if(name=="AugmentedLagrangianRholambda") return AugmentedLagrangianRholambdaEnum  end
+	if(name=="AugmentedLagrangianRhop") return AugmentedLagrangianRhopEnum  end
+	if(name=="AugmentedLagrangianRlambda") return AugmentedLagrangianRlambdaEnum  end
+	if(name=="AugmentedLagrangianTheta") return AugmentedLagrangianThetaEnum  end
+	if(name=="AutodiffCbufsize") return AutodiffCbufsizeEnum  end
+	if(name=="AutodiffDependentObjects") return AutodiffDependentObjectsEnum  end
+	if(name=="AutodiffDriver") return AutodiffDriverEnum  end
+	if(name=="AutodiffFosForwardIndex") return AutodiffFosForwardIndexEnum  end
+	if(name=="AutodiffFosReverseIndex") return AutodiffFosReverseIndexEnum  end
+	if(name=="AutodiffFovForwardIndices") return AutodiffFovForwardIndicesEnum  end
+	if(name=="AutodiffGcTriggerMaxSize") return AutodiffGcTriggerMaxSizeEnum  end
+	if(name=="AutodiffGcTriggerRatio") return AutodiffGcTriggerRatioEnum  end
+	if(name=="AutodiffIsautodiff") return AutodiffIsautodiffEnum  end
+	if(name=="AutodiffLbufsize") return AutodiffLbufsizeEnum  end
+	if(name=="AutodiffNumDependents") return AutodiffNumDependentsEnum  end
+	if(name=="AutodiffNumIndependents") return AutodiffNumIndependentsEnum  end
+	if(name=="AutodiffObufsize") return AutodiffObufsizeEnum  end
+	if(name=="AutodiffTapeAlloc") return AutodiffTapeAllocEnum  end
+	if(name=="AutodiffTbufsize") return AutodiffTbufsizeEnum  end
+	if(name=="AutodiffXp") return AutodiffXpEnum  end
+	if(name=="BalancethicknessStabilization") return BalancethicknessStabilizationEnum  end
+	if(name=="BarystaticContributions") return BarystaticContributionsEnum  end
+	if(name=="BasalforcingsAutoregressionInitialTime") return BasalforcingsAutoregressionInitialTimeEnum  end
+	if(name=="BasalforcingsAutoregressionTimestep") return BasalforcingsAutoregressionTimestepEnum  end
+	if(name=="BasalforcingsAutoregressiveOrder") return BasalforcingsAutoregressiveOrderEnum  end
+	if(name=="BasalforcingsBeta0") return BasalforcingsBeta0Enum  end
+	if(name=="BasalforcingsBeta1") return BasalforcingsBeta1Enum  end
+	if(name=="BasalforcingsBottomplumedepth") return BasalforcingsBottomplumedepthEnum  end
+	if(name=="BasalforcingsCrustthickness") return BasalforcingsCrustthicknessEnum  end
+	if(name=="BasalforcingsDeepwaterElevation") return BasalforcingsDeepwaterElevationEnum  end
+	if(name=="BasalforcingsDeepwaterMeltingRate") return BasalforcingsDeepwaterMeltingRateEnum  end
+	if(name=="BasalforcingsDtbg") return BasalforcingsDtbgEnum  end
+	if(name=="Basalforcings") return BasalforcingsEnum  end
+	if(name=="BasalforcingsIsmip6AverageTf") return BasalforcingsIsmip6AverageTfEnum  end
+	if(name=="BasalforcingsIsmip6BasinArea") return BasalforcingsIsmip6BasinAreaEnum  end
+	if(name=="BasalforcingsIsmip6DeltaT") return BasalforcingsIsmip6DeltaTEnum  end
+	if(name=="BasalforcingsIsmip6Gamma0") return BasalforcingsIsmip6Gamma0Enum  end
+	if(name=="BasalforcingsIsmip6IsLocal") return BasalforcingsIsmip6IsLocalEnum  end
+	if(name=="BasalforcingsIsmip6NumBasins") return BasalforcingsIsmip6NumBasinsEnum  end
+	if(name=="BasalforcingsIsmip6TfDepths") return BasalforcingsIsmip6TfDepthsEnum  end
+	if(name=="BasalforcingsLinearNumBasins") return BasalforcingsLinearNumBasinsEnum  end
+	if(name=="BasalforcingsLowercrustheat") return BasalforcingsLowercrustheatEnum  end
+	if(name=="BasalforcingsMantleconductivity") return BasalforcingsMantleconductivityEnum  end
+	if(name=="BasalforcingsNusselt") return BasalforcingsNusseltEnum  end
+	if(name=="BasalforcingsPhi") return BasalforcingsPhiEnum  end
+	if(name=="BasalforcingsPicoAverageOverturning") return BasalforcingsPicoAverageOverturningEnum  end
+	if(name=="BasalforcingsPicoAverageSalinity") return BasalforcingsPicoAverageSalinityEnum  end
+	if(name=="BasalforcingsPicoAverageTemperature") return BasalforcingsPicoAverageTemperatureEnum  end
+	if(name=="BasalforcingsPicoBoxArea") return BasalforcingsPicoBoxAreaEnum  end
+	if(name=="BasalforcingsPicoFarOceansalinity") return BasalforcingsPicoFarOceansalinityEnum  end
+	if(name=="BasalforcingsPicoFarOceantemperature") return BasalforcingsPicoFarOceantemperatureEnum  end
+	if(name=="BasalforcingsPicoGammaT") return BasalforcingsPicoGammaTEnum  end
+	if(name=="BasalforcingsPicoIsplume") return BasalforcingsPicoIsplumeEnum  end
+	if(name=="BasalforcingsPicoMaxboxcount") return BasalforcingsPicoMaxboxcountEnum  end
+	if(name=="BasalforcingsPicoNumBasins") return BasalforcingsPicoNumBasinsEnum  end
+	if(name=="BasalforcingsPlumeradius") return BasalforcingsPlumeradiusEnum  end
+	if(name=="BasalforcingsPlumex") return BasalforcingsPlumexEnum  end
+	if(name=="BasalforcingsPlumey") return BasalforcingsPlumeyEnum  end
+	if(name=="BasalforcingsThresholdThickness") return BasalforcingsThresholdThicknessEnum  end
+	if(name=="BasalforcingsTopplumedepth") return BasalforcingsTopplumedepthEnum  end
+	if(name=="BasalforcingsUppercrustheat") return BasalforcingsUppercrustheatEnum  end
+	if(name=="BasalforcingsUppercrustthickness") return BasalforcingsUppercrustthicknessEnum  end
+	if(name=="BasalforcingsUpperdepthMelt") return BasalforcingsUpperdepthMeltEnum  end
+	if(name=="BasalforcingsUpperwaterElevation") return BasalforcingsUpperwaterElevationEnum  end
+	if(name=="BasalforcingsUpperwaterMeltingRate") return BasalforcingsUpperwaterMeltingRateEnum  end
+	if(name=="CalvingCrevasseDepth") return CalvingCrevasseDepthEnum  end
+	if(name=="CalvingCrevasseThreshold") return CalvingCrevasseThresholdEnum  end
+	if(name=="CalvingHeightAboveFloatation") return CalvingHeightAboveFloatationEnum  end
+	if(name=="CalvingLaw") return CalvingLawEnum  end
+	if(name=="CalvingMinthickness") return CalvingMinthicknessEnum  end
+	if(name=="CalvingTestSpeedfactor") return CalvingTestSpeedfactorEnum  end
+	if(name=="CalvingTestIndependentRate") return CalvingTestIndependentRateEnum  end
+	if(name=="CalvingUseParam") return CalvingUseParamEnum  end
+	if(name=="CalvingTheta") return CalvingThetaEnum  end
+	if(name=="CalvingAlpha") return CalvingAlphaEnum  end
+	if(name=="CalvingXoffset") return CalvingXoffsetEnum  end
+	if(name=="CalvingYoffset") return CalvingYoffsetEnum  end
+	if(name=="CalvingVelLowerbound") return CalvingVelLowerboundEnum  end
+	if(name=="CalvingVelUpperbound") return CalvingVelUpperboundEnum  end
+	if(name=="ConfigurationType") return ConfigurationTypeEnum  end
+	if(name=="ConstantsG") return ConstantsGEnum  end
+	if(name=="ConstantsNewtonGravity") return ConstantsNewtonGravityEnum  end
+	if(name=="ConstantsReferencetemperature") return ConstantsReferencetemperatureEnum  end
+	if(name=="ConstantsYts") return ConstantsYtsEnum  end
+	if(name=="ControlInputSizeM") return ControlInputSizeMEnum  end
+	if(name=="ControlInputSizeN") return ControlInputSizeNEnum  end
+	if(name=="ControlInputInterpolation") return ControlInputInterpolationEnum  end
+	if(name=="CumBslc") return CumBslcEnum  end
+	if(name=="CumBslcIce") return CumBslcIceEnum  end
+	if(name=="CumBslcHydro") return CumBslcHydroEnum  end
+	if(name=="CumBslcOcean") return CumBslcOceanEnum  end
+	if(name=="CumBslcIcePartition") return CumBslcIcePartitionEnum  end
+	if(name=="CumBslcHydroPartition") return CumBslcHydroPartitionEnum  end
+	if(name=="CumBslcOceanPartition") return CumBslcOceanPartitionEnum  end
+	if(name=="CumGmtslc") return CumGmtslcEnum  end
+	if(name=="CumGmslc") return CumGmslcEnum  end
+	if(name=="DamageC1") return DamageC1Enum  end
+	if(name=="DamageC2") return DamageC2Enum  end
+	if(name=="DamageC3") return DamageC3Enum  end
+	if(name=="DamageC4") return DamageC4Enum  end
+	if(name=="Damage") return DamageEnum  end
+	if(name=="DamageEquivStress") return DamageEquivStressEnum  end
+	if(name=="DamageEvolutionNumRequestedOutputs") return DamageEvolutionNumRequestedOutputsEnum  end
+	if(name=="DamageEvolutionRequestedOutputs") return DamageEvolutionRequestedOutputsEnum  end
+	if(name=="DamageHealing") return DamageHealingEnum  end
+	if(name=="DamageKappa") return DamageKappaEnum  end
+	if(name=="DamageLaw") return DamageLawEnum  end
+	if(name=="DamageMaxDamage") return DamageMaxDamageEnum  end
+	if(name=="DamageStabilization") return DamageStabilizationEnum  end
+	if(name=="DamageStressThreshold") return DamageStressThresholdEnum  end
+	if(name=="DamageStressUBound") return DamageStressUBoundEnum  end
+	if(name=="DebugProfiling") return DebugProfilingEnum  end
+	if(name=="DomainDimension") return DomainDimensionEnum  end
+	if(name=="DomainType") return DomainTypeEnum  end
+	if(name=="DslModel") return DslModelEnum  end
+	if(name=="DslModelid") return DslModelidEnum  end
+	if(name=="DslNummodels") return DslNummodelsEnum  end
+	if(name=="SolidearthIsExternal") return SolidearthIsExternalEnum  end
+	if(name=="SolidearthExternalNature") return SolidearthExternalNatureEnum  end
+	if(name=="SolidearthExternalModelid") return SolidearthExternalModelidEnum  end
+	if(name=="SolidearthExternalNummodels") return SolidearthExternalNummodelsEnum  end
+	if(name=="SolidearthSettingsComputeBpGrd") return SolidearthSettingsComputeBpGrdEnum  end
+	if(name=="EarthId") return EarthIdEnum  end
+	if(name=="Elastic") return ElasticEnum  end
+	if(name=="EplZigZagCounter") return EplZigZagCounterEnum  end
+	if(name=="EsaHElastic") return EsaHElasticEnum  end
+	if(name=="EsaHemisphere") return EsaHemisphereEnum  end
+	if(name=="EsaRequestedOutputs") return EsaRequestedOutputsEnum  end
+	if(name=="EsaUElastic") return EsaUElasticEnum  end
+	if(name=="ExtrapolationVariable") return ExtrapolationVariableEnum  end
+	if(name=="FemModelComm") return FemModelCommEnum  end
+	if(name=="Fields") return FieldsEnum  end
+	if(name=="FlowequationFeFS") return FlowequationFeFSEnum  end
+	if(name=="FlowequationIsFS") return FlowequationIsFSEnum  end
+	if(name=="FlowequationIsHO") return FlowequationIsHOEnum  end
+	if(name=="FlowequationIsL1L2") return FlowequationIsL1L2Enum  end
+	if(name=="FlowequationIsMOLHO") return FlowequationIsMOLHOEnum  end
+	if(name=="FlowequationIsSIA") return FlowequationIsSIAEnum  end
+	if(name=="FlowequationIsSSA") return FlowequationIsSSAEnum  end
+	if(name=="FlowequationIsNitsche") return FlowequationIsNitscheEnum  end
+	if(name=="FeFSNitscheGamma") return FeFSNitscheGammaEnum  end
+	if(name=="FrictionCoupling") return FrictionCouplingEnum  end
+	if(name=="FrictionDelta") return FrictionDeltaEnum  end
+	if(name=="FrictionEffectivePressureLimit") return FrictionEffectivePressureLimitEnum  end
+	if(name=="FrictionF") return FrictionFEnum  end
+	if(name=="FrictionGamma") return FrictionGammaEnum  end
+	if(name=="FrictionLaw") return FrictionLawEnum  end
+	if(name=="FrictionPseudoplasticityExponent") return FrictionPseudoplasticityExponentEnum  end
+	if(name=="FrictionThresholdSpeed") return FrictionThresholdSpeedEnum  end
+	if(name=="FrictionVoidRatio") return FrictionVoidRatioEnum  end
+	if(name=="FrontalForcingsBasinIcefrontArea") return FrontalForcingsBasinIcefrontAreaEnum  end
+	if(name=="FrontalForcingsAutoregressionInitialTime") return FrontalForcingsAutoregressionInitialTimeEnum  end
+	if(name=="FrontalForcingsAutoregressionTimestep") return FrontalForcingsAutoregressionTimestepEnum  end
+	if(name=="FrontalForcingsAutoregressiveOrder") return FrontalForcingsAutoregressiveOrderEnum  end
+	if(name=="FrontalForcingsBeta0") return FrontalForcingsBeta0Enum  end
+	if(name=="FrontalForcingsBeta1") return FrontalForcingsBeta1Enum  end
+	if(name=="FrontalForcingsNumberofBasins") return FrontalForcingsNumberofBasinsEnum  end
+	if(name=="FrontalForcingsParam") return FrontalForcingsParamEnum  end
+	if(name=="FrontalForcingsPhi") return FrontalForcingsPhiEnum  end
+	if(name=="GrdModel") return GrdModelEnum  end
+	if(name=="GroundinglineFrictionInterpolation") return GroundinglineFrictionInterpolationEnum  end
+	if(name=="GroundinglineMeltInterpolation") return GroundinglineMeltInterpolationEnum  end
+	if(name=="GroundinglineMigration") return GroundinglineMigrationEnum  end
+	if(name=="GroundinglineNumRequestedOutputs") return GroundinglineNumRequestedOutputsEnum  end
+	if(name=="GroundinglineRequestedOutputs") return GroundinglineRequestedOutputsEnum  end
+	if(name=="HydrologyAveraging") return HydrologyAveragingEnum  end
+	if(name=="HydrologyCavitySpacing") return HydrologyCavitySpacingEnum  end
+	if(name=="HydrologyChannelConductivity") return HydrologyChannelConductivityEnum  end
+	if(name=="HydrologyChannelSheetWidth") return HydrologyChannelSheetWidthEnum  end
+	if(name=="HydrologyEnglacialVoidRatio") return HydrologyEnglacialVoidRatioEnum  end
+	if(name=="HydrologyIschannels") return HydrologyIschannelsEnum  end
+	if(name=="HydrologyMeltFlag") return HydrologyMeltFlagEnum  end
+	if(name=="HydrologyModel") return HydrologyModelEnum  end
+	if(name=="HydrologyNumRequestedOutputs") return HydrologyNumRequestedOutputsEnum  end
+	if(name=="HydrologyPressureMeltCoefficient") return HydrologyPressureMeltCoefficientEnum  end
+	if(name=="HydrologyRelaxation") return HydrologyRelaxationEnum  end
+	if(name=="HydrologyRequestedOutputs") return HydrologyRequestedOutputsEnum  end
+	if(name=="HydrologySedimentKmax") return HydrologySedimentKmaxEnum  end
+	if(name=="HydrologyStepsPerStep") return HydrologyStepsPerStepEnum  end
+	if(name=="HydrologyStorage") return HydrologyStorageEnum  end
+	if(name=="HydrologydcEplColapseThickness") return HydrologydcEplColapseThicknessEnum  end
+	if(name=="HydrologydcEplConductivity") return HydrologydcEplConductivityEnum  end
+	if(name=="HydrologydcEplInitialThickness") return HydrologydcEplInitialThicknessEnum  end
+	if(name=="HydrologydcEplLayerCompressibility") return HydrologydcEplLayerCompressibilityEnum  end
+	if(name=="HydrologydcEplMaxThickness") return HydrologydcEplMaxThicknessEnum  end
+	if(name=="HydrologydcEplPoreWaterMass") return HydrologydcEplPoreWaterMassEnum  end
+	if(name=="HydrologydcEplThickComp") return HydrologydcEplThickCompEnum  end
+	if(name=="HydrologydcEplflipLock") return HydrologydcEplflipLockEnum  end
+	if(name=="HydrologydcIsefficientlayer") return HydrologydcIsefficientlayerEnum  end
+	if(name=="HydrologydcLeakageFactor") return HydrologydcLeakageFactorEnum  end
+	if(name=="HydrologydcMaxIter") return HydrologydcMaxIterEnum  end
+	if(name=="HydrologydcPenaltyFactor") return HydrologydcPenaltyFactorEnum  end
+	if(name=="HydrologydcPenaltyLock") return HydrologydcPenaltyLockEnum  end
+	if(name=="HydrologydcRelTol") return HydrologydcRelTolEnum  end
+	if(name=="HydrologydcSedimentlimit") return HydrologydcSedimentlimitEnum  end
+	if(name=="HydrologydcSedimentlimitFlag") return HydrologydcSedimentlimitFlagEnum  end
+	if(name=="HydrologydcSedimentLayerCompressibility") return HydrologydcSedimentLayerCompressibilityEnum  end
+	if(name=="HydrologydcSedimentPoreWaterMass") return HydrologydcSedimentPoreWaterMassEnum  end
+	if(name=="HydrologydcSedimentPorosity") return HydrologydcSedimentPorosityEnum  end
+	if(name=="HydrologydcSedimentThickness") return HydrologydcSedimentThicknessEnum  end
+	if(name=="HydrologyStepAdapt") return HydrologyStepAdaptEnum  end
+	if(name=="HydrologydcTransferFlag") return HydrologydcTransferFlagEnum  end
+	if(name=="HydrologydcUnconfinedFlag") return HydrologydcUnconfinedFlagEnum  end
+	if(name=="HydrologyshreveStabilization") return HydrologyshreveStabilizationEnum  end
+	if(name=="IcecapToEarthComm") return IcecapToEarthCommEnum  end
+	if(name=="Index") return IndexEnum  end
+	if(name=="InputFileName") return InputFileNameEnum  end
+	if(name=="DirectoryName") return DirectoryNameEnum  end
+	if(name=="Indices") return IndicesEnum  end
+	if(name=="InputToDepthaverageIn") return InputToDepthaverageInEnum  end
+	if(name=="InputToDepthaverageOut") return InputToDepthaverageOutEnum  end
+	if(name=="InputToExtrude") return InputToExtrudeEnum  end
+	if(name=="InputToL2Project") return InputToL2ProjectEnum  end
+	if(name=="InputToSmooth") return InputToSmoothEnum  end
+	if(name=="InversionAlgorithm") return InversionAlgorithmEnum  end
+	if(name=="InversionControlParameters") return InversionControlParametersEnum  end
+	if(name=="InversionControlScalingFactors") return InversionControlScalingFactorsEnum  end
+	if(name=="InversionCostFunctions") return InversionCostFunctionsEnum  end
+	if(name=="InversionDxmin") return InversionDxminEnum  end
+	if(name=="InversionGatol") return InversionGatolEnum  end
+	if(name=="InversionGradientScaling") return InversionGradientScalingEnum  end
+	if(name=="InversionGrtol") return InversionGrtolEnum  end
+	if(name=="InversionGttol") return InversionGttolEnum  end
+	if(name=="InversionIncompleteAdjoint") return InversionIncompleteAdjointEnum  end
+	if(name=="InversionIscontrol") return InversionIscontrolEnum  end
+	if(name=="InversionMaxiter") return InversionMaxiterEnum  end
+	if(name=="InversionMaxiterPerStep") return InversionMaxiterPerStepEnum  end
+	if(name=="InversionMaxsteps") return InversionMaxstepsEnum  end
+	if(name=="InversionNsteps") return InversionNstepsEnum  end
+	if(name=="InversionNumControlParameters") return InversionNumControlParametersEnum  end
+	if(name=="InversionNumCostFunctions") return InversionNumCostFunctionsEnum  end
+	if(name=="InversionStepThreshold") return InversionStepThresholdEnum  end
+	if(name=="InversionType") return InversionTypeEnum  end
+	if(name=="Ivins") return IvinsEnum  end
+	if(name=="IsSlcCoupling") return IsSlcCouplingEnum  end
+	if(name=="LevelsetKillIcebergs") return LevelsetKillIcebergsEnum  end
+	if(name=="LevelsetReinitFrequency") return LevelsetReinitFrequencyEnum  end
+	if(name=="LevelsetStabilization") return LevelsetStabilizationEnum  end
+	if(name=="LockFileName") return LockFileNameEnum  end
+	if(name=="LoveAllowLayerDeletion") return LoveAllowLayerDeletionEnum  end
+	if(name=="LoveChandlerWobble") return LoveChandlerWobbleEnum  end
+	if(name=="LoveCoreMantleBoundary") return LoveCoreMantleBoundaryEnum  end
+	if(name=="LoveEarthMass") return LoveEarthMassEnum  end
+	if(name=="LoveForcingType") return LoveForcingTypeEnum  end
+	if(name=="LoveFrequencies") return LoveFrequenciesEnum  end
+	if(name=="LoveIsTemporal") return LoveIsTemporalEnum  end
+	if(name=="LoveG0") return LoveG0Enum  end
+	if(name=="LoveGravitationalConstant") return LoveGravitationalConstantEnum  end
+	if(name=="LoveInnerCoreBoundary") return LoveInnerCoreBoundaryEnum  end
+	if(name=="LoveComplexComputation") return LoveComplexComputationEnum  end
+	if(name=="LoveQuadPrecision") return LoveQuadPrecisionEnum  end
+	if(name=="LoveIntStepsPerLayer") return LoveIntStepsPerLayerEnum  end
+	if(name=="LoveMinIntegrationSteps") return LoveMinIntegrationStepsEnum  end
+	if(name=="LoveMaxIntegrationdr") return LoveMaxIntegrationdrEnum  end
+	if(name=="LoveKernels") return LoveKernelsEnum  end
+	if(name=="LoveMu0") return LoveMu0Enum  end
+	if(name=="LoveNfreq") return LoveNfreqEnum  end
+	if(name=="LoveNTemporalIterations") return LoveNTemporalIterationsEnum  end
+	if(name=="LoveNYiEquations") return LoveNYiEquationsEnum  end
+	if(name=="LoveR0") return LoveR0Enum  end
+	if(name=="LoveShNmax") return LoveShNmaxEnum  end
+	if(name=="LoveShNmin") return LoveShNminEnum  end
+	if(name=="LoveStartingLayer") return LoveStartingLayerEnum  end
+	if(name=="LoveUnderflowTol") return LoveUnderflowTolEnum  end
+	if(name=="LovePostWidderThreshold") return LovePostWidderThresholdEnum  end
+	if(name=="LoveDebug") return LoveDebugEnum  end
+	if(name=="LoveHypergeomNZ") return LoveHypergeomNZEnum  end
+	if(name=="LoveHypergeomNAlpha") return LoveHypergeomNAlphaEnum  end
+	if(name=="MassFluxSegments") return MassFluxSegmentsEnum  end
+	if(name=="MassFluxSegmentsPresent") return MassFluxSegmentsPresentEnum  end
+	if(name=="MasstransportHydrostaticAdjustment") return MasstransportHydrostaticAdjustmentEnum  end
+	if(name=="MasstransportIsfreesurface") return MasstransportIsfreesurfaceEnum  end
+	if(name=="MasstransportMinThickness") return MasstransportMinThicknessEnum  end
+	if(name=="MasstransportNumRequestedOutputs") return MasstransportNumRequestedOutputsEnum  end
+	if(name=="MasstransportPenaltyFactor") return MasstransportPenaltyFactorEnum  end
+	if(name=="MasstransportRequestedOutputs") return MasstransportRequestedOutputsEnum  end
+	if(name=="MasstransportStabilization") return MasstransportStabilizationEnum  end
+	if(name=="MaterialsBeta") return MaterialsBetaEnum  end
+	if(name=="MaterialsEarthDensity") return MaterialsEarthDensityEnum  end
+	if(name=="MaterialsEffectiveconductivityAveraging") return MaterialsEffectiveconductivityAveragingEnum  end
+	if(name=="MaterialsHeatcapacity") return MaterialsHeatcapacityEnum  end
+	if(name=="MaterialsLatentheat") return MaterialsLatentheatEnum  end
+	if(name=="MaterialsMeltingpoint") return MaterialsMeltingpointEnum  end
+	if(name=="MaterialsMixedLayerCapacity") return MaterialsMixedLayerCapacityEnum  end
+	if(name=="MaterialsMuWater") return MaterialsMuWaterEnum  end
+	if(name=="MaterialsRheologyLaw") return MaterialsRheologyLawEnum  end
+	if(name=="MaterialsRhoFreshwater") return MaterialsRhoFreshwaterEnum  end
+	if(name=="MaterialsRhoIce") return MaterialsRhoIceEnum  end
+	if(name=="MaterialsRhoSeawater") return MaterialsRhoSeawaterEnum  end
+	if(name=="MaterialsTemperateiceconductivity") return MaterialsTemperateiceconductivityEnum  end
+	if(name=="MaterialsThermalExchangeVelocity") return MaterialsThermalExchangeVelocityEnum  end
+	if(name=="MaterialsThermalconductivity") return MaterialsThermalconductivityEnum  end
+	if(name=="MeltingOffset") return MeltingOffsetEnum  end
+	if(name=="MeshAverageVertexConnectivity") return MeshAverageVertexConnectivityEnum  end
+	if(name=="MeshElementtype") return MeshElementtypeEnum  end
+	if(name=="MeshNumberoflayers") return MeshNumberoflayersEnum  end
+	if(name=="MeshNumberofvertices") return MeshNumberofverticesEnum  end
+	if(name=="MeshNumberofelements") return MeshNumberofelementsEnum  end
+	if(name=="MigrationMax") return MigrationMaxEnum  end
+	if(name=="ModelId") return ModelIdEnum  end
+	if(name=="Nbins") return NbinsEnum  end
+	if(name=="Nodes") return NodesEnum  end
+	if(name=="NumModels") return NumModelsEnum  end
+	if(name=="OceanGridNx") return OceanGridNxEnum  end
+	if(name=="OceanGridNy") return OceanGridNyEnum  end
+	if(name=="OceanGridX") return OceanGridXEnum  end
+	if(name=="OceanGridY") return OceanGridYEnum  end
+	if(name=="OutputBufferPointer") return OutputBufferPointerEnum  end
+	if(name=="OutputBufferSizePointer") return OutputBufferSizePointerEnum  end
+	if(name=="OutputFileName") return OutputFileNameEnum  end
+	if(name=="OutputFilePointer") return OutputFilePointerEnum  end
+	if(name=="Outputdefinition") return OutputdefinitionEnum  end
+	if(name=="QmuErrName") return QmuErrNameEnum  end
+	if(name=="QmuInName") return QmuInNameEnum  end
+	if(name=="QmuIsdakota") return QmuIsdakotaEnum  end
+	if(name=="QmuOutName") return QmuOutNameEnum  end
+	if(name=="QmuOutput") return QmuOutputEnum  end
+	if(name=="QmuCurrEvalId") return QmuCurrEvalIdEnum  end
+	if(name=="QmuNsample") return QmuNsampleEnum  end
+	if(name=="QmuResponsedescriptors") return QmuResponsedescriptorsEnum  end
+	if(name=="QmuVariableDescriptors") return QmuVariableDescriptorsEnum  end
+	if(name=="QmuVariablePartitions") return QmuVariablePartitionsEnum  end
+	if(name=="QmuVariablePartitionsNpart") return QmuVariablePartitionsNpartEnum  end
+	if(name=="QmuVariablePartitionsNt") return QmuVariablePartitionsNtEnum  end
+	if(name=="QmuResponsePartitions") return QmuResponsePartitionsEnum  end
+	if(name=="QmuResponsePartitionsNpart") return QmuResponsePartitionsNpartEnum  end
+	if(name=="QmuStatistics") return QmuStatisticsEnum  end
+	if(name=="QmuNumstatistics") return QmuNumstatisticsEnum  end
+	if(name=="QmuNdirectories") return QmuNdirectoriesEnum  end
+	if(name=="QmuNfilesPerDirectory") return QmuNfilesPerDirectoryEnum  end
+	if(name=="QmuStatisticsMethod") return QmuStatisticsMethodEnum  end
+	if(name=="QmuMethods") return QmuMethodsEnum  end
+	if(name=="RestartFileName") return RestartFileNameEnum  end
+	if(name=="Results") return ResultsEnum  end
+	if(name=="RootPath") return RootPathEnum  end
+	if(name=="Modelname") return ModelnameEnum  end
+	if(name=="SamplingAlpha") return SamplingAlphaEnum  end
+	if(name=="SamplingNumRequestedOutputs") return SamplingNumRequestedOutputsEnum  end
+	if(name=="SamplingRequestedOutputs") return SamplingRequestedOutputsEnum  end
+	if(name=="SamplingRobin") return SamplingRobinEnum  end
+	if(name=="SamplingSeed") return SamplingSeedEnum  end
+	if(name=="SaveResults") return SaveResultsEnum  end
+	if(name=="SolidearthPartitionIce") return SolidearthPartitionIceEnum  end
+	if(name=="SolidearthPartitionHydro") return SolidearthPartitionHydroEnum  end
+	if(name=="SolidearthPartitionOcean") return SolidearthPartitionOceanEnum  end
+	if(name=="SolidearthNpartIce") return SolidearthNpartIceEnum  end
+	if(name=="SolidearthNpartOcean") return SolidearthNpartOceanEnum  end
+	if(name=="SolidearthNpartHydro") return SolidearthNpartHydroEnum  end
+	if(name=="SolidearthPlanetRadius") return SolidearthPlanetRadiusEnum  end
+	if(name=="SolidearthPlanetArea") return SolidearthPlanetAreaEnum  end
+	if(name=="SolidearthSettingsAbstol") return SolidearthSettingsAbstolEnum  end
+	if(name=="SolidearthSettingsCrossSectionShape") return SolidearthSettingsCrossSectionShapeEnum  end
+	if(name=="SolidearthSettingsElastic") return SolidearthSettingsElasticEnum  end
+	if(name=="SolidearthSettingsViscous") return SolidearthSettingsViscousEnum  end
+	if(name=="SolidearthSettingsSatelliteGravi") return SolidearthSettingsSatelliteGraviEnum  end
+	if(name=="SolidearthSettingsDegreeAccuracy") return SolidearthSettingsDegreeAccuracyEnum  end
+	if(name=="SealevelchangeGeometryDone") return SealevelchangeGeometryDoneEnum  end
+	if(name=="SealevelchangeViscousNumSteps") return SealevelchangeViscousNumStepsEnum  end
+	if(name=="SealevelchangeViscousTimes") return SealevelchangeViscousTimesEnum  end
+	if(name=="SealevelchangeViscousIndex") return SealevelchangeViscousIndexEnum  end
+	if(name=="SealevelchangeViscousPolarMotion") return SealevelchangeViscousPolarMotionEnum  end
+	if(name=="SealevelchangeRunCount") return SealevelchangeRunCountEnum  end
+	if(name=="SealevelchangeTransitions") return SealevelchangeTransitionsEnum  end
+	if(name=="SealevelchangeRequestedOutputs") return SealevelchangeRequestedOutputsEnum  end
+	if(name=="RotationalAngularVelocity") return RotationalAngularVelocityEnum  end
+	if(name=="RotationalEquatorialMoi") return RotationalEquatorialMoiEnum  end
+	if(name=="RotationalPolarMoi") return RotationalPolarMoiEnum  end
+	if(name=="LovePolarMotionTransferFunctionColinear") return LovePolarMotionTransferFunctionColinearEnum  end
+	if(name=="LovePolarMotionTransferFunctionOrthogonal") return LovePolarMotionTransferFunctionOrthogonalEnum  end
+	if(name=="TidalLoveH") return TidalLoveHEnum  end
+	if(name=="TidalLoveK") return TidalLoveKEnum  end
+	if(name=="TidalLoveL") return TidalLoveLEnum  end
+	if(name=="TidalLoveK2Secular") return TidalLoveK2SecularEnum  end
+	if(name=="LoadLoveH") return LoadLoveHEnum  end
+	if(name=="LoadLoveK") return LoadLoveKEnum  end
+	if(name=="LoadLoveL") return LoadLoveLEnum  end
+	if(name=="LoveTimeFreq") return LoveTimeFreqEnum  end
+	if(name=="LoveIsTime") return LoveIsTimeEnum  end
+	if(name=="LoveHypergeomZ") return LoveHypergeomZEnum  end
+	if(name=="LoveHypergeomTable1") return LoveHypergeomTable1Enum  end
+	if(name=="LoveHypergeomTable2") return LoveHypergeomTable2Enum  end
+	if(name=="SealevelchangeGSelfAttraction") return SealevelchangeGSelfAttractionEnum  end
+	if(name=="SealevelchangeGViscoElastic") return SealevelchangeGViscoElasticEnum  end
+	if(name=="SealevelchangeUViscoElastic") return SealevelchangeUViscoElasticEnum  end
+	if(name=="SealevelchangeHViscoElastic") return SealevelchangeHViscoElasticEnum  end
+	if(name=="SealevelchangePolarMotionTransferFunctionColinear") return SealevelchangePolarMotionTransferFunctionColinearEnum  end
+	if(name=="SealevelchangePolarMotionTransferFunctionOrthogonal") return SealevelchangePolarMotionTransferFunctionOrthogonalEnum  end
+	if(name=="SealevelchangePolarMotionTransferFunctionZ") return SealevelchangePolarMotionTransferFunctionZEnum  end
+	if(name=="SealevelchangeTidalK2") return SealevelchangeTidalK2Enum  end
+	if(name=="SealevelchangeTidalH2") return SealevelchangeTidalH2Enum  end
+	if(name=="SealevelchangeTidalL2") return SealevelchangeTidalL2Enum  end
+	if(name=="SolidearthSettingsSealevelLoading") return SolidearthSettingsSealevelLoadingEnum  end
+	if(name=="SolidearthSettingsGRD") return SolidearthSettingsGRDEnum  end
+	if(name=="SolidearthSettingsRunFrequency") return SolidearthSettingsRunFrequencyEnum  end
+	if(name=="SolidearthSettingsTimeAcc") return SolidearthSettingsTimeAccEnum  end
+	if(name=="SolidearthSettingsHoriz") return SolidearthSettingsHorizEnum  end
+	if(name=="SolidearthSettingsMaxiter") return SolidearthSettingsMaxiterEnum  end
+	if(name=="SolidearthSettingsGrdOcean") return SolidearthSettingsGrdOceanEnum  end
+	if(name=="SolidearthSettingsOceanAreaScaling") return SolidearthSettingsOceanAreaScalingEnum  end
+	if(name=="StochasticForcingCovariance") return StochasticForcingCovarianceEnum  end
+	if(name=="StochasticForcingDefaultDimension") return StochasticForcingDefaultDimensionEnum  end
+	if(name=="StochasticForcingDimensions") return StochasticForcingDimensionsEnum  end
+	if(name=="StochasticForcingFields") return StochasticForcingFieldsEnum  end
+	if(name=="StochasticForcingIsEffectivePressure") return StochasticForcingIsEffectivePressureEnum  end
+	if(name=="StochasticForcingIsStochasticForcing") return StochasticForcingIsStochasticForcingEnum  end
+	if(name=="StochasticForcingIsWaterPressure") return StochasticForcingIsWaterPressureEnum  end
+	if(name=="StochasticForcingNoiseterms") return StochasticForcingNoisetermsEnum  end
+	if(name=="StochasticForcingNumFields") return StochasticForcingNumFieldsEnum  end
+	if(name=="StochasticForcingRandomflag") return StochasticForcingRandomflagEnum  end
+	if(name=="StochasticForcingTimestep") return StochasticForcingTimestepEnum  end
+	if(name=="SolidearthSettingsReltol") return SolidearthSettingsReltolEnum  end
+	if(name=="SolidearthSettingsSelfAttraction") return SolidearthSettingsSelfAttractionEnum  end
+	if(name=="SolidearthSettingsRotation") return SolidearthSettingsRotationEnum  end
+	if(name=="SolidearthSettingsMaxSHCoeff") return SolidearthSettingsMaxSHCoeffEnum  end
+	if(name=="SettingsIoGather") return SettingsIoGatherEnum  end
+	if(name=="SettingsNumResultsOnNodes") return SettingsNumResultsOnNodesEnum  end
+	if(name=="SettingsOutputFrequency") return SettingsOutputFrequencyEnum  end
+	if(name=="SettingsCheckpointFrequency") return SettingsCheckpointFrequencyEnum  end
+	if(name=="SettingsResultsOnNodes") return SettingsResultsOnNodesEnum  end
+	if(name=="SettingsSbCouplingFrequency") return SettingsSbCouplingFrequencyEnum  end
+	if(name=="SettingsSolverResidueThreshold") return SettingsSolverResidueThresholdEnum  end
+	if(name=="SettingsWaitonlock") return SettingsWaitonlockEnum  end
+	if(name=="SmbAIce") return SmbAIceEnum  end
+	if(name=="SmbAIdx") return SmbAIdxEnum  end
+	if(name=="SmbASnow") return SmbASnowEnum  end
+	if(name=="SmbAccualti") return SmbAccualtiEnum  end
+	if(name=="SmbAccugrad") return SmbAccugradEnum  end
+	if(name=="SmbAccuref") return SmbAccurefEnum  end
+	if(name=="SmbAdThresh") return SmbAdThreshEnum  end
+	if(name=="SmbAutoregressionInitialTime") return SmbAutoregressionInitialTimeEnum  end
+	if(name=="SmbAutoregressionTimestep") return SmbAutoregressionTimestepEnum  end
+	if(name=="SmbAutoregressiveOrder") return SmbAutoregressiveOrderEnum  end
+	if(name=="SmbAveraging") return SmbAveragingEnum  end
+	if(name=="SmbBeta0") return SmbBeta0Enum  end
+	if(name=="SmbBeta1") return SmbBeta1Enum  end
+	if(name=="SmbDesfac") return SmbDesfacEnum  end
+	if(name=="SmbDpermil") return SmbDpermilEnum  end
+	if(name=="SmbDsnowIdx") return SmbDsnowIdxEnum  end
+	if(name=="SmbElevationBins") return SmbElevationBinsEnum  end
+	if(name=="SmbCldFrac") return SmbCldFracEnum  end
+	if(name=="SmbDelta18o") return SmbDelta18oEnum  end
+	if(name=="SmbDelta18oSurface") return SmbDelta18oSurfaceEnum  end
+	if(name=="SmbDenIdx") return SmbDenIdxEnum  end
+	if(name=="SmbDt") return SmbDtEnum  end
+	if(name=="Smb") return SmbEnum  end
+	if(name=="SmbEIdx") return SmbEIdxEnum  end
+	if(name=="SmbF") return SmbFEnum  end
+	if(name=="SmbInitDensityScaling") return SmbInitDensityScalingEnum  end
+	if(name=="SmbIsaccumulation") return SmbIsaccumulationEnum  end
+	if(name=="SmbIsalbedo") return SmbIsalbedoEnum  end
+	if(name=="SmbIsconstrainsurfaceT") return SmbIsconstrainsurfaceTEnum  end
+	if(name=="SmbIsd18opd") return SmbIsd18opdEnum  end
+	if(name=="SmbIsdelta18o") return SmbIsdelta18oEnum  end
+	if(name=="SmbIsdensification") return SmbIsdensificationEnum  end
+	if(name=="SmbIsdeltaLWup") return SmbIsdeltaLWupEnum  end
+	if(name=="SmbIsfirnwarming") return SmbIsfirnwarmingEnum  end
+	if(name=="SmbIsgraingrowth") return SmbIsgraingrowthEnum  end
+	if(name=="SmbIsmelt") return SmbIsmeltEnum  end
+	if(name=="SmbIsmungsm") return SmbIsmungsmEnum  end
+	if(name=="SmbIsprecipscaled") return SmbIsprecipscaledEnum  end
+	if(name=="SmbIssetpddfac") return SmbIssetpddfacEnum  end
+	if(name=="SmbIsshortwave") return SmbIsshortwaveEnum  end
+	if(name=="SmbIstemperaturescaled") return SmbIstemperaturescaledEnum  end
+	if(name=="SmbIsthermal") return SmbIsthermalEnum  end
+	if(name=="SmbIsturbulentflux") return SmbIsturbulentfluxEnum  end
+	if(name=="SmbK") return SmbKEnum  end
+	if(name=="SmbLapseRates") return SmbLapseRatesEnum  end
+	if(name=="SmbNumBasins") return SmbNumBasinsEnum  end
+	if(name=="SmbNumElevationBins") return SmbNumElevationBinsEnum  end
+	if(name=="SmbNumRequestedOutputs") return SmbNumRequestedOutputsEnum  end
+	if(name=="SmbPfac") return SmbPfacEnum  end
+	if(name=="SmbPhi") return SmbPhiEnum  end
+	if(name=="SmbRdl") return SmbRdlEnum  end
+	if(name=="SmbRefElevation") return SmbRefElevationEnum  end
+	if(name=="SmbRequestedOutputs") return SmbRequestedOutputsEnum  end
+	if(name=="SmbRlaps") return SmbRlapsEnum  end
+	if(name=="SmbRlapslgm") return SmbRlapslgmEnum  end
+	if(name=="SmbRunoffalti") return SmbRunoffaltiEnum  end
+	if(name=="SmbRunoffgrad") return SmbRunoffgradEnum  end
+	if(name=="SmbRunoffref") return SmbRunoffrefEnum  end
+	if(name=="SmbSealev") return SmbSealevEnum  end
+	if(name=="SmbStepsPerStep") return SmbStepsPerStepEnum  end
+	if(name=="SmbSwIdx") return SmbSwIdxEnum  end
+	if(name=="SmbT0dry") return SmbT0dryEnum  end
+	if(name=="SmbT0wet") return SmbT0wetEnum  end
+	if(name=="SmbTcIdx") return SmbTcIdxEnum  end
+	if(name=="SmbTeThresh") return SmbTeThreshEnum  end
+	if(name=="SmbTdiff") return SmbTdiffEnum  end
+	if(name=="SmbThermoDeltaTScaling") return SmbThermoDeltaTScalingEnum  end
+	if(name=="SmbTemperaturesReconstructedYears") return SmbTemperaturesReconstructedYearsEnum  end
+	if(name=="SmbPrecipitationsReconstructedYears") return SmbPrecipitationsReconstructedYearsEnum  end
+	if(name=="SmoothThicknessMultiplier") return SmoothThicknessMultiplierEnum  end
+	if(name=="SolutionType") return SolutionTypeEnum  end
+	if(name=="SteadystateMaxiter") return SteadystateMaxiterEnum  end
+	if(name=="SteadystateNumRequestedOutputs") return SteadystateNumRequestedOutputsEnum  end
+	if(name=="SteadystateReltol") return SteadystateReltolEnum  end
+	if(name=="SteadystateRequestedOutputs") return SteadystateRequestedOutputsEnum  end
+	if(name=="Step") return StepEnum  end
+	if(name=="Steps") return StepsEnum  end
+	if(name=="StressbalanceAbstol") return StressbalanceAbstolEnum  end
+	if(name=="StressbalanceFSreconditioning") return StressbalanceFSreconditioningEnum  end
+	if(name=="StressbalanceIsnewton") return StressbalanceIsnewtonEnum  end
+	if(name=="StressbalanceMaxiter") return StressbalanceMaxiterEnum  end
+	if(name=="StressbalanceNumRequestedOutputs") return StressbalanceNumRequestedOutputsEnum  end
+	if(name=="StressbalancePenaltyFactor") return StressbalancePenaltyFactorEnum  end
+	if(name=="StressbalanceReltol") return StressbalanceReltolEnum  end
+	if(name=="StressbalanceRequestedOutputs") return StressbalanceRequestedOutputsEnum  end
+	if(name=="StressbalanceRestol") return StressbalanceRestolEnum  end
+	if(name=="StressbalanceRiftPenaltyThreshold") return StressbalanceRiftPenaltyThresholdEnum  end
+	if(name=="StressbalanceShelfDampening") return StressbalanceShelfDampeningEnum  end
+	if(name=="ThermalIsdrainicecolumn") return ThermalIsdrainicecolumnEnum  end
+	if(name=="ThermalIsdynamicbasalspc") return ThermalIsdynamicbasalspcEnum  end
+	if(name=="ThermalIsenthalpy") return ThermalIsenthalpyEnum  end
+	if(name=="ThermalMaxiter") return ThermalMaxiterEnum  end
+	if(name=="ThermalNumRequestedOutputs") return ThermalNumRequestedOutputsEnum  end
+	if(name=="ThermalPenaltyFactor") return ThermalPenaltyFactorEnum  end
+	if(name=="ThermalPenaltyLock") return ThermalPenaltyLockEnum  end
+	if(name=="ThermalPenaltyThreshold") return ThermalPenaltyThresholdEnum  end
+	if(name=="ThermalReltol") return ThermalReltolEnum  end
+	if(name=="ThermalRequestedOutputs") return ThermalRequestedOutputsEnum  end
+	if(name=="ThermalStabilization") return ThermalStabilizationEnum  end
+	if(name=="ThermalWatercolumnUpperlimit") return ThermalWatercolumnUpperlimitEnum  end
+	if(name=="Time") return TimeEnum  end
+	if(name=="TimesteppingAverageForcing") return TimesteppingAverageForcingEnum  end
+	if(name=="TimesteppingCflCoefficient") return TimesteppingCflCoefficientEnum  end
+	if(name=="TimesteppingCouplingTime") return TimesteppingCouplingTimeEnum  end
+	if(name=="TimesteppingFinalTime") return TimesteppingFinalTimeEnum  end
+	if(name=="TimesteppingInterpForcing") return TimesteppingInterpForcingEnum  end
+	if(name=="TimesteppingCycleForcing") return TimesteppingCycleForcingEnum  end
+	if(name=="TimesteppingStartTime") return TimesteppingStartTimeEnum  end
+	if(name=="TimesteppingTimeStep") return TimesteppingTimeStepEnum  end
+	if(name=="TimesteppingTimeStepMax") return TimesteppingTimeStepMaxEnum  end
+	if(name=="TimesteppingTimeStepMin") return TimesteppingTimeStepMinEnum  end
+	if(name=="TimesteppingType") return TimesteppingTypeEnum  end
+	if(name=="ToMITgcmComm") return ToMITgcmCommEnum  end
+	if(name=="ToolkitsFileName") return ToolkitsFileNameEnum  end
+	if(name=="ToolkitsOptionsAnalyses") return ToolkitsOptionsAnalysesEnum  end
+	if(name=="ToolkitsOptionsStrings") return ToolkitsOptionsStringsEnum  end
+	if(name=="ToolkitsTypes") return ToolkitsTypesEnum  end
+	if(name=="TransientAmrFrequency") return TransientAmrFrequencyEnum  end
+	if(name=="TransientIsage") return TransientIsageEnum  end
+	if(name=="TransientIsdamageevolution") return TransientIsdamageevolutionEnum  end
+	if(name=="TransientIsesa") return TransientIsesaEnum  end
+	if(name=="TransientIsgia") return TransientIsgiaEnum  end
+	if(name=="TransientIsgroundingline") return TransientIsgroundinglineEnum  end
+	if(name=="TransientIshydrology") return TransientIshydrologyEnum  end
+	if(name=="TransientIsmasstransport") return TransientIsmasstransportEnum  end
+	if(name=="TransientIsoceantransport") return TransientIsoceantransportEnum  end
+	if(name=="TransientIsmovingfront") return TransientIsmovingfrontEnum  end
+	if(name=="TransientIsoceancoupling") return TransientIsoceancouplingEnum  end
+	if(name=="TransientIssampling") return TransientIssamplingEnum  end
+	if(name=="TransientIsslc") return TransientIsslcEnum  end
+	if(name=="TransientIssmb") return TransientIssmbEnum  end
+	if(name=="TransientIsstressbalance") return TransientIsstressbalanceEnum  end
+	if(name=="TransientIsthermal") return TransientIsthermalEnum  end
+	if(name=="TransientNumRequestedOutputs") return TransientNumRequestedOutputsEnum  end
+	if(name=="TransientRequestedOutputs") return TransientRequestedOutputsEnum  end
+	if(name=="Velocity") return VelocityEnum  end
+	if(name=="Xxe") return XxeEnum  end
+	if(name=="Yye") return YyeEnum  end
+	if(name=="Zze") return ZzeEnum  end
+	if(name=="Areae") return AreaeEnum  end
+	if(name=="WorldComm") return WorldCommEnum  end
+	if(name=="ParametersEND") return ParametersENDEnum  end
+	if(name=="InputsSTART") return InputsSTARTEnum  end
+	if(name=="AccumulatedDeltaBottomPressure") return AccumulatedDeltaBottomPressureEnum  end
+	if(name=="AccumulatedDeltaIceThickness") return AccumulatedDeltaIceThicknessEnum  end
+	if(name=="AccumulatedDeltaTws") return AccumulatedDeltaTwsEnum  end
+	if(name=="Adjoint") return AdjointEnum  end
+	if(name=="Adjointp") return AdjointpEnum  end
+	if(name=="Adjointx") return AdjointxEnum  end
+	if(name=="AdjointxBase") return AdjointxBaseEnum  end
+	if(name=="AdjointxShear") return AdjointxShearEnum  end
+	if(name=="Adjointy") return AdjointyEnum  end
+	if(name=="AdjointyBase") return AdjointyBaseEnum  end
+	if(name=="AdjointyShear") return AdjointyShearEnum  end
+	if(name=="Adjointz") return AdjointzEnum  end
+	if(name=="Age") return AgeEnum  end
+	if(name=="Air") return AirEnum  end
+	if(name=="Approximation") return ApproximationEnum  end
+	if(name=="BalancethicknessMisfit") return BalancethicknessMisfitEnum  end
+	if(name=="BalancethicknessOmega0") return BalancethicknessOmega0Enum  end
+	if(name=="BalancethicknessOmega") return BalancethicknessOmegaEnum  end
+	if(name=="BalancethicknessSpcthickness") return BalancethicknessSpcthicknessEnum  end
+	if(name=="BalancethicknessThickeningRate") return BalancethicknessThickeningRateEnum  end
+	if(name=="BasalCrevasse") return BasalCrevasseEnum  end
+	if(name=="BasalforcingsDeepwaterMeltingRateAutoregression") return BasalforcingsDeepwaterMeltingRateAutoregressionEnum  end
+	if(name=="BasalforcingsDeepwaterMeltingRateNoise") return BasalforcingsDeepwaterMeltingRateNoiseEnum  end
+	if(name=="BasalforcingsDeepwaterMeltingRateValuesAutoregression") return BasalforcingsDeepwaterMeltingRateValuesAutoregressionEnum  end
+	if(name=="BasalforcingsFloatingiceMeltingRate") return BasalforcingsFloatingiceMeltingRateEnum  end
+	if(name=="BasalforcingsGeothermalflux") return BasalforcingsGeothermalfluxEnum  end
+	if(name=="BasalforcingsGroundediceMeltingRate") return BasalforcingsGroundediceMeltingRateEnum  end
+	if(name=="BasalforcingsLinearBasinId") return BasalforcingsLinearBasinIdEnum  end
+	if(name=="BasalforcingsPerturbationMeltingRate") return BasalforcingsPerturbationMeltingRateEnum  end
+	if(name=="BasalforcingsSpatialDeepwaterElevation") return BasalforcingsSpatialDeepwaterElevationEnum  end
+	if(name=="BasalforcingsSpatialDeepwaterMeltingRate") return BasalforcingsSpatialDeepwaterMeltingRateEnum  end
+	if(name=="BasalforcingsSpatialUpperwaterElevation") return BasalforcingsSpatialUpperwaterElevationEnum  end
+	if(name=="BasalforcingsSpatialUpperwaterMeltingRate") return BasalforcingsSpatialUpperwaterMeltingRateEnum  end
+	if(name=="BasalforcingsIsmip6BasinId") return BasalforcingsIsmip6BasinIdEnum  end
+	if(name=="BasalforcingsIsmip6Tf") return BasalforcingsIsmip6TfEnum  end
+	if(name=="BasalforcingsIsmip6TfShelf") return BasalforcingsIsmip6TfShelfEnum  end
+	if(name=="BasalforcingsIsmip6MeltAnomaly") return BasalforcingsIsmip6MeltAnomalyEnum  end
+	if(name=="BasalforcingsMeltrateFactor") return BasalforcingsMeltrateFactorEnum  end
+	if(name=="BasalforcingsOceanSalinity") return BasalforcingsOceanSalinityEnum  end
+	if(name=="BasalforcingsOceanTemp") return BasalforcingsOceanTempEnum  end
+	if(name=="BasalforcingsPicoBasinId") return BasalforcingsPicoBasinIdEnum  end
+	if(name=="BasalforcingsPicoBoxId") return BasalforcingsPicoBoxIdEnum  end
+	if(name=="BasalforcingsPicoOverturningCoeff") return BasalforcingsPicoOverturningCoeffEnum  end
+	if(name=="BasalforcingsPicoSubShelfOceanOverturning") return BasalforcingsPicoSubShelfOceanOverturningEnum  end
+	if(name=="BasalforcingsPicoSubShelfOceanSalinity") return BasalforcingsPicoSubShelfOceanSalinityEnum  end
+	if(name=="BasalforcingsPicoSubShelfOceanTemp") return BasalforcingsPicoSubShelfOceanTempEnum  end
+	if(name=="BasalStressx") return BasalStressxEnum  end
+	if(name=="BasalStressy") return BasalStressyEnum  end
+	if(name=="BasalStress") return BasalStressEnum  end
+	if(name=="Base") return BaseEnum  end
+	if(name=="BaseOld") return BaseOldEnum  end
+	if(name=="BaseSlopeX") return BaseSlopeXEnum  end
+	if(name=="BaseSlopeY") return BaseSlopeYEnum  end
+	if(name=="BaselineBasalforcingsFloatingiceMeltingRate") return BaselineBasalforcingsFloatingiceMeltingRateEnum  end
+	if(name=="BaselineBasalforcingsSpatialDeepwaterMeltingRate") return BaselineBasalforcingsSpatialDeepwaterMeltingRateEnum  end
+	if(name=="BaselineCalvingCalvingrate") return BaselineCalvingCalvingrateEnum  end
+	if(name=="BaselineFrictionEffectivePressure") return BaselineFrictionEffectivePressureEnum  end
+	if(name=="BaselineSmbMassBalance") return BaselineSmbMassBalanceEnum  end
+	if(name=="Bed") return BedEnum  end
+	if(name=="BedGRD") return BedGRDEnum  end
+	if(name=="BedEast") return BedEastEnum  end
+	if(name=="BedEastGRD") return BedEastGRDEnum  end
+	if(name=="BedNorth") return BedNorthEnum  end
+	if(name=="BedNorthGRD") return BedNorthGRDEnum  end
+	if(name=="BedSlopeX") return BedSlopeXEnum  end
+	if(name=="BedSlopeY") return BedSlopeYEnum  end
+	if(name=="BottomPressure") return BottomPressureEnum  end
+	if(name=="BottomPressureOld") return BottomPressureOldEnum  end
+	if(name=="CalvingCalvingrate") return CalvingCalvingrateEnum  end
+	if(name=="CalvingHabFraction") return CalvingHabFractionEnum  end
+	if(name=="CalvingAblationrate") return CalvingAblationrateEnum  end
+	if(name=="CalvingMeltingrate") return CalvingMeltingrateEnum  end
+	if(name=="CalvingStressThresholdFloatingice") return CalvingStressThresholdFloatingiceEnum  end
+	if(name=="CalvingStressThresholdGroundedice") return CalvingStressThresholdGroundediceEnum  end
+	if(name=="CalvinglevermannCoeff") return CalvinglevermannCoeffEnum  end
+	if(name=="Calvingratex") return CalvingratexEnum  end
+	if(name=="Calvingratey") return CalvingrateyEnum  end
+	if(name=="CalvingFluxLevelset") return CalvingFluxLevelsetEnum  end
+	if(name=="CalvingMeltingFluxLevelset") return CalvingMeltingFluxLevelsetEnum  end
+	if(name=="Converged") return ConvergedEnum  end
+	if(name=="CrevasseDepth") return CrevasseDepthEnum  end
+	if(name=="DamageD") return DamageDEnum  end
+	if(name=="DamageDOld") return DamageDOldEnum  end
+	if(name=="DamageDbar") return DamageDbarEnum  end
+	if(name=="DamageDbarOld") return DamageDbarOldEnum  end
+	if(name=="DamageF") return DamageFEnum  end
+	if(name=="DegreeOfChannelization") return DegreeOfChannelizationEnum  end
+	if(name=="DepthBelowSurface") return DepthBelowSurfaceEnum  end
+	if(name=="DeltaIceThickness") return DeltaIceThicknessEnum  end
+	if(name=="DeltaTws") return DeltaTwsEnum  end
+	if(name=="DeltaBottomPressure") return DeltaBottomPressureEnum  end
+	if(name=="DeltaDsl") return DeltaDslEnum  end
+	if(name=="DslOld") return DslOldEnum  end
+	if(name=="Dsl") return DslEnum  end
+	if(name=="DeltaStr") return DeltaStrEnum  end
+	if(name=="StrOld") return StrOldEnum  end
+	if(name=="Str") return StrEnum  end
+	if(name=="DeviatoricStresseffective") return DeviatoricStresseffectiveEnum  end
+	if(name=="DeviatoricStressxx") return DeviatoricStressxxEnum  end
+	if(name=="DeviatoricStressxy") return DeviatoricStressxyEnum  end
+	if(name=="DeviatoricStressxz") return DeviatoricStressxzEnum  end
+	if(name=="DeviatoricStressyy") return DeviatoricStressyyEnum  end
+	if(name=="DeviatoricStressyz") return DeviatoricStressyzEnum  end
+	if(name=="DeviatoricStresszz") return DeviatoricStresszzEnum  end
+	if(name=="DeviatoricStress1") return DeviatoricStress1Enum  end
+	if(name=="DeviatoricStress2") return DeviatoricStress2Enum  end
+	if(name=="DistanceToCalvingfront") return DistanceToCalvingfrontEnum  end
+	if(name=="DistanceToGroundingline") return DistanceToGroundinglineEnum  end
+	if(name=="Domain2Dhorizontal") return Domain2DhorizontalEnum  end
+	if(name=="Domain2Dvertical") return Domain2DverticalEnum  end
+	if(name=="Domain3D") return Domain3DEnum  end
+	if(name=="DragCoefficientAbsGradient") return DragCoefficientAbsGradientEnum  end
+	if(name=="DrivingStressX") return DrivingStressXEnum  end
+	if(name=="DrivingStressY") return DrivingStressYEnum  end
+	if(name=="Dummy") return DummyEnum  end
+	if(name=="EffectivePressure") return EffectivePressureEnum  end
+	if(name=="EffectivePressureSubstep") return EffectivePressureSubstepEnum  end
+	if(name=="EffectivePressureTransient") return EffectivePressureTransientEnum  end
+	if(name=="Enthalpy") return EnthalpyEnum  end
+	if(name=="EnthalpyPicard") return EnthalpyPicardEnum  end
+	if(name=="EplHead") return EplHeadEnum  end
+	if(name=="EplHeadOld") return EplHeadOldEnum  end
+	if(name=="EplHeadSlopeX") return EplHeadSlopeXEnum  end
+	if(name=="EplHeadSlopeY") return EplHeadSlopeYEnum  end
+	if(name=="EplHeadSubstep") return EplHeadSubstepEnum  end
+	if(name=="EplHeadTransient") return EplHeadTransientEnum  end
+	if(name=="EsaEmotion") return EsaEmotionEnum  end
+	if(name=="EsaNmotion") return EsaNmotionEnum  end
+	if(name=="EsaRotationrate") return EsaRotationrateEnum  end
+	if(name=="EsaStrainratexx") return EsaStrainratexxEnum  end
+	if(name=="EsaStrainratexy") return EsaStrainratexyEnum  end
+	if(name=="EsaStrainrateyy") return EsaStrainrateyyEnum  end
+	if(name=="EsaUmotion") return EsaUmotionEnum  end
+	if(name=="EsaXmotion") return EsaXmotionEnum  end
+	if(name=="EsaYmotion") return EsaYmotionEnum  end
+	if(name=="EtaDiff") return EtaDiffEnum  end
+	if(name=="FlowequationBorderFS") return FlowequationBorderFSEnum  end
+	if(name=="FrictionAs") return FrictionAsEnum  end
+	if(name=="FrictionC") return FrictionCEnum  end
+	if(name=="FrictionCmax") return FrictionCmaxEnum  end
+	if(name=="FrictionCoefficient") return FrictionCoefficientEnum  end
+	if(name=="FrictionCoefficientcoulomb") return FrictionCoefficientcoulombEnum  end
+	if(name=="FrictionCoulombWaterPressure") return FrictionCoulombWaterPressureEnum  end
+	if(name=="FrictionEffectivePressure") return FrictionEffectivePressureEnum  end
+	if(name=="FrictionM") return FrictionMEnum  end
+	if(name=="FrictionP") return FrictionPEnum  end
+	if(name=="FrictionPressureAdjustedTemperature") return FrictionPressureAdjustedTemperatureEnum  end
+	if(name=="FrictionQ") return FrictionQEnum  end
+	if(name=="FrictionSedimentCompressibilityCoefficient") return FrictionSedimentCompressibilityCoefficientEnum  end
+	if(name=="FrictionTillFrictionAngle") return FrictionTillFrictionAngleEnum  end
+	if(name=="FrictionSchoofWaterPressure") return FrictionSchoofWaterPressureEnum  end
+	if(name=="FrictionWaterLayer") return FrictionWaterLayerEnum  end
+	if(name=="FrictionWaterPressure") return FrictionWaterPressureEnum  end
+	if(name=="Frictionf") return FrictionfEnum  end
+	if(name=="FrontalForcingsBasinId") return FrontalForcingsBasinIdEnum  end
+	if(name=="FrontalForcingsSubglacialDischarge") return FrontalForcingsSubglacialDischargeEnum  end
+	if(name=="FrontalForcingsThermalForcing") return FrontalForcingsThermalForcingEnum  end
+	if(name=="GeometryHydrostaticRatio") return GeometryHydrostaticRatioEnum  end
+	if(name=="NGia") return NGiaEnum  end
+	if(name=="NGiaRate") return NGiaRateEnum  end
+	if(name=="UGia") return UGiaEnum  end
+	if(name=="UGiaRate") return UGiaRateEnum  end
+	if(name=="Gradient") return GradientEnum  end
+	if(name=="GroundinglineHeight") return GroundinglineHeightEnum  end
+	if(name=="HydraulicPotential") return HydraulicPotentialEnum  end
+	if(name=="HydraulicPotentialOld") return HydraulicPotentialOldEnum  end
+	if(name=="HydrologyBasalFlux") return HydrologyBasalFluxEnum  end
+	if(name=="HydrologyBumpHeight") return HydrologyBumpHeightEnum  end
+	if(name=="HydrologyBumpSpacing") return HydrologyBumpSpacingEnum  end
+	if(name=="HydrologydcBasalMoulinInput") return HydrologydcBasalMoulinInputEnum  end
+	if(name=="HydrologydcEplThickness") return HydrologydcEplThicknessEnum  end
+	if(name=="HydrologydcEplThicknessOld") return HydrologydcEplThicknessOldEnum  end
+	if(name=="HydrologydcEplThicknessSubstep") return HydrologydcEplThicknessSubstepEnum  end
+	if(name=="HydrologydcEplThicknessTransient") return HydrologydcEplThicknessTransientEnum  end
+	if(name=="HydrologydcMaskEplactiveElt") return HydrologydcMaskEplactiveEltEnum  end
+	if(name=="HydrologydcMaskEplactiveNode") return HydrologydcMaskEplactiveNodeEnum  end
+	if(name=="HydrologydcMaskThawedElt") return HydrologydcMaskThawedEltEnum  end
+	if(name=="HydrologydcMaskThawedNode") return HydrologydcMaskThawedNodeEnum  end
+	if(name=="HydrologydcSedimentTransmitivity") return HydrologydcSedimentTransmitivityEnum  end
+	if(name=="HydrologyDrainageRate") return HydrologyDrainageRateEnum  end
+	if(name=="HydrologyEnglacialInput") return HydrologyEnglacialInputEnum  end
+	if(name=="HydrologyGapHeight") return HydrologyGapHeightEnum  end
+	if(name=="HydrologyGapHeightX") return HydrologyGapHeightXEnum  end
+	if(name=="HydrologyGapHeightXX") return HydrologyGapHeightXXEnum  end
+	if(name=="HydrologyGapHeightY") return HydrologyGapHeightYEnum  end
+	if(name=="HydrologyGapHeightYY") return HydrologyGapHeightYYEnum  end
+	if(name=="HydrologyHead") return HydrologyHeadEnum  end
+	if(name=="HydrologyHeadOld") return HydrologyHeadOldEnum  end
+	if(name=="HydrologyMoulinInput") return HydrologyMoulinInputEnum  end
+	if(name=="HydrologyNeumannflux") return HydrologyNeumannfluxEnum  end
+	if(name=="HydrologyReynolds") return HydrologyReynoldsEnum  end
+	if(name=="HydrologySheetConductivity") return HydrologySheetConductivityEnum  end
+	if(name=="HydrologySheetThickness") return HydrologySheetThicknessEnum  end
+	if(name=="HydrologySheetThicknessOld") return HydrologySheetThicknessOldEnum  end
+	if(name=="HydrologyTws") return HydrologyTwsEnum  end
+	if(name=="HydrologyTwsSpc") return HydrologyTwsSpcEnum  end
+	if(name=="HydrologyTwsAnalysis") return HydrologyTwsAnalysisEnum  end
+	if(name=="HydrologyWatercolumnMax") return HydrologyWatercolumnMaxEnum  end
+	if(name=="HydrologyWaterVx") return HydrologyWaterVxEnum  end
+	if(name=="HydrologyWaterVy") return HydrologyWaterVyEnum  end
+	if(name=="Ice") return IceEnum  end
+	if(name=="IceMaskNodeActivation") return IceMaskNodeActivationEnum  end
+	if(name=="Input") return InputEnum  end
+	if(name=="InversionCostFunctionsCoefficients") return InversionCostFunctionsCoefficientsEnum  end
+	if(name=="InversionSurfaceObs") return InversionSurfaceObsEnum  end
+	if(name=="InversionThicknessObs") return InversionThicknessObsEnum  end
+	if(name=="InversionVelObs") return InversionVelObsEnum  end
+	if(name=="InversionVxObs") return InversionVxObsEnum  end
+	if(name=="InversionVyObs") return InversionVyObsEnum  end
+	if(name=="LevelsetfunctionSlopeX") return LevelsetfunctionSlopeXEnum  end
+	if(name=="LevelsetfunctionSlopeY") return LevelsetfunctionSlopeYEnum  end
+	if(name=="LevelsetObservation") return LevelsetObservationEnum  end
+	if(name=="LoadingforceX") return LoadingforceXEnum  end
+	if(name=="LoadingforceY") return LoadingforceYEnum  end
+	if(name=="LoadingforceZ") return LoadingforceZEnum  end
+	if(name=="MaskOceanLevelset") return MaskOceanLevelsetEnum  end
+	if(name=="MaskIceLevelset") return MaskIceLevelsetEnum  end
+	if(name=="MaskIceRefLevelset") return MaskIceRefLevelsetEnum  end
+	if(name=="MasstransportSpcthickness") return MasstransportSpcthicknessEnum  end
+	if(name=="MaterialsRheologyB") return MaterialsRheologyBEnum  end
+	if(name=="MaterialsRheologyBbar") return MaterialsRheologyBbarEnum  end
+	if(name=="MaterialsRheologyE") return MaterialsRheologyEEnum  end
+	if(name=="MaterialsRheologyEbar") return MaterialsRheologyEbarEnum  end
+	if(name=="MaterialsRheologyEc") return MaterialsRheologyEcEnum  end
+	if(name=="MaterialsRheologyEcbar") return MaterialsRheologyEcbarEnum  end
+	if(name=="MaterialsRheologyEs") return MaterialsRheologyEsEnum  end
+	if(name=="MaterialsRheologyEsbar") return MaterialsRheologyEsbarEnum  end
+	if(name=="MaterialsRheologyN") return MaterialsRheologyNEnum  end
+	if(name=="MeshScaleFactor") return MeshScaleFactorEnum  end
+	if(name=="MeshVertexonbase") return MeshVertexonbaseEnum  end
+	if(name=="MeshVertexonboundary") return MeshVertexonboundaryEnum  end
+	if(name=="MeshVertexonsurface") return MeshVertexonsurfaceEnum  end
+	if(name=="Misfit") return MisfitEnum  end
+	if(name=="MovingFrontalVx") return MovingFrontalVxEnum  end
+	if(name=="MovingFrontalVy") return MovingFrontalVyEnum  end
+	if(name=="Neumannflux") return NeumannfluxEnum  end
+	if(name=="NewDamage") return NewDamageEnum  end
+	if(name=="Node") return NodeEnum  end
+	if(name=="OmegaAbsGradient") return OmegaAbsGradientEnum  end
+	if(name=="OceantransportSpcbottompressure") return OceantransportSpcbottompressureEnum  end
+	if(name=="OceantransportSpcstr") return OceantransportSpcstrEnum  end
+	if(name=="OceantransportSpcdsl") return OceantransportSpcdslEnum  end
+	if(name=="P0") return P0Enum  end
+	if(name=="P1") return P1Enum  end
+	if(name=="Partitioning") return PartitioningEnum  end
+	if(name=="Pressure") return PressureEnum  end
+	if(name=="Radar") return RadarEnum  end
+	if(name=="RadarAttenuationMacGregor") return RadarAttenuationMacGregorEnum  end
+	if(name=="RadarAttenuationWolff") return RadarAttenuationWolffEnum  end
+	if(name=="RadarIcePeriod") return RadarIcePeriodEnum  end
+	if(name=="RadarPowerMacGregor") return RadarPowerMacGregorEnum  end
+	if(name=="RadarPowerWolff") return RadarPowerWolffEnum  end
+	if(name=="RheologyBAbsGradient") return RheologyBAbsGradientEnum  end
+	if(name=="RheologyBInitialguess") return RheologyBInitialguessEnum  end
+	if(name=="RheologyBInitialguessMisfit") return RheologyBInitialguessMisfitEnum  end
+	if(name=="RheologyBbarAbsGradient") return RheologyBbarAbsGradientEnum  end
+	if(name=="Sample") return SampleEnum  end
+	if(name=="SampleOld") return SampleOldEnum  end
+	if(name=="SampleNoise") return SampleNoiseEnum  end
+	if(name=="SamplingBeta") return SamplingBetaEnum  end
+	if(name=="SamplingKappa") return SamplingKappaEnum  end
+	if(name=="SamplingPhi") return SamplingPhiEnum  end
+	if(name=="SamplingTau") return SamplingTauEnum  end
+	if(name=="Sealevel") return SealevelEnum  end
+	if(name=="SealevelGRD") return SealevelGRDEnum  end
+	if(name=="SatGraviGRD") return SatGraviGRDEnum  end
+	if(name=="SealevelBarystaticMask") return SealevelBarystaticMaskEnum  end
+	if(name=="SealevelBarystaticIceMask") return SealevelBarystaticIceMaskEnum  end
+	if(name=="SealevelBarystaticIceWeights") return SealevelBarystaticIceWeightsEnum  end
+	if(name=="SealevelBarystaticIceArea") return SealevelBarystaticIceAreaEnum  end
+	if(name=="SealevelBarystaticIceLatbar") return SealevelBarystaticIceLatbarEnum  end
+	if(name=="SealevelBarystaticIceLongbar") return SealevelBarystaticIceLongbarEnum  end
+	if(name=="SealevelBarystaticIceLoad") return SealevelBarystaticIceLoadEnum  end
+	if(name=="SealevelBarystaticHydroMask") return SealevelBarystaticHydroMaskEnum  end
+	if(name=="SealevelBarystaticHydroWeights") return SealevelBarystaticHydroWeightsEnum  end
+	if(name=="SealevelBarystaticHydroArea") return SealevelBarystaticHydroAreaEnum  end
+	if(name=="SealevelBarystaticHydroLatbar") return SealevelBarystaticHydroLatbarEnum  end
+	if(name=="SealevelBarystaticHydroLongbar") return SealevelBarystaticHydroLongbarEnum  end
+	if(name=="SealevelBarystaticHydroLoad") return SealevelBarystaticHydroLoadEnum  end
+	if(name=="SealevelBarystaticBpMask") return SealevelBarystaticBpMaskEnum  end
+	if(name=="SealevelBarystaticBpWeights") return SealevelBarystaticBpWeightsEnum  end
+	if(name=="SealevelBarystaticBpArea") return SealevelBarystaticBpAreaEnum  end
+	if(name=="SealevelBarystaticBpLoad") return SealevelBarystaticBpLoadEnum  end
+	if(name=="SealevelBarystaticOceanMask") return SealevelBarystaticOceanMaskEnum  end
+	if(name=="SealevelBarystaticOceanWeights") return SealevelBarystaticOceanWeightsEnum  end
+	if(name=="SealevelBarystaticOceanArea") return SealevelBarystaticOceanAreaEnum  end
+	if(name=="SealevelBarystaticOceanLatbar") return SealevelBarystaticOceanLatbarEnum  end
+	if(name=="SealevelBarystaticOceanLongbar") return SealevelBarystaticOceanLongbarEnum  end
+	if(name=="SealevelBarystaticOceanLoad") return SealevelBarystaticOceanLoadEnum  end
+	if(name=="SealevelNEsa") return SealevelNEsaEnum  end
+	if(name=="SealevelNEsaRate") return SealevelNEsaRateEnum  end
+	if(name=="SealevelRSL") return SealevelRSLEnum  end
+	if(name=="Bslc") return BslcEnum  end
+	if(name=="BslcIce") return BslcIceEnum  end
+	if(name=="BslcHydro") return BslcHydroEnum  end
+	if(name=="BslcOcean") return BslcOceanEnum  end
+	if(name=="BslcRate") return BslcRateEnum  end
+	if(name=="Gmtslc") return GmtslcEnum  end
+	if(name=="SealevelRSLBarystatic") return SealevelRSLBarystaticEnum  end
+	if(name=="SealevelRSLRate") return SealevelRSLRateEnum  end
+	if(name=="SealevelUGrd") return SealevelUGrdEnum  end
+	if(name=="SealevelNGrd") return SealevelNGrdEnum  end
+	if(name=="SealevelUEastEsa") return SealevelUEastEsaEnum  end
+	if(name=="SealevelUNorthEsa") return SealevelUNorthEsaEnum  end
+	if(name=="SealevelchangeIndices") return SealevelchangeIndicesEnum  end
+	if(name=="SealevelchangeAlphaIndex") return SealevelchangeAlphaIndexEnum  end
+	if(name=="SealevelchangeAzimuthIndex") return SealevelchangeAzimuthIndexEnum  end
+	if(name=="SealevelchangeGrot") return SealevelchangeGrotEnum  end
+	if(name=="SealevelchangeGSatGravirot") return SealevelchangeGSatGravirotEnum  end
+	if(name=="SealevelchangeGUrot") return SealevelchangeGUrotEnum  end
+	if(name=="SealevelchangeGNrot") return SealevelchangeGNrotEnum  end
+	if(name=="SealevelchangeGErot") return SealevelchangeGErotEnum  end
+	if(name=="SealevelchangeAlphaIndexOcean") return SealevelchangeAlphaIndexOceanEnum  end
+	if(name=="SealevelchangeAlphaIndexIce") return SealevelchangeAlphaIndexIceEnum  end
+	if(name=="SealevelchangeAlphaIndexHydro") return SealevelchangeAlphaIndexHydroEnum  end
+	if(name=="SealevelchangeAzimuthIndexOcean") return SealevelchangeAzimuthIndexOceanEnum  end
+	if(name=="SealevelchangeAzimuthIndexIce") return SealevelchangeAzimuthIndexIceEnum  end
+	if(name=="SealevelchangeAzimuthIndexHydro") return SealevelchangeAzimuthIndexHydroEnum  end
+	if(name=="SealevelchangeViscousRSL") return SealevelchangeViscousRSLEnum  end
+	if(name=="SealevelchangeViscousSG") return SealevelchangeViscousSGEnum  end
+	if(name=="SealevelchangeViscousU") return SealevelchangeViscousUEnum  end
+	if(name=="SealevelchangeViscousN") return SealevelchangeViscousNEnum  end
+	if(name=="SealevelchangeViscousE") return SealevelchangeViscousEEnum  end
+	if(name=="SedimentHead") return SedimentHeadEnum  end
+	if(name=="SedimentHeadOld") return SedimentHeadOldEnum  end
+	if(name=="SedimentHeadSubstep") return SedimentHeadSubstepEnum  end
+	if(name=="SedimentHeadTransient") return SedimentHeadTransientEnum  end
+	if(name=="SedimentHeadResidual") return SedimentHeadResidualEnum  end
+	if(name=="SedimentHeadStacked") return SedimentHeadStackedEnum  end
+	if(name=="SigmaNN") return SigmaNNEnum  end
+	if(name=="SigmaVM") return SigmaVMEnum  end
+	if(name=="SmbAccumulatedEC") return SmbAccumulatedECEnum  end
+	if(name=="SmbAccumulatedMassBalance") return SmbAccumulatedMassBalanceEnum  end
+	if(name=="SmbAccumulatedMelt") return SmbAccumulatedMeltEnum  end
+	if(name=="SmbAccumulatedPrecipitation") return SmbAccumulatedPrecipitationEnum  end
+	if(name=="SmbAccumulatedRain") return SmbAccumulatedRainEnum  end
+	if(name=="SmbAccumulatedRefreeze") return SmbAccumulatedRefreezeEnum  end
+	if(name=="SmbAccumulatedRunoff") return SmbAccumulatedRunoffEnum  end
+	if(name=="SmbA") return SmbAEnum  end
+	if(name=="SmbAdiff") return SmbAdiffEnum  end
+	if(name=="SmbAValue") return SmbAValueEnum  end
+	if(name=="SmbAccumulation") return SmbAccumulationEnum  end
+	if(name=="SmbAdiffini") return SmbAdiffiniEnum  end
+	if(name=="SmbAini") return SmbAiniEnum  end
+	if(name=="SmbAutoregressionNoise") return SmbAutoregressionNoiseEnum  end
+	if(name=="SmbBasinsId") return SmbBasinsIdEnum  end
+	if(name=="SmbBMax") return SmbBMaxEnum  end
+	if(name=="SmbBMin") return SmbBMinEnum  end
+	if(name=="SmbBNeg") return SmbBNegEnum  end
+	if(name=="SmbBPos") return SmbBPosEnum  end
+	if(name=="SmbC") return SmbCEnum  end
+	if(name=="SmbCcsnowValue") return SmbCcsnowValueEnum  end
+	if(name=="SmbCciceValue") return SmbCciceValueEnum  end
+	if(name=="SmbCotValue") return SmbCotValueEnum  end
+	if(name=="SmbD") return SmbDEnum  end
+	if(name=="SmbDailyairdensity") return SmbDailyairdensityEnum  end
+	if(name=="SmbDailyairhumidity") return SmbDailyairhumidityEnum  end
+	if(name=="SmbDailydlradiation") return SmbDailydlradiationEnum  end
+	if(name=="SmbDailydsradiation") return SmbDailydsradiationEnum  end
+	if(name=="SmbDailypressure") return SmbDailypressureEnum  end
+	if(name=="SmbDailyrainfall") return SmbDailyrainfallEnum  end
+	if(name=="SmbDailysnowfall") return SmbDailysnowfallEnum  end
+	if(name=="SmbDailytemperature") return SmbDailytemperatureEnum  end
+	if(name=="SmbDailywindspeed") return SmbDailywindspeedEnum  end
+	if(name=="SmbDini") return SmbDiniEnum  end
+	if(name=="SmbDlwrf") return SmbDlwrfEnum  end
+	if(name=="SmbDulwrfValue") return SmbDulwrfValueEnum  end
+	if(name=="SmbDswrf") return SmbDswrfEnum  end
+	if(name=="SmbDswdiffrf") return SmbDswdiffrfEnum  end
+	if(name=="SmbDzAdd") return SmbDzAddEnum  end
+	if(name=="SmbDz") return SmbDzEnum  end
+	if(name=="SmbDzMin") return SmbDzMinEnum  end
+	if(name=="SmbDzTop") return SmbDzTopEnum  end
+	if(name=="SmbDzini") return SmbDziniEnum  end
+	if(name=="SmbEAir") return SmbEAirEnum  end
+	if(name=="SmbEC") return SmbECEnum  end
+	if(name=="SmbECDt") return SmbECDtEnum  end
+	if(name=="SmbECini") return SmbECiniEnum  end
+	if(name=="SmbEla") return SmbElaEnum  end
+	if(name=="SmbEvaporation") return SmbEvaporationEnum  end
+	if(name=="SmbFAC") return SmbFACEnum  end
+	if(name=="SmbGdn") return SmbGdnEnum  end
+	if(name=="SmbGdnini") return SmbGdniniEnum  end
+	if(name=="SmbGsp") return SmbGspEnum  end
+	if(name=="SmbGspini") return SmbGspiniEnum  end
+	if(name=="SmbHref") return SmbHrefEnum  end
+	if(name=="SmbIsInitialized") return SmbIsInitializedEnum  end
+	if(name=="SmbMAdd") return SmbMAddEnum  end
+	if(name=="SmbMassBalance") return SmbMassBalanceEnum  end
+	if(name=="SmbMassBalanceSubstep") return SmbMassBalanceSubstepEnum  end
+	if(name=="SmbMassBalanceTransient") return SmbMassBalanceTransientEnum  end
+	if(name=="SmbMeanLHF") return SmbMeanLHFEnum  end
+	if(name=="SmbMeanSHF") return SmbMeanSHFEnum  end
+	if(name=="SmbMeanULW") return SmbMeanULWEnum  end
+	if(name=="SmbMelt") return SmbMeltEnum  end
+	if(name=="SmbMonthlytemperatures") return SmbMonthlytemperaturesEnum  end
+	if(name=="SmbMSurf") return SmbMSurfEnum  end
+	if(name=="SmbNetLW") return SmbNetLWEnum  end
+	if(name=="SmbNetSW") return SmbNetSWEnum  end
+	if(name=="SmbPAir") return SmbPAirEnum  end
+	if(name=="SmbP") return SmbPEnum  end
+	if(name=="SmbPddfacIce") return SmbPddfacIceEnum  end
+	if(name=="SmbPddfacSnow") return SmbPddfacSnowEnum  end
+	if(name=="SmbPrecipitation") return SmbPrecipitationEnum  end
+	if(name=="SmbPrecipitationsAnomaly") return SmbPrecipitationsAnomalyEnum  end
+	if(name=="SmbPrecipitationsLgm") return SmbPrecipitationsLgmEnum  end
+	if(name=="SmbPrecipitationsPresentday") return SmbPrecipitationsPresentdayEnum  end
+	if(name=="SmbPrecipitationsReconstructed") return SmbPrecipitationsReconstructedEnum  end
+	if(name=="SmbRain") return SmbRainEnum  end
+	if(name=="SmbRe") return SmbReEnum  end
+	if(name=="SmbRefreeze") return SmbRefreezeEnum  end
+	if(name=="SmbReini") return SmbReiniEnum  end
+	if(name=="SmbRunoff") return SmbRunoffEnum  end
+	if(name=="SmbRunoffSubstep") return SmbRunoffSubstepEnum  end
+	if(name=="SmbRunoffTransient") return SmbRunoffTransientEnum  end
+	if(name=="SmbS0gcm") return SmbS0gcmEnum  end
+	if(name=="SmbS0p") return SmbS0pEnum  end
+	if(name=="SmbS0t") return SmbS0tEnum  end
+	if(name=="SmbSizeini") return SmbSizeiniEnum  end
+	if(name=="SmbSmbCorr") return SmbSmbCorrEnum  end
+	if(name=="SmbSmbref") return SmbSmbrefEnum  end
+	if(name=="SmbSzaValue") return SmbSzaValueEnum  end
+	if(name=="SmbT") return SmbTEnum  end
+	if(name=="SmbTa") return SmbTaEnum  end
+	if(name=="SmbTeValue") return SmbTeValueEnum  end
+	if(name=="SmbTemperaturesAnomaly") return SmbTemperaturesAnomalyEnum  end
+	if(name=="SmbTemperaturesLgm") return SmbTemperaturesLgmEnum  end
+	if(name=="SmbTemperaturesPresentday") return SmbTemperaturesPresentdayEnum  end
+	if(name=="SmbTemperaturesReconstructed") return SmbTemperaturesReconstructedEnum  end
+	if(name=="SmbTini") return SmbTiniEnum  end
+	if(name=="SmbTmean") return SmbTmeanEnum  end
+	if(name=="SmbTz") return SmbTzEnum  end
+	if(name=="SmbValuesAutoregression") return SmbValuesAutoregressionEnum  end
+	if(name=="SmbV") return SmbVEnum  end
+	if(name=="SmbVmean") return SmbVmeanEnum  end
+	if(name=="SmbVz") return SmbVzEnum  end
+	if(name=="SmbW") return SmbWEnum  end
+	if(name=="SmbWAdd") return SmbWAddEnum  end
+	if(name=="SmbWini") return SmbWiniEnum  end
+	if(name=="SmbZMax") return SmbZMaxEnum  end
+	if(name=="SmbZMin") return SmbZMinEnum  end
+	if(name=="SmbZTop") return SmbZTopEnum  end
+	if(name=="SmbZY") return SmbZYEnum  end
+	if(name=="SolidearthExternalDisplacementEastRate") return SolidearthExternalDisplacementEastRateEnum  end
+	if(name=="SolidearthExternalDisplacementNorthRate") return SolidearthExternalDisplacementNorthRateEnum  end
+	if(name=="SolidearthExternalDisplacementUpRate") return SolidearthExternalDisplacementUpRateEnum  end
+	if(name=="SolidearthExternalGeoidRate") return SolidearthExternalGeoidRateEnum  end
+	if(name=="StochasticForcingDefaultId") return StochasticForcingDefaultIdEnum  end
+	if(name=="StrainRateeffective") return StrainRateeffectiveEnum  end
+	if(name=="StrainRateparallel") return StrainRateparallelEnum  end
+	if(name=="StrainRateperpendicular") return StrainRateperpendicularEnum  end
+	if(name=="StrainRatexx") return StrainRatexxEnum  end
+	if(name=="StrainRatexy") return StrainRatexyEnum  end
+	if(name=="StrainRatexz") return StrainRatexzEnum  end
+	if(name=="StrainRateyy") return StrainRateyyEnum  end
+	if(name=="StrainRateyz") return StrainRateyzEnum  end
+	if(name=="StrainRatezz") return StrainRatezzEnum  end
+	if(name=="StressMaxPrincipal") return StressMaxPrincipalEnum  end
+	if(name=="StressTensorxx") return StressTensorxxEnum  end
+	if(name=="StressTensorxy") return StressTensorxyEnum  end
+	if(name=="StressTensorxz") return StressTensorxzEnum  end
+	if(name=="StressTensoryy") return StressTensoryyEnum  end
+	if(name=="StressTensoryz") return StressTensoryzEnum  end
+	if(name=="StressTensorzz") return StressTensorzzEnum  end
+	if(name=="SurfaceAbsMisfit") return SurfaceAbsMisfitEnum  end
+	if(name=="SurfaceAbsVelMisfit") return SurfaceAbsVelMisfitEnum  end
+	if(name=="Area") return AreaEnum  end
+	if(name=="SealevelArea") return SealevelAreaEnum  end
+	if(name=="SurfaceArea") return SurfaceAreaEnum  end
+	if(name=="SurfaceAverageVelMisfit") return SurfaceAverageVelMisfitEnum  end
+	if(name=="SurfaceCrevasse") return SurfaceCrevasseEnum  end
+	if(name=="Surface") return SurfaceEnum  end
+	if(name=="SurfaceOld") return SurfaceOldEnum  end
+	if(name=="SurfaceLogVelMisfit") return SurfaceLogVelMisfitEnum  end
+	if(name=="SurfaceLogVxVyMisfit") return SurfaceLogVxVyMisfitEnum  end
+	if(name=="SurfaceObservation") return SurfaceObservationEnum  end
+	if(name=="SurfaceRelVelMisfit") return SurfaceRelVelMisfitEnum  end
+	if(name=="SurfaceSlopeX") return SurfaceSlopeXEnum  end
+	if(name=="SurfaceSlopeY") return SurfaceSlopeYEnum  end
+	if(name=="Temperature") return TemperatureEnum  end
+	if(name=="TemperaturePDD") return TemperaturePDDEnum  end
+	if(name=="TemperaturePicard") return TemperaturePicardEnum  end
+	if(name=="TemperatureSEMIC") return TemperatureSEMICEnum  end
+	if(name=="ThermalforcingAutoregressionNoise") return ThermalforcingAutoregressionNoiseEnum  end
+	if(name=="ThermalforcingValuesAutoregression") return ThermalforcingValuesAutoregressionEnum  end
+	if(name=="ThermalSpctemperature") return ThermalSpctemperatureEnum  end
+	if(name=="ThicknessAbsGradient") return ThicknessAbsGradientEnum  end
+	if(name=="ThicknessAbsMisfit") return ThicknessAbsMisfitEnum  end
+	if(name=="ThicknessAcrossGradient") return ThicknessAcrossGradientEnum  end
+	if(name=="ThicknessAlongGradient") return ThicknessAlongGradientEnum  end
+	if(name=="Thickness") return ThicknessEnum  end
+	if(name=="ThicknessOld") return ThicknessOldEnum  end
+	if(name=="ThicknessPositive") return ThicknessPositiveEnum  end
+	if(name=="ThicknessResidual") return ThicknessResidualEnum  end
+	if(name=="TransientAccumulatedDeltaIceThickness") return TransientAccumulatedDeltaIceThicknessEnum  end
+	if(name=="Vel") return VelEnum  end
+	if(name=="VxAverage") return VxAverageEnum  end
+	if(name=="VxBase") return VxBaseEnum  end
+	if(name=="Vx") return VxEnum  end
+	if(name=="VxMesh") return VxMeshEnum  end
+	if(name=="VxObs") return VxObsEnum  end
+	if(name=="VxShear") return VxShearEnum  end
+	if(name=="VxSurface") return VxSurfaceEnum  end
+	if(name=="VyAverage") return VyAverageEnum  end
+	if(name=="VyBase") return VyBaseEnum  end
+	if(name=="Vy") return VyEnum  end
+	if(name=="VyMesh") return VyMeshEnum  end
+	if(name=="VyObs") return VyObsEnum  end
+	if(name=="VyShear") return VyShearEnum  end
+	if(name=="VySurface") return VySurfaceEnum  end
+	if(name=="Vz") return VzEnum  end
+	if(name=="VzFS") return VzFSEnum  end
+	if(name=="VzHO") return VzHOEnum  end
+	if(name=="VzMesh") return VzMeshEnum  end
+	if(name=="VzSSA") return VzSSAEnum  end
+	if(name=="WaterColumnOld") return WaterColumnOldEnum  end
+	if(name=="Watercolumn") return WatercolumnEnum  end
+	if(name=="WaterfractionDrainage") return WaterfractionDrainageEnum  end
+	if(name=="WaterfractionDrainageIntegrated") return WaterfractionDrainageIntegratedEnum  end
+	if(name=="Waterfraction") return WaterfractionEnum  end
+	if(name=="Waterheight") return WaterheightEnum  end
+	if(name=="WeightsLevelsetObservation") return WeightsLevelsetObservationEnum  end
+	if(name=="WeightsSurfaceObservation") return WeightsSurfaceObservationEnum  end
+	if(name=="OldAccumulatedDeltaBottomPressure") return OldAccumulatedDeltaBottomPressureEnum  end
+	if(name=="OldAccumulatedDeltaIceThickness") return OldAccumulatedDeltaIceThicknessEnum  end
+	if(name=="OldAccumulatedDeltaTws") return OldAccumulatedDeltaTwsEnum  end
+	if(name=="Outputdefinition1") return Outputdefinition1Enum  end
+	if(name=="Outputdefinition10") return Outputdefinition10Enum  end
+	if(name=="Outputdefinition11") return Outputdefinition11Enum  end
+	if(name=="Outputdefinition12") return Outputdefinition12Enum  end
+	if(name=="Outputdefinition13") return Outputdefinition13Enum  end
+	if(name=="Outputdefinition14") return Outputdefinition14Enum  end
+	if(name=="Outputdefinition15") return Outputdefinition15Enum  end
+	if(name=="Outputdefinition16") return Outputdefinition16Enum  end
+	if(name=="Outputdefinition17") return Outputdefinition17Enum  end
+	if(name=="Outputdefinition18") return Outputdefinition18Enum  end
+	if(name=="Outputdefinition19") return Outputdefinition19Enum  end
+	if(name=="Outputdefinition20") return Outputdefinition20Enum  end
+	if(name=="Outputdefinition21") return Outputdefinition21Enum  end
+	if(name=="Outputdefinition22") return Outputdefinition22Enum  end
+	if(name=="Outputdefinition23") return Outputdefinition23Enum  end
+	if(name=="Outputdefinition24") return Outputdefinition24Enum  end
+	if(name=="Outputdefinition25") return Outputdefinition25Enum  end
+	if(name=="Outputdefinition26") return Outputdefinition26Enum  end
+	if(name=="Outputdefinition27") return Outputdefinition27Enum  end
+	if(name=="Outputdefinition28") return Outputdefinition28Enum  end
+	if(name=="Outputdefinition29") return Outputdefinition29Enum  end
+	if(name=="Outputdefinition2") return Outputdefinition2Enum  end
+	if(name=="Outputdefinition30") return Outputdefinition30Enum  end
+	if(name=="Outputdefinition31") return Outputdefinition31Enum  end
+	if(name=="Outputdefinition32") return Outputdefinition32Enum  end
+	if(name=="Outputdefinition33") return Outputdefinition33Enum  end
+	if(name=="Outputdefinition34") return Outputdefinition34Enum  end
+	if(name=="Outputdefinition35") return Outputdefinition35Enum  end
+	if(name=="Outputdefinition36") return Outputdefinition36Enum  end
+	if(name=="Outputdefinition37") return Outputdefinition37Enum  end
+	if(name=="Outputdefinition38") return Outputdefinition38Enum  end
+	if(name=="Outputdefinition39") return Outputdefinition39Enum  end
+	if(name=="Outputdefinition3") return Outputdefinition3Enum  end
+	if(name=="Outputdefinition40") return Outputdefinition40Enum  end
+	if(name=="Outputdefinition41") return Outputdefinition41Enum  end
+	if(name=="Outputdefinition42") return Outputdefinition42Enum  end
+	if(name=="Outputdefinition43") return Outputdefinition43Enum  end
+	if(name=="Outputdefinition44") return Outputdefinition44Enum  end
+	if(name=="Outputdefinition45") return Outputdefinition45Enum  end
+	if(name=="Outputdefinition46") return Outputdefinition46Enum  end
+	if(name=="Outputdefinition47") return Outputdefinition47Enum  end
+	if(name=="Outputdefinition48") return Outputdefinition48Enum  end
+	if(name=="Outputdefinition49") return Outputdefinition49Enum  end
+	if(name=="Outputdefinition4") return Outputdefinition4Enum  end
+	if(name=="Outputdefinition50") return Outputdefinition50Enum  end
+	if(name=="Outputdefinition51") return Outputdefinition51Enum  end
+	if(name=="Outputdefinition52") return Outputdefinition52Enum  end
+	if(name=="Outputdefinition53") return Outputdefinition53Enum  end
+	if(name=="Outputdefinition54") return Outputdefinition54Enum  end
+	if(name=="Outputdefinition55") return Outputdefinition55Enum  end
+	if(name=="Outputdefinition56") return Outputdefinition56Enum  end
+	if(name=="Outputdefinition57") return Outputdefinition57Enum  end
+	if(name=="Outputdefinition58") return Outputdefinition58Enum  end
+	if(name=="Outputdefinition59") return Outputdefinition59Enum  end
+	if(name=="Outputdefinition5") return Outputdefinition5Enum  end
+	if(name=="Outputdefinition60") return Outputdefinition60Enum  end
+	if(name=="Outputdefinition61") return Outputdefinition61Enum  end
+	if(name=="Outputdefinition62") return Outputdefinition62Enum  end
+	if(name=="Outputdefinition63") return Outputdefinition63Enum  end
+	if(name=="Outputdefinition64") return Outputdefinition64Enum  end
+	if(name=="Outputdefinition65") return Outputdefinition65Enum  end
+	if(name=="Outputdefinition66") return Outputdefinition66Enum  end
+	if(name=="Outputdefinition67") return Outputdefinition67Enum  end
+	if(name=="Outputdefinition68") return Outputdefinition68Enum  end
+	if(name=="Outputdefinition69") return Outputdefinition69Enum  end
+	if(name=="Outputdefinition6") return Outputdefinition6Enum  end
+	if(name=="Outputdefinition70") return Outputdefinition70Enum  end
+	if(name=="Outputdefinition71") return Outputdefinition71Enum  end
+	if(name=="Outputdefinition72") return Outputdefinition72Enum  end
+	if(name=="Outputdefinition73") return Outputdefinition73Enum  end
+	if(name=="Outputdefinition74") return Outputdefinition74Enum  end
+	if(name=="Outputdefinition75") return Outputdefinition75Enum  end
+	if(name=="Outputdefinition76") return Outputdefinition76Enum  end
+	if(name=="Outputdefinition77") return Outputdefinition77Enum  end
+	if(name=="Outputdefinition78") return Outputdefinition78Enum  end
+	if(name=="Outputdefinition79") return Outputdefinition79Enum  end
+	if(name=="Outputdefinition7") return Outputdefinition7Enum  end
+	if(name=="Outputdefinition80") return Outputdefinition80Enum  end
+	if(name=="Outputdefinition81") return Outputdefinition81Enum  end
+	if(name=="Outputdefinition82") return Outputdefinition82Enum  end
+	if(name=="Outputdefinition83") return Outputdefinition83Enum  end
+	if(name=="Outputdefinition84") return Outputdefinition84Enum  end
+	if(name=="Outputdefinition85") return Outputdefinition85Enum  end
+	if(name=="Outputdefinition86") return Outputdefinition86Enum  end
+	if(name=="Outputdefinition87") return Outputdefinition87Enum  end
+	if(name=="Outputdefinition88") return Outputdefinition88Enum  end
+	if(name=="Outputdefinition89") return Outputdefinition89Enum  end
+	if(name=="Outputdefinition8") return Outputdefinition8Enum  end
+	if(name=="Outputdefinition90") return Outputdefinition90Enum  end
+	if(name=="Outputdefinition91") return Outputdefinition91Enum  end
+	if(name=="Outputdefinition92") return Outputdefinition92Enum  end
+	if(name=="Outputdefinition93") return Outputdefinition93Enum  end
+	if(name=="Outputdefinition94") return Outputdefinition94Enum  end
+	if(name=="Outputdefinition95") return Outputdefinition95Enum  end
+	if(name=="Outputdefinition96") return Outputdefinition96Enum  end
+	if(name=="Outputdefinition97") return Outputdefinition97Enum  end
+	if(name=="Outputdefinition98") return Outputdefinition98Enum  end
+	if(name=="Outputdefinition99") return Outputdefinition99Enum  end
+	if(name=="Outputdefinition9") return Outputdefinition9Enum  end
+	if(name=="Outputdefinition100") return Outputdefinition100Enum  end
+	if(name=="InputsEND") return InputsENDEnum  end
+	if(name=="Absolute") return AbsoluteEnum  end
+	if(name=="AdaptiveTimestepping") return AdaptiveTimesteppingEnum  end
+	if(name=="AdjointBalancethickness2Analysis") return AdjointBalancethickness2AnalysisEnum  end
+	if(name=="AdjointBalancethicknessAnalysis") return AdjointBalancethicknessAnalysisEnum  end
+	if(name=="AdjointHorizAnalysis") return AdjointHorizAnalysisEnum  end
+	if(name=="AgeAnalysis") return AgeAnalysisEnum  end
+	if(name=="AggressiveMigration") return AggressiveMigrationEnum  end
+	if(name=="AmrBamg") return AmrBamgEnum  end
+	if(name=="AmrNeopz") return AmrNeopzEnum  end
+	if(name=="AndroidFrictionCoefficient") return AndroidFrictionCoefficientEnum  end
+	if(name=="Arrhenius") return ArrheniusEnum  end
+	if(name=="AutodiffJacobian") return AutodiffJacobianEnum  end
+	if(name=="AutoregressionLinearFloatingMeltRate") return AutoregressionLinearFloatingMeltRateEnum  end
+	if(name=="Balancethickness2Analysis") return Balancethickness2AnalysisEnum  end
+	if(name=="Balancethickness2Solution") return Balancethickness2SolutionEnum  end
+	if(name=="BalancethicknessAnalysis") return BalancethicknessAnalysisEnum  end
+	if(name=="BalancethicknessApparentMassbalance") return BalancethicknessApparentMassbalanceEnum  end
+	if(name=="BalancethicknessSoftAnalysis") return BalancethicknessSoftAnalysisEnum  end
+	if(name=="BalancethicknessSoftSolution") return BalancethicknessSoftSolutionEnum  end
+	if(name=="BalancethicknessSolution") return BalancethicknessSolutionEnum  end
+	if(name=="BalancevelocityAnalysis") return BalancevelocityAnalysisEnum  end
+	if(name=="BalancevelocitySolution") return BalancevelocitySolutionEnum  end
+	if(name=="BasalforcingsIsmip6") return BasalforcingsIsmip6Enum  end
+	if(name=="BasalforcingsPico") return BasalforcingsPicoEnum  end
+	if(name=="BeckmannGoosseFloatingMeltRate") return BeckmannGoosseFloatingMeltRateEnum  end
+	if(name=="BedSlopeSolution") return BedSlopeSolutionEnum  end
+	if(name=="BoolExternalResult") return BoolExternalResultEnum  end
+	if(name=="BoolInput") return BoolInputEnum  end
+	if(name=="IntInput") return IntInputEnum  end
+	if(name=="DoubleInput") return DoubleInputEnum  end
+	if(name=="BoolParam") return BoolParamEnum  end
+	if(name=="Boundary") return BoundaryEnum  end
+	if(name=="BuddJacka") return BuddJackaEnum  end
+	if(name=="CalvingDev2") return CalvingDev2Enum  end
+	if(name=="CalvingHab") return CalvingHabEnum  end
+	if(name=="CalvingLevermann") return CalvingLevermannEnum  end
+	if(name=="CalvingTest") return CalvingTestEnum  end
+	if(name=="CalvingParameterization") return CalvingParameterizationEnum  end
+	if(name=="CalvingVonmises") return CalvingVonmisesEnum  end
+	if(name=="Cfdragcoeffabsgrad") return CfdragcoeffabsgradEnum  end
+	if(name=="Cfsurfacelogvel") return CfsurfacelogvelEnum  end
+	if(name=="Cfsurfacesquare") return CfsurfacesquareEnum  end
+	if(name=="Cflevelsetmisfit") return CflevelsetmisfitEnum  end
+	if(name=="Channel") return ChannelEnum  end
+	if(name=="ChannelArea") return ChannelAreaEnum  end
+	if(name=="ChannelAreaOld") return ChannelAreaOldEnum  end
+	if(name=="ChannelDischarge") return ChannelDischargeEnum  end
+	if(name=="Closed") return ClosedEnum  end
+	if(name=="Colinear") return ColinearEnum  end
+	if(name=="Constraints") return ConstraintsEnum  end
+	if(name=="Contact") return ContactEnum  end
+	if(name=="Contour") return ContourEnum  end
+	if(name=="Contours") return ContoursEnum  end
+	if(name=="ControlInput") return ControlInputEnum  end
+	if(name=="ControlInputGrad") return ControlInputGradEnum  end
+	if(name=="ControlInputMaxs") return ControlInputMaxsEnum  end
+	if(name=="ControlInputMins") return ControlInputMinsEnum  end
+	if(name=="ControlInputValues") return ControlInputValuesEnum  end
+	if(name=="CrouzeixRaviart") return CrouzeixRaviartEnum  end
+	if(name=="Cuffey") return CuffeyEnum  end
+	if(name=="CuffeyTemperate") return CuffeyTemperateEnum  end
+	if(name=="DamageEvolutionAnalysis") return DamageEvolutionAnalysisEnum  end
+	if(name=="DamageEvolutionSolution") return DamageEvolutionSolutionEnum  end
+	if(name=="DataSet") return DataSetEnum  end
+	if(name=="DataSetParam") return DataSetParamEnum  end
+	if(name=="DatasetInput") return DatasetInputEnum  end
+	if(name=="DefaultAnalysis") return DefaultAnalysisEnum  end
+	if(name=="DefaultCalving") return DefaultCalvingEnum  end
+	if(name=="Dense") return DenseEnum  end
+	if(name=="DependentObject") return DependentObjectEnum  end
+	if(name=="DepthAverageAnalysis") return DepthAverageAnalysisEnum  end
+	if(name=="DeviatoricStressErrorEstimator") return DeviatoricStressErrorEstimatorEnum  end
+	if(name=="Divergence") return DivergenceEnum  end
+	if(name=="Domain3Dsurface") return Domain3DsurfaceEnum  end
+	if(name=="DoubleArrayInput") return DoubleArrayInputEnum  end
+	if(name=="ArrayInput") return ArrayInputEnum  end
+	if(name=="IntArrayInput") return IntArrayInputEnum  end
+	if(name=="DoubleExternalResult") return DoubleExternalResultEnum  end
+	if(name=="DoubleMatArrayParam") return DoubleMatArrayParamEnum  end
+	if(name=="DoubleMatExternalResult") return DoubleMatExternalResultEnum  end
+	if(name=="DoubleMatParam") return DoubleMatParamEnum  end
+	if(name=="DoubleParam") return DoubleParamEnum  end
+	if(name=="DoubleVecParam") return DoubleVecParamEnum  end
+	if(name=="Element") return ElementEnum  end
+	if(name=="ElementHook") return ElementHookEnum  end
+	if(name=="ElementSId") return ElementSIdEnum  end
+	if(name=="EnthalpyAnalysis") return EnthalpyAnalysisEnum  end
+	if(name=="EsaAnalysis") return EsaAnalysisEnum  end
+	if(name=="EsaSolution") return EsaSolutionEnum  end
+	if(name=="EsaTransitions") return EsaTransitionsEnum  end
+	if(name=="ExternalResult") return ExternalResultEnum  end
+	if(name=="ExtrapolationAnalysis") return ExtrapolationAnalysisEnum  end
+	if(name=="ExtrudeFromBaseAnalysis") return ExtrudeFromBaseAnalysisEnum  end
+	if(name=="ExtrudeFromTopAnalysis") return ExtrudeFromTopAnalysisEnum  end
+	if(name=="FSApproximation") return FSApproximationEnum  end
+	if(name=="FSSolver") return FSSolverEnum  end
+	if(name=="FSpressure") return FSpressureEnum  end
+	if(name=="FSvelocity") return FSvelocityEnum  end
+	if(name=="FemModel") return FemModelEnum  end
+	if(name=="FileParam") return FileParamEnum  end
+	if(name=="FixedTimestepping") return FixedTimesteppingEnum  end
+	if(name=="FloatingArea") return FloatingAreaEnum  end
+	if(name=="FloatingAreaScaled") return FloatingAreaScaledEnum  end
+	if(name=="FloatingMeltRate") return FloatingMeltRateEnum  end
+	if(name=="Free") return FreeEnum  end
+	if(name=="FreeSurfaceBaseAnalysis") return FreeSurfaceBaseAnalysisEnum  end
+	if(name=="FreeSurfaceTopAnalysis") return FreeSurfaceTopAnalysisEnum  end
+	if(name=="FrontalForcingsDefault") return FrontalForcingsDefaultEnum  end
+	if(name=="FrontalForcingsRignot") return FrontalForcingsRignotEnum  end
+	if(name=="FrontalForcingsRignotAutoregression") return FrontalForcingsRignotAutoregressionEnum  end
+	if(name=="Fset") return FsetEnum  end
+	if(name=="FullMeltOnPartiallyFloating") return FullMeltOnPartiallyFloatingEnum  end
+	if(name=="GLheightadvectionAnalysis") return GLheightadvectionAnalysisEnum  end
+	if(name=="GaussPenta") return GaussPentaEnum  end
+	if(name=="GaussSeg") return GaussSegEnum  end
+	if(name=="GaussTetra") return GaussTetraEnum  end
+	if(name=="GaussTria") return GaussTriaEnum  end
+	if(name=="GenericOption") return GenericOptionEnum  end
+	if(name=="GenericParam") return GenericParamEnum  end
+	if(name=="GenericExternalResult") return GenericExternalResultEnum  end
+	if(name=="Gradient1") return Gradient1Enum  end
+	if(name=="Gradient2") return Gradient2Enum  end
+	if(name=="Gradient3") return Gradient3Enum  end
+	if(name=="Gradient4") return Gradient4Enum  end
+	if(name=="GroundedArea") return GroundedAreaEnum  end
+	if(name=="GroundedAreaScaled") return GroundedAreaScaledEnum  end
+	if(name=="GroundingOnly") return GroundingOnlyEnum  end
+	if(name=="GroundinglineMassFlux") return GroundinglineMassFluxEnum  end
+	if(name=="Gset") return GsetEnum  end
+	if(name=="Gsl") return GslEnum  end
+	if(name=="HOApproximation") return HOApproximationEnum  end
+	if(name=="HOFSApproximation") return HOFSApproximationEnum  end
+	if(name=="Hook") return HookEnum  end
+	if(name=="HydrologyDCEfficientAnalysis") return HydrologyDCEfficientAnalysisEnum  end
+	if(name=="HydrologyDCInefficientAnalysis") return HydrologyDCInefficientAnalysisEnum  end
+	if(name=="HydrologyGlaDSAnalysis") return HydrologyGlaDSAnalysisEnum  end
+	if(name=="HydrologyGlaDS") return HydrologyGlaDSEnum  end
+	if(name=="HydrologyPismAnalysis") return HydrologyPismAnalysisEnum  end
+	if(name=="HydrologyShaktiAnalysis") return HydrologyShaktiAnalysisEnum  end
+	if(name=="HydrologyShreveAnalysis") return HydrologyShreveAnalysisEnum  end
+	if(name=="HydrologySolution") return HydrologySolutionEnum  end
+	if(name=="HydrologySubsteps") return HydrologySubstepsEnum  end
+	if(name=="HydrologySubTime") return HydrologySubTimeEnum  end
+	if(name=="Hydrologydc") return HydrologydcEnum  end
+	if(name=="Hydrologypism") return HydrologypismEnum  end
+	if(name=="Hydrologyshakti") return HydrologyshaktiEnum  end
+	if(name=="Hydrologyshreve") return HydrologyshreveEnum  end
+	if(name=="IceMass") return IceMassEnum  end
+	if(name=="IceMassScaled") return IceMassScaledEnum  end
+	if(name=="IceVolumeAboveFloatation") return IceVolumeAboveFloatationEnum  end
+	if(name=="IceVolumeAboveFloatationScaled") return IceVolumeAboveFloatationScaledEnum  end
+	if(name=="IceVolume") return IceVolumeEnum  end
+	if(name=="IceVolumeScaled") return IceVolumeScaledEnum  end
+	if(name=="IcefrontMassFlux") return IcefrontMassFluxEnum  end
+	if(name=="IcefrontMassFluxLevelset") return IcefrontMassFluxLevelsetEnum  end
+	if(name=="Incremental") return IncrementalEnum  end
+	if(name=="Indexed") return IndexedEnum  end
+	if(name=="IntExternalResult") return IntExternalResultEnum  end
+	if(name=="ElementInput") return ElementInputEnum  end
+	if(name=="IntMatExternalResult") return IntMatExternalResultEnum  end
+	if(name=="IntMatParam") return IntMatParamEnum  end
+	if(name=="IntParam") return IntParamEnum  end
+	if(name=="IntVecParam") return IntVecParamEnum  end
+	if(name=="Inputs") return InputsEnum  end
+	if(name=="Internal") return InternalEnum  end
+	if(name=="Intersect") return IntersectEnum  end
+	if(name=="InversionVzObs") return InversionVzObsEnum  end
+	if(name=="J") return JEnum  end
+	if(name=="L1L2Approximation") return L1L2ApproximationEnum  end
+	if(name=="MOLHOApproximation") return MOLHOApproximationEnum  end
+	if(name=="L2ProjectionBaseAnalysis") return L2ProjectionBaseAnalysisEnum  end
+	if(name=="L2ProjectionEPLAnalysis") return L2ProjectionEPLAnalysisEnum  end
+	if(name=="LACrouzeixRaviart") return LACrouzeixRaviartEnum  end
+	if(name=="LATaylorHood") return LATaylorHoodEnum  end
+	if(name=="LambdaS") return LambdaSEnum  end
+	if(name=="LevelsetAnalysis") return LevelsetAnalysisEnum  end
+	if(name=="LevelsetfunctionPicard") return LevelsetfunctionPicardEnum  end
+	if(name=="LinearFloatingMeltRate") return LinearFloatingMeltRateEnum  end
+	if(name=="LliboutryDuval") return LliboutryDuvalEnum  end
+	if(name=="Loads") return LoadsEnum  end
+	if(name=="LoveAnalysis") return LoveAnalysisEnum  end
+	if(name=="LoveHf") return LoveHfEnum  end
+	if(name=="LoveHt") return LoveHtEnum  end
+	if(name=="LoveKernelsImag") return LoveKernelsImagEnum  end
+	if(name=="LoveKernelsReal") return LoveKernelsRealEnum  end
+	if(name=="LoveKf") return LoveKfEnum  end
+	if(name=="LoveKt") return LoveKtEnum  end
+	if(name=="LoveLf") return LoveLfEnum  end
+	if(name=="LoveLt") return LoveLtEnum  end
+	if(name=="LoveTidalHt") return LoveTidalHtEnum  end
+	if(name=="LoveTidalKt") return LoveTidalKtEnum  end
+	if(name=="LoveTidalLt") return LoveTidalLtEnum  end
+	if(name=="LovePMTF1t") return LovePMTF1tEnum  end
+	if(name=="LovePMTF2t") return LovePMTF2tEnum  end
+	if(name=="LoveYi") return LoveYiEnum  end
+	if(name=="LoveRhs") return LoveRhsEnum  end
+	if(name=="LoveSolution") return LoveSolutionEnum  end
+	if(name=="MINI") return MINIEnum  end
+	if(name=="MINIcondensed") return MINIcondensedEnum  end
+	if(name=="MantlePlumeGeothermalFlux") return MantlePlumeGeothermalFluxEnum  end
+	if(name=="MassFlux") return MassFluxEnum  end
+	if(name=="Masscon") return MassconEnum  end
+	if(name=="Massconaxpby") return MassconaxpbyEnum  end
+	if(name=="Massfluxatgate") return MassfluxatgateEnum  end
+	if(name=="MasstransportAnalysis") return MasstransportAnalysisEnum  end
+	if(name=="MasstransportSolution") return MasstransportSolutionEnum  end
+	if(name=="Matdamageice") return MatdamageiceEnum  end
+	if(name=="Matenhancedice") return MatenhancediceEnum  end
+	if(name=="Materials") return MaterialsEnum  end
+	if(name=="Matestar") return MatestarEnum  end
+	if(name=="Matice") return MaticeEnum  end
+	if(name=="Matlitho") return MatlithoEnum  end
+	if(name=="Mathydro") return MathydroEnum  end
+	if(name=="MatrixParam") return MatrixParamEnum  end
+	if(name=="MaxAbsVx") return MaxAbsVxEnum  end
+	if(name=="MaxAbsVy") return MaxAbsVyEnum  end
+	if(name=="MaxAbsVz") return MaxAbsVzEnum  end
+	if(name=="MaxDivergence") return MaxDivergenceEnum  end
+	if(name=="MaxVel") return MaxVelEnum  end
+	if(name=="MaxVx") return MaxVxEnum  end
+	if(name=="MaxVy") return MaxVyEnum  end
+	if(name=="MaxVz") return MaxVzEnum  end
+	if(name=="Melange") return MelangeEnum  end
+	if(name=="MeltingAnalysis") return MeltingAnalysisEnum  end
+	if(name=="MeshElements") return MeshElementsEnum  end
+	if(name=="MeshX") return MeshXEnum  end
+	if(name=="MeshY") return MeshYEnum  end
+	if(name=="MinVel") return MinVelEnum  end
+	if(name=="MinVx") return MinVxEnum  end
+	if(name=="MinVy") return MinVyEnum  end
+	if(name=="MinVz") return MinVzEnum  end
+	if(name=="MismipFloatingMeltRate") return MismipFloatingMeltRateEnum  end
+	if(name=="Moulin") return MoulinEnum  end
+	if(name=="MpiDense") return MpiDenseEnum  end
+	if(name=="Mpi") return MpiEnum  end
+	if(name=="MpiSparse") return MpiSparseEnum  end
+	if(name=="Mumps") return MumpsEnum  end
+	if(name=="NoFrictionOnPartiallyFloating") return NoFrictionOnPartiallyFloatingEnum  end
+	if(name=="NoMeltOnPartiallyFloating") return NoMeltOnPartiallyFloatingEnum  end
+	if(name=="Nodal") return NodalEnum  end
+	if(name=="Nodalvalue") return NodalvalueEnum  end
+	if(name=="NodeSId") return NodeSIdEnum  end
+	if(name=="NoneApproximation") return NoneApproximationEnum  end
+	if(name=="None") return NoneEnum  end
+	if(name=="Numberedcostfunction") return NumberedcostfunctionEnum  end
+	if(name=="NyeCO2") return NyeCO2Enum  end
+	if(name=="NyeH2O") return NyeH2OEnum  end
+	if(name=="Numericalflux") return NumericalfluxEnum  end
+	if(name=="OceantransportAnalysis") return OceantransportAnalysisEnum  end
+	if(name=="OceantransportSolution") return OceantransportSolutionEnum  end
+	if(name=="OldGradient") return OldGradientEnum  end
+	if(name=="OneLayerP4z") return OneLayerP4zEnum  end
+	if(name=="Open") return OpenEnum  end
+	if(name=="Option") return OptionEnum  end
+	if(name=="Param") return ParamEnum  end
+	if(name=="Parameters") return ParametersEnum  end
+	if(name=="P0Array") return P0ArrayEnum  end
+	if(name=="P0DG") return P0DGEnum  end
+	if(name=="P1DG") return P1DGEnum  end
+	if(name=="P1P1") return P1P1Enum  end
+	if(name=="P1P1GLS") return P1P1GLSEnum  end
+	if(name=="P1bubble") return P1bubbleEnum  end
+	if(name=="P1bubblecondensed") return P1bubblecondensedEnum  end
+	if(name=="P1xP2") return P1xP2Enum  end
+	if(name=="P1xP3") return P1xP3Enum  end
+	if(name=="P1xP4") return P1xP4Enum  end
+	if(name=="P2") return P2Enum  end
+	if(name=="P2bubble") return P2bubbleEnum  end
+	if(name=="P2bubblecondensed") return P2bubblecondensedEnum  end
+	if(name=="P2xP1") return P2xP1Enum  end
+	if(name=="P2xP4") return P2xP4Enum  end
+	if(name=="Paterson") return PatersonEnum  end
+	if(name=="Pengrid") return PengridEnum  end
+	if(name=="Penpair") return PenpairEnum  end
+	if(name=="Penta") return PentaEnum  end
+	if(name=="PentaInput") return PentaInputEnum  end
+	if(name=="Profiler") return ProfilerEnum  end
+	if(name=="ProfilingCurrentFlops") return ProfilingCurrentFlopsEnum  end
+	if(name=="ProfilingCurrentMem") return ProfilingCurrentMemEnum  end
+	if(name=="ProfilingSolutionTime") return ProfilingSolutionTimeEnum  end
+	if(name=="Regionaloutput") return RegionaloutputEnum  end
+	if(name=="Regular") return RegularEnum  end
+	if(name=="RecoveryAnalysis") return RecoveryAnalysisEnum  end
+	if(name=="Riftfront") return RiftfrontEnum  end
+	if(name=="SamplingAnalysis") return SamplingAnalysisEnum  end
+	if(name=="SamplingSolution") return SamplingSolutionEnum  end
+	if(name=="SIAApproximation") return SIAApproximationEnum  end
+	if(name=="SMBautoregression") return SMBautoregressionEnum  end
+	if(name=="SMBcomponents") return SMBcomponentsEnum  end
+	if(name=="SMBd18opdd") return SMBd18opddEnum  end
+	if(name=="SMBforcing") return SMBforcingEnum  end
+	if(name=="SMBgcm") return SMBgcmEnum  end
+	if(name=="SMBgemb") return SMBgembEnum  end
+	if(name=="SMBgradients") return SMBgradientsEnum  end
+	if(name=="SMBgradientscomponents") return SMBgradientscomponentsEnum  end
+	if(name=="SMBgradientsela") return SMBgradientselaEnum  end
+	if(name=="SMBhenning") return SMBhenningEnum  end
+	if(name=="SMBmeltcomponents") return SMBmeltcomponentsEnum  end
+	if(name=="SMBpdd") return SMBpddEnum  end
+	if(name=="SMBpddSicopolis") return SMBpddSicopolisEnum  end
+	if(name=="SMBsemic") return SMBsemicEnum  end
+	if(name=="SSAApproximation") return SSAApproximationEnum  end
+	if(name=="SSAFSApproximation") return SSAFSApproximationEnum  end
+	if(name=="SSAHOApproximation") return SSAHOApproximationEnum  end
+	if(name=="Scaled") return ScaledEnum  end
+	if(name=="SealevelAbsolute") return SealevelAbsoluteEnum  end
+	if(name=="SealevelEmotion") return SealevelEmotionEnum  end
+	if(name=="SealevelchangePolarMotionX") return SealevelchangePolarMotionXEnum  end
+	if(name=="SealevelchangePolarMotionY") return SealevelchangePolarMotionYEnum  end
+	if(name=="SealevelchangePolarMotionZ") return SealevelchangePolarMotionZEnum  end
+	if(name=="SealevelchangePolarMotion") return SealevelchangePolarMotionEnum  end
+	if(name=="SealevelNmotion") return SealevelNmotionEnum  end
+	if(name=="SealevelUmotion") return SealevelUmotionEnum  end
+	if(name=="SealevelchangeAnalysis") return SealevelchangeAnalysisEnum  end
+	if(name=="Seg") return SegEnum  end
+	if(name=="SegInput") return SegInputEnum  end
+	if(name=="Segment") return SegmentEnum  end
+	if(name=="SegmentRiftfront") return SegmentRiftfrontEnum  end
+	if(name=="Separate") return SeparateEnum  end
+	if(name=="Seq") return SeqEnum  end
+	if(name=="SmbAnalysis") return SmbAnalysisEnum  end
+	if(name=="SmbSolution") return SmbSolutionEnum  end
+	if(name=="SmoothAnalysis") return SmoothAnalysisEnum  end
+	if(name=="SoftMigration") return SoftMigrationEnum  end
+	if(name=="SpatialLinearFloatingMeltRate") return SpatialLinearFloatingMeltRateEnum  end
+	if(name=="SpcDynamic") return SpcDynamicEnum  end
+	if(name=="SpcStatic") return SpcStaticEnum  end
+	if(name=="SpcTransient") return SpcTransientEnum  end
+	if(name=="Sset") return SsetEnum  end
+	if(name=="StatisticsSolution") return StatisticsSolutionEnum  end
+	if(name=="SteadystateSolution") return SteadystateSolutionEnum  end
+	if(name=="StressIntensityFactor") return StressIntensityFactorEnum  end
+	if(name=="StressbalanceAnalysis") return StressbalanceAnalysisEnum  end
+	if(name=="StressbalanceConvergenceNumSteps") return StressbalanceConvergenceNumStepsEnum  end
+	if(name=="StressbalanceSIAAnalysis") return StressbalanceSIAAnalysisEnum  end
+	if(name=="StressbalanceSolution") return StressbalanceSolutionEnum  end
+	if(name=="StressbalanceVerticalAnalysis") return StressbalanceVerticalAnalysisEnum  end
+	if(name=="StringArrayParam") return StringArrayParamEnum  end
+	if(name=="StringExternalResult") return StringExternalResultEnum  end
+	if(name=="StringParam") return StringParamEnum  end
+	if(name=="SubelementFriction1") return SubelementFriction1Enum  end
+	if(name=="SubelementFriction2") return SubelementFriction2Enum  end
+	if(name=="SubelementMelt1") return SubelementMelt1Enum  end
+	if(name=="SubelementMelt2") return SubelementMelt2Enum  end
+	if(name=="SubelementMigration") return SubelementMigrationEnum  end
+	if(name=="SurfaceSlopeSolution") return SurfaceSlopeSolutionEnum  end
+	if(name=="TaylorHood") return TaylorHoodEnum  end
+	if(name=="Tetra") return TetraEnum  end
+	if(name=="TetraInput") return TetraInputEnum  end
+	if(name=="ThermalAnalysis") return ThermalAnalysisEnum  end
+	if(name=="ThermalSolution") return ThermalSolutionEnum  end
+	if(name=="ThicknessErrorEstimator") return ThicknessErrorEstimatorEnum  end
+	if(name=="TotalCalvingFluxLevelset") return TotalCalvingFluxLevelsetEnum  end
+	if(name=="TotalCalvingMeltingFluxLevelset") return TotalCalvingMeltingFluxLevelsetEnum  end
+	if(name=="TotalFloatingBmb") return TotalFloatingBmbEnum  end
+	if(name=="TotalFloatingBmbScaled") return TotalFloatingBmbScaledEnum  end
+	if(name=="TotalGroundedBmb") return TotalGroundedBmbEnum  end
+	if(name=="TotalGroundedBmbScaled") return TotalGroundedBmbScaledEnum  end
+	if(name=="TotalSmb") return TotalSmbEnum  end
+	if(name=="TotalSmbScaled") return TotalSmbScaledEnum  end
+	if(name=="TransientArrayParam") return TransientArrayParamEnum  end
+	if(name=="TransientInput") return TransientInputEnum  end
+	if(name=="TransientParam") return TransientParamEnum  end
+	if(name=="TransientSolution") return TransientSolutionEnum  end
+	if(name=="Tria") return TriaEnum  end
+	if(name=="TriaInput") return TriaInputEnum  end
+	if(name=="UzawaPressureAnalysis") return UzawaPressureAnalysisEnum  end
+	if(name=="VectorParam") return VectorParamEnum  end
+	if(name=="Vertex") return VertexEnum  end
+	if(name=="VertexLId") return VertexLIdEnum  end
+	if(name=="VertexPId") return VertexPIdEnum  end
+	if(name=="VertexSId") return VertexSIdEnum  end
+	if(name=="Vertices") return VerticesEnum  end
+	if(name=="ViscousHeating") return ViscousHeatingEnum  end
+	if(name=="Water") return WaterEnum  end
+	if(name=="XTaylorHood") return XTaylorHoodEnum  end
+	if(name=="XY") return XYEnum  end
+	if(name=="XYZ") return XYZEnum  end
+	if(name=="BalancethicknessD0") return BalancethicknessD0Enum  end
+	if(name=="BalancethicknessDiffusionCoefficient") return BalancethicknessDiffusionCoefficientEnum  end
+	if(name=="BilinearInterp") return BilinearInterpEnum  end
+	if(name=="CalvingdevCoeff") return CalvingdevCoeffEnum  end
+	if(name=="DeviatoricStress") return DeviatoricStressEnum  end
+	if(name=="EtaAbsGradient") return EtaAbsGradientEnum  end
+	if(name=="MeshZ") return MeshZEnum  end
+	if(name=="NearestInterp") return NearestInterpEnum  end
+	if(name=="OutputdefinitionList") return OutputdefinitionListEnum  end
+	if(name=="SealevelObs") return SealevelObsEnum  end
+	if(name=="SealevelWeights") return SealevelWeightsEnum  end
+	if(name=="StrainRate") return StrainRateEnum  end
+	if(name=="StressTensor") return StressTensorEnum  end
+	if(name=="StressbalanceViscosityOvershoot") return StressbalanceViscosityOvershootEnum  end
+	if(name=="SubelementMigration4") return SubelementMigration4Enum  end
+	if(name=="TimesteppingTimeAdapt") return TimesteppingTimeAdaptEnum  end
+	if(name=="TriangleInterp") return TriangleInterpEnum  end
+	if(name=="MaximumNumberOfDefinitions") return MaximumNumberOfDefinitionsEnum  end
 end

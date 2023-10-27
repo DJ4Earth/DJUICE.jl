@@ -16,18 +16,19 @@ md.stressbalance.maxiter = 20
 #Now call AD!
 md.inversion.iscontrol = 1
 md.inversion.independent = md.materials.rheology_B
-md.inversion.independent_string = "RheologyB"
+md.inversion.independent_string = "MaterialsRheologyB"
 
 md = solve(md, :sb)
 
-addJ = md.results["StressbalanceSolution"]["Gradient"] 
+# compute gradient by finite differences at each node
+addJ = md.results["StressbalanceSolution"]["Gradient"]
 
 @testset "AD results RheologyB" begin
 	α = md.inversion.independent
+	delta = 1e-8
+	femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
+	J1 = dJUICE.costfunction(femmodel, α)
 	for i in 1:md.mesh.numberofvertices
-		delta = 1e-8
-		femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
-		J1 = dJUICE.costfunction(femmodel, α)
 		dα = zero(md.friction.coefficient)
 		dα[i] = delta
 		femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
@@ -37,4 +38,3 @@ addJ = md.results["StressbalanceSolution"]["Gradient"]
 		@test abs(dJ - addJ[i])< 1e-6
 	end
 end
-
