@@ -4863,4 +4863,5 @@ function StringToEnum(name::String)
 	if(name=="TimesteppingTimeAdapt") return TimesteppingTimeAdaptEnum  end
 	if(name=="TriangleInterp") return TriangleInterpEnum  end
 	if(name=="MaximumNumberOfDefinitions") return MaximumNumberOfDefinitionsEnum  end
+	error("Enum ", name, " not found");
 end

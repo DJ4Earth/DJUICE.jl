@@ -16,6 +16,14 @@ using MAT
 	@test (typeof(md.friction)) == dJUICE.SchoofFriction
 end
 
+@testset "Enums <-> String" begin
+	@test dJUICE.StringToEnum("FrictionCoefficient") == dJUICE.FrictionCoefficientEnum
+	@test dJUICE.StringToEnum("MaterialsRheologyB") == dJUICE.MaterialsRheologyBEnum
+	@test dJUICE.EnumToString(dJUICE.FrictionCoefficientEnum) == "FrictionCoefficient"
+	@test dJUICE.EnumToString(dJUICE.MaterialsRheologyBEnum) == "MaterialsRheologyB"
+end
+
+# quick test for AD
 @testset "Cost function" begin
 	file = matopen(joinpath(@__DIR__, "..", "data","temp.mat")) #SMALL model (35 elements)
 	mat  = read(file, "md")
