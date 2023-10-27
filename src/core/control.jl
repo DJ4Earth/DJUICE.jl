@@ -1,13 +1,19 @@
 function Control_Core(md::model, femmodel::FemModel) #{{{
+	# Compute gradient 
+	computeGradient(md, femmodel)
+end#}}}
+function computeGradient(md::model, femmodel::FemModel) #{{{
       #independent variable
-		controlstring = FindParam(String, femmodel.parameters, InversionControlParametersEnum)
-      if (controlstring == "FrictionC")
-         α = md.friction.coefficient
-      elseif (controlstring == "RheologyB")
-         α = md.materials.rheology_B
-      else
-         error(controlstring, " is not supported, just for now. ")
-      end
+		#controlstring = FindParam(String, femmodel.parameters, InversionControlParametersEnum)
+		#α = md.inversion.independent
+      #if (controlstring == "FrictionC")
+      #   α = md.friction.coefficient
+      #elseif (controlstring == "RheologyB")
+      #   α = md.materials.rheology_B
+      #else
+      #   error(controlstring, " is not supported, just for now. ")
+      #end
+		α = md.inversion.independent
       #initialize derivative as 0
       ∂J_∂α = zero(α)
 

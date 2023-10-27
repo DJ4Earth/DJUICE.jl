@@ -15,14 +15,15 @@ md.stressbalance.maxiter = 20
 
 #Now call AD!
 md.inversion.iscontrol = 1
-md.inversion.independent = "RheologyB"
+md.inversion.independent = md.materials.rheology_B
+md.inversion.independent_string = "RheologyB"
 
 md = solve(md, :sb)
 
 addJ = md.results["StressbalanceSolution"]["Gradient"] 
 
 @testset "AD results RheologyB" begin
-	α = md.materials.rheology_B
+	α = md.inversion.independent
 	for i in 1:md.mesh.numberofvertices
 		delta = 1e-8
 		femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
