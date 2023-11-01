@@ -5,6 +5,7 @@ differentiable JUlia ICE model
 
 Authors:
  - Mathieu Morlighem, Dartmouth
+ - Cheng Gong, Dartmouth
 
 License: MIT
 
