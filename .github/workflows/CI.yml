@@ -21,7 +21,6 @@ jobs:
         version:
           - '1.9'   # the minimum version 
           - '1.10'  # the latest version
-          - 'nightly'
         os:
           - ubuntu-20.04
           - macOS-latest
