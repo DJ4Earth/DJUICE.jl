@@ -1,10 +1,15 @@
 #utils
 function issmdir() #{{{
-	issmdir = ENV["ISSM_DIR"]
+	if haskey(ENV, "ISSM_DIR")
+		issmdir = ENV["ISSM_DIR"]
+	else
+		println(io, "Could not determine the location of ISSM, use dJUICE path instead")
+		return "./"
+	end
 
 	if isempty(issmdir)
 		println(io, "Could not determine the location of ISSM, use dJUICE path instead")
-		return ENV["./"]
+		return "./"
 	else
 		return issmdir
 	end
