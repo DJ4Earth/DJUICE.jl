@@ -46,8 +46,9 @@ jobs:
       - uses: julia-actions/julia-buildpkg@v1
       - run: |
           svn --username anon --password anon checkout https://issm.ess.uci.edu/svn/issm/issm/trunk
-          export ISSM_DIR=./trunk/
       - uses: julia-actions/julia-runtest@v1
+        env:
+          ISSM_DIR: ${{ './trunk/' }}
       - uses: julia-actions/julia-processcoverage@v1
       - uses: codecov/codecov-action@v1
         with:
