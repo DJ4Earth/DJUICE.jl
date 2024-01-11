@@ -152,11 +152,12 @@ function triangle(md::model,domainname::String,resolution::Float64) #{{{
 	#Call triangle using ISSM's default options
 	triangle_switches = "pQzDq30ia"*@sprintf("%lf",area) #replace V by Q to quiet down the logging
 	#rc=ccall( (:triangulate,"libtriangle"),
-	try rc=ccall( (:triangulate,issmdir()*"/externalpackages/triangle/src/libtriangle.dylib"),
+
+	try rc=ccall( (:triangulate,issmdir()*"/externalpackages/triangle/src/libtriangle."*(@static Sys.islinux() ? :"so" : (@static Sys.isapple() ? :"dylib" : :"so"))),
 				Cint, ( Cstring, Ref{CTriangulateIO}, Ref{CTriangulateIO}, Ref{CTriangulateIO}),
 				triangle_switches, Ref(ctio_in), Ref(ctio_out), Ref(vor_out))
 	catch LoadError
-		rc=ccall( (:triangulate,issmdir()*"/externalpackages/triangle/install/lib/libtriangle.dylib"),
+		rc=ccall( (:triangulate,issmdir()*"/externalpackages/triangle/install/lib/libtriangle."*(@static Sys.islinux() ? :"so" : (@static Sys.isapple() ? :"dylib" : :"so"))),
 					Cint, ( Cstring, Ref{CTriangulateIO}, Ref{CTriangulateIO}, Ref{CTriangulateIO}),
 					triangle_switches, Ref(ctio_in), Ref(ctio_out), Ref(vor_out))
 	end

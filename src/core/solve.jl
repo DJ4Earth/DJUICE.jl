@@ -1,8 +1,3 @@
-using Enzyme
-Enzyme.API.looseTypeAnalysis!(false)
-Enzyme.API.strictAliasing!(false)
-Enzyme.API.typeWarning!(false)
-
 include("./issmenums.jl")
 include("./toolkits.jl")
 include("./gauss.jl")

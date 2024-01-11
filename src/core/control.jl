@@ -1,3 +1,8 @@
+using Enzyme
+Enzyme.API.looseTypeAnalysis!(false)
+Enzyme.API.strictAliasing!(false)
+Enzyme.API.typeWarning!(false)
+
 function Control_Core(md::model, femmodel::FemModel) #{{{
 	# Compute gradient 
 	computeGradient(md, femmodel)
