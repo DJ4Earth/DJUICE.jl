@@ -1,6 +1,4 @@
-#!/Applications/Julia-1.8.app/Contents/Resources/julia/bin/julia --project
 using dJUICE
-#using JET
 
 md = model()
 md = triangle(md,issmdir()*"/test/Exp/Square.exp",50000.)

@@ -67,7 +67,7 @@ TRIANGLE - create model mesh using the triangle package
  - md=triangle(md,'DomainOutline.exp',1000);
  - md=triangle(md,'DomainOutline.exp','Rifts.exp',1500);
 """
-function triangle(md::model,domainname::String,resolution::Float64) #{{{
+function triangle2(md::model,domainname::String,resolution::Float64) #{{{
 
 	#read input file
 	contours = expread(domainname)
