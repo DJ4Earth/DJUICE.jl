@@ -4,12 +4,12 @@ function issmdir() #{{{
 		issmdir = ENV["ISSM_DIR"]
 	else
 		println("Could not determine the location of ISSM, use dJUICE path instead")
-		return "./"
+		return joinpath(dirname(pathof(dJUICE)), "..")
 	end
 
 	if isempty(issmdir)
 		println("Could not determine the location of ISSM, use dJUICE path instead")
-		return "./"
+		return joinpath(dirname(pathof(dJUICE)), "..")
 	else
 		return issmdir
 	end
