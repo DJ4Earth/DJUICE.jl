@@ -1,5 +1,5 @@
 
-function costfunction(α::Vector{Float64}, femmodel::FemModel) #{{{
+function costfunction(femmodel::FemModel, α::Vector{Float64}) #{{{
 	# get the md.inversion.control_string
 	control_string = FindParam(String, femmodel.parameters, InversionControlParametersEnum)
 	# get the Enum

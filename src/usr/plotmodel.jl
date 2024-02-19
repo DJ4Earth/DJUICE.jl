@@ -1,5 +1,5 @@
 import ColorSchemes.jet
-#using GLMakie
+using GLMakie
 
 function plotmodel( md::model, data::Vector; showvertices::Bool=false, showfacets::Bool=false, caxis::Tuple{Float64, Float64}=(0.0, 0.0)) #{{{
 
@@ -25,7 +25,7 @@ function plotmodel( md::model, data::Vector; showvertices::Bool=false, showfacet
 			#Add colorbar
 			Colorbar(fig[1, 2], limits = caxis, colormap = jet)
 		elseif length(data)==md.mesh.numberofvertices
-			fig, ax, h = Makie.mesh( [md.mesh.x md.mesh.y], md.mesh.elements, shading = false, color = data, colormap = jet, colorrange = caxis)
+			fig, ax, h = Makie.mesh( [md.mesh.x md.mesh.y], md.mesh.elements, shading = NoShading, color = data, colormap = jet, colorrange = caxis)
 
 			#Add colorbar
 			Colorbar(fig[1, 2], h, width=25)
@@ -35,7 +35,7 @@ function plotmodel( md::model, data::Vector; showvertices::Bool=false, showfacet
 	else
 		# default to single color
 		@assert length(data)==1
-		fig, ax, h = Makie.mesh( [md.mesh.x md.mesh.y], md.mesh.elements, shading = false, color = data, colormap = jet)
+		fig, ax, h = Makie.mesh( [md.mesh.x md.mesh.y], md.mesh.elements, shading = NoShading, color = data, colormap = jet)
 	end
 
 	if showfacets
@@ -63,7 +63,7 @@ end#}}}
 function plotmodel(md::model,data::String) #{{{
 
 	if(data=="mesh")
-		poly([md.mesh.x md.mesh.y], md.mesh.elements, strokewidth=1, shading=false)
+		poly([md.mesh.x md.mesh.y], md.mesh.elements, strokewidth=1, shading=NoShading)
 	else
 		error(data, " plot not supported yet")
 	end
