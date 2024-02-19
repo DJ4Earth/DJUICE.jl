@@ -1,4 +1,6 @@
 using Enzyme
+using Optimization, OptimizationOptimJL
+
 Enzyme.API.looseTypeAnalysis!(false)
 Enzyme.API.strictAliasing!(false)
 Enzyme.API.typeWarning!(false)
@@ -6,6 +8,15 @@ Enzyme.API.typeWarning!(false)
 function Control_Core(md::model, femmodel::FemModel) #{{{
 	# Compute gradient 
 	computeGradient(md, femmodel)
+#	α = md.inversion.independent
+#	n = length(α)
+#	optprob = OptimizationFunction(costfunction, Optimization.AutoEnzyme())#, grad=enzymerule)
+#	prob = Optimization.OptimizationProblem(optprob, α, femmodel, lb = -ones(n), ub = ones(n))
+#	sol = solve(prob, Optim.LBFGS())
+#
+#	#Put gradient in results
+#	InputUpdateFromVectorx(femmodel, sol.u, GradientEnum, VertexSIdEnum)
+#	RequestedOutputsx(femmodel, [GradientEnum])
 end#}}}
 function computeGradient(md::model, femmodel::FemModel) #{{{
 	#independent variable
