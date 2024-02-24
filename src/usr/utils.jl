@@ -212,23 +212,25 @@ function IssmStructDisp(io::IO, modelfield::Any) # {{{
 	println(io,typeof(modelfield),":")
 	for name in fieldnames(typeof(modelfield))
 		a=getfield(modelfield,name)
-		#print(io,"   $(name) = ")
 		@printf "%19s: " name
-		if isa(a,String)
-			println(io, a)
-		elseif isa(a, Flux.Chain)
-			println(io, "Flux.", a)
-		elseif isa(a, StatsBase.ZScoreTransform)
-			println(io, "Normalization: ", a)
-		elseif length(a)>1
-			if !isempty(a)
-				println(io, typeof(a), " of size ", size(a))
-			else
-				println(io,"empty")
-			end
-		else
-			println(io, a)
-		end
+		IssmPrintField(io, a)
+		@printf "\n"
+	end
+end #}}}
+function IssmPrintField(io::IO, field::Any) #{{{
+	@printf "%s" field
+end #}}}
+function IssmPrintField(io::IO, field::Flux.Chain) #{{{
+	@printf "Flux: %s" field
+end #}}}
+function IssmPrintField(io::IO, field::StatsBase.ZScoreTransform) #{{{
+	@printf "Normalization: %s" field
+end #}}}
+function IssmPrintField(io::IO, field::Vector) #{{{
+	if !isempty(field)
+		@printf "%s of size %s" typeof(field) size(field)
+	else
+		@printf "empty"
 	end
 end #}}}
 function meshgrid(x::Vector, y::Vector) # {{{
