@@ -19,10 +19,11 @@ jobs:
       fail-fast: false
       matrix:
         version:
+          - '1.8'   # the minimum version 
           - '1.9'   # the minimum version 
           - '1.10'  # the latest version
         os:
-          - ubuntu-lastest
+          - ubuntu-20.04
           - macOS-latest
         arch:
           - x64
