@@ -17,7 +17,7 @@ end
 	end
 
 	# AD test
-	@time include("testad.jl")
+	#@time include("testad.jl")
 	#@time include("testad2.jl")
 
 	# GPU test

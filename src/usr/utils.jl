@@ -209,7 +209,7 @@ function InterpFromMeshToMesh2d2(index_data::Array,x_data::Vector,y_data::Vector
 	return dataout
 end #}}}
 function IssmStructDisp(io::IO, modelfield::Any) # {{{
-	println(io,typeof(modelfield),":")
+	@printf "%s:\n" typeof(modelfield)
 	for name in fieldnames(typeof(modelfield))
 		a=getfield(modelfield,name)
 		@printf "%19s: " name
@@ -226,7 +226,7 @@ end #}}}
 function IssmPrintField(io::IO, field::StatsBase.ZScoreTransform) #{{{
 	@printf "Normalization: %s" field
 end #}}}
-function IssmPrintField(io::IO, field::Vector) #{{{
+function IssmPrintField(io::IO, field::Union{Vector, Matrix}) #{{{
 	if !isempty(field)
 		@printf "%s of size %s" typeof(field) size(field)
 	else

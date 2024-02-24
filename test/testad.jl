@@ -1,4 +1,5 @@
-#!/Applications/Julia-1.8.app/Contents/Resources/julia/bin/julia --project
+module enzymeDiff
+
 using dJUICE
 using MAT
 using Test
@@ -23,6 +24,19 @@ md = solve(md, :sb)
 # compute gradient by finite differences at each node
 addJ = md.results["StressbalanceSolution"]["Gradient"]
 
+
+@testset "Quick AD test with Cost function" begin
+   #Now call AD!
+   md.inversion.iscontrol = 1
+   md.inversion.independent = md.friction.coefficient
+   md.inversion.independent_string = "FrictionCoefficient"
+
+   α = md.inversion.independent
+   femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
+   J1 = dJUICE.costfunction(femmodel, α)
+   @test ~isnothing(J1)
+end
+
 @testset "AD gradient calculation for FrictionC" begin
 	α = md.inversion.independent
 	delta = 1e-7
@@ -37,4 +51,6 @@ addJ = md.results["StressbalanceSolution"]["Gradient"]
 
 		@test abs(dJ - addJ[i])< 1e-5
 	end
+end
+
 end
