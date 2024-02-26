@@ -19,6 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         version:
+          - '1.8'   # the minimum version 
           - '1.9'   # the minimum version 
           - '1.10'  # the latest version
         os:
@@ -26,7 +27,6 @@ jobs:
           # - macOS-latest
         arch:
           - x64
-
     steps:
       - uses: actions/checkout@v2
       - uses: julia-actions/setup-julia@v1
@@ -44,11 +44,17 @@ jobs:
             ${{ runner.os }}-test-
             ${{ runner.os }}-
       - uses: julia-actions/cache@v1
-      - run: sudo apt-get update && sudo apt-get install -y xorg-dev mesa-utils xvfb libgl1 freeglut3-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxext-dev xsettingsd x11-xserver-utils
       - uses: julia-actions/julia-buildpkg@v1
-      - uses: julia-actions/julia-runtest@v1
+      - if: matrix.os == 'ubuntu-20.04'
+        run: sudo apt-get update && sudo apt-get install -y xorg-dev mesa-utils xvfb libgl1 freeglut3-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxext-dev xsettingsd x11-xserver-utils
+      - if: matrix.os == 'ubuntu-20.04'
+        uses: julia-actions/julia-runtest@v1
         with:
           prefix: xvfb-run -s '-screen 0 1024x768x24'
+      - if: matrix.os == 'macOS-latest'
+        uses: julia-actions/julia-runtest@v1
+        with:
+          prefix: Xvfb -s '-screen 0 1024x768x24'
       - uses: julia-actions/julia-processcoverage@v1
       - uses: codecov/codecov-action@v1
         with:

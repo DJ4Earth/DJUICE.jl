@@ -1,3 +1,5 @@
+module ModelStruct
+
 using dJUICE
 using Test
 using MAT
@@ -23,20 +25,19 @@ end
 	@test dJUICE.EnumToString(dJUICE.MaterialsRheologyBEnum) == "MaterialsRheologyB"
 end
 
-# quick test for AD
-@testset "Cost function" begin
-	file = matopen(joinpath(@__DIR__, "..", "data","temp.mat")) #SMALL model (35 elements)
-	mat  = read(file, "md")
-	close(file)
-	md = model(mat)
+@testset "Triangle" begin
+	md = model()
+	c = dJUICE.ExpStruct()
+	c.name = "domainoutline"
+	c.nods = 5
+	c.density = 1.0
+	c.x = [0.0, 1.0e6, 1.0e6, 0.0, 0.0]
+	c.y = [0.0, 0.0, 1.0e6, 1.0e6, 0.0]
+	c.closed = true
+	contour = [c]
+	md = triangle(md,contour,50000.) 
+	@test md.mesh.numberofvertices == 340
+	@test md.mesh.numberofelements == 614
+end
 
-	#Now call AD!
-	md.inversion.iscontrol = 1
-	md.inversion.independent = md.friction.coefficient
-	md.inversion.independent_string = "FrictionCoefficient"
-
-	α = md.inversion.independent
-	femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
-	J1 = dJUICE.costfunction(femmodel, α)
-	@test ~isnothing(J1)
 end

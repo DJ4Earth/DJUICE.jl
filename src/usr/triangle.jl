@@ -1,55 +1,4 @@
-
-#Class Triangle's triangulateio
-mutable struct CTriangulateIO #{{{
-
-    pointlist :: Ptr{Cdouble}
-    pointattributelist :: Ptr{Cdouble}
-    pointmarkerlist :: Ptr{Cint}
-    numberofpoints :: Cint
-    numberofpointattributes :: Cint
-
-    trianglelist :: Ptr{Cint}
-    triangleattributelist :: Ptr{Cdouble}
-    trianglearealist :: Ptr{Cdouble}
-    neighborlist :: Ptr{Cint}
-    numberoftriangles :: Cint
-    numberofcorners :: Cint
-    numberoftriangleattributes :: Cint
-
-    segmentlist :: Ptr{Cint}
-    segmentmarkerlist :: Ptr{Cint}
-    numberofsegments :: Cint
-
-    holelist :: Ptr{Cdouble}
-    numberofholes :: Cint
-
-    regionlist :: Ptr{Cdouble}
-    numberofregions :: Cint
-
-    edgelist :: Ptr{Cint}
-    edgemarkerlist :: Ptr{Cint}
-    normlist :: Ptr{Cdouble}
-    numberofedges :: Cint
- end  #}}}
-function CTriangulateIO() #{{{
-	return CTriangulateIO(C_NULL, C_NULL, C_NULL, 0, 0,
-								 C_NULL, C_NULL, C_NULL, C_NULL, 0, 0, 0,
-								 C_NULL, C_NULL, 0,
-								 C_NULL, 0,
-								 C_NULL, 0,
-								 C_NULL, C_NULL, C_NULL, 0)
-end# }}}
-function Base.show(io::IO, tio::CTriangulateIO)# {{{
-	println(io,"CTriangulateIO(")
-	for name in fieldnames(typeof(tio))
-		a=getfield(tio,name)
-		print(io,"$(name) = ")
-		println(io,a)
-	end
-	println(io,")")
-end# }}}
-
-using Printf #needed for sprintf
+using Triangulate
 
 """
 TRIANGLE - create model mesh using the triangle package
@@ -67,16 +16,18 @@ TRIANGLE - create model mesh using the triangle package
  - md=triangle(md,'DomainOutline.exp',1000);
  - md=triangle(md,'DomainOutline.exp','Rifts.exp',1500);
 """
-function triangle2(md::model,domainname::String,resolution::Float64) #{{{
+function triangle(md::model,domainname::String,resolution::Float64) #{{{
 
 	#read input file
 	contours = expread(domainname)
+	return triangle(md, contours, resolution)
+end#}}}
+
+function triangle(md::model,contours::Vector{ExpStruct},resolution::Float64) #{{{
 	area     = resolution^2
 
-	#Initialize i/o structures
-	ctio_in  = CTriangulateIO();
-	ctio_out = CTriangulateIO();
-	vor_out  = CTriangulateIO();
+	#Initialize input structure
+	triin=Triangulate.TriangulateIO()
 
 	#Construct input structure
 	numberofpoints   = 0
@@ -137,44 +88,23 @@ function triangle2(md::model,domainname::String,resolution::Float64) #{{{
 	end
 
 	#based on this, prepare input structure
-	ctio_in.numberofpoints = numberofpoints
-	ctio_in.pointlist=pointer(pointlist)
-	ctio_in.numberofpointattributes=numberofpointattributes
-	ctio_in.pointattributelist=pointer(pointattributelist)
-	ctio_in.pointmarkerlist=pointer(pointmarkerlist)
-	ctio_in.numberofsegments=numberofsegments
-	ctio_in.segmentlist=pointer(segmentlist)
-	ctio_in.segmentmarkerlist = pointer(segmentmarkerlist)
-	ctio_in.numberofholes=numberofholes
-	ctio_in.holelist=pointer(holelist)
-	ctio_in.numberofregions=0
+	triin.pointlist=pointlist
+	triin.segmentlist=segmentlist
+	triin.segmentmarkerlist = segmentmarkerlist
+	triin.holelist=holelist
 
-	#Call triangle using ISSM's default options
+	#Triangulate
 	triangle_switches = "pQzDq30ia"*@sprintf("%lf",area) #replace V by Q to quiet down the logging
-	#rc=ccall( (:triangulate,"libtriangle"),
-
-	try rc=ccall( (:triangulate,issmdir()*"/externalpackages/triangle/src/libtriangle."*(@static Sys.islinux() ? :"so" : (@static Sys.isapple() ? :"dylib" : :"so"))),
-				Cint, ( Cstring, Ref{CTriangulateIO}, Ref{CTriangulateIO}, Ref{CTriangulateIO}),
-				triangle_switches, Ref(ctio_in), Ref(ctio_out), Ref(vor_out))
-	catch LoadError
-		rc=ccall( (:triangulate,issmdir()*"/externalpackages/triangle/install/lib/libtriangle."*(@static Sys.islinux() ? :"so" : (@static Sys.isapple() ? :"dylib" : :"so"))),
-					Cint, ( Cstring, Ref{CTriangulateIO}, Ref{CTriangulateIO}, Ref{CTriangulateIO}),
-					triangle_switches, Ref(ctio_in), Ref(ctio_out), Ref(vor_out))
-	end
-
-	#post process output
-	points    = convert(Array{Cdouble,2}, Base.unsafe_wrap(Array, ctio_out.pointlist,    (2,Int(ctio_out.numberofpoints)), own=true))'
-	triangles = convert(Array{Cint,2},    Base.unsafe_wrap(Array, ctio_out.trianglelist, (3,Int(ctio_out.numberoftriangles)), own=true))' .+1
-	segments  = convert(Array{Cint,2},    Base.unsafe_wrap(Array, ctio_out.segmentlist,  (2,Int(ctio_out.numberofsegments)), own=true))' .+1
+	(triout, vorout)=triangulate(triangle_switches, triin)
 
 	#assign output
 	md.mesh = Mesh2dTriangle()
-	md.mesh.numberofvertices = ctio_out.numberofpoints
-	md.mesh.numberofelements = ctio_out.numberoftriangles
-	md.mesh.x                = points[:,1]
-	md.mesh.y                = points[:,2]
-	md.mesh.elements         = triangles
-	md.mesh.segments         = segments
+	md.mesh.numberofvertices = size(triout.pointlist, 2)
+	md.mesh.numberofelements = size(triout.trianglelist, 2)
+	md.mesh.x                = triout.pointlist[1,:]
+	md.mesh.y                = triout.pointlist[2,:]
+	md.mesh.elements         = convert(Matrix{Int64}, triout.trianglelist' .+ 1)
+	md.mesh.segments         = collect(triout.segmentlist' .+ 1)
 
 	#post processing
 	md.mesh.vertexonboundary = zeros(Bool,md.mesh.numberofvertices)
