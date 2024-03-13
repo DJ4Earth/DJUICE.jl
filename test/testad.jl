@@ -3,6 +3,12 @@ module enzymeDiff
 using dJUICE
 using MAT
 using Test
+using Enzyme
+
+Enzyme.API.looseTypeAnalysis!(false)
+Enzyme.API.strictAliasing!(false)
+Enzyme.API.typeWarning!(false)
+Enzyme.Compiler.RunAttributor[] = false
 
 #Load model from MATLAB file
 #file = matopen(joinpath(@__DIR__, "..", "data","temp12k.mat")) #BIG model
