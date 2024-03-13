@@ -5,9 +5,6 @@ using MAT
 using Test
 using Enzyme
 
-Enzyme.API.looseTypeAnalysis!(false)
-Enzyme.API.strictAliasing!(false)
-Enzyme.API.typeWarning!(false)
 Enzyme.Compiler.RunAttributor[] = false
 
 #Load model from MATLAB file
