@@ -1,4 +1,4 @@
-module enzymeDiff
+module enzymeDiff_grad_frictionC
 
 using dJUICE
 using MAT
@@ -22,7 +22,7 @@ md.inversion.iscontrol = 1
 md.inversion.independent = md.friction.coefficient
 md.inversion.independent_string = "FrictionCoefficient"
 
-md = solve(md, :sb)
+md = solve(md, :grad)
 
 # compute gradient by finite differences at each node
 addJ = md.results["StressbalanceSolution"]["Gradient"]
