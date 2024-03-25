@@ -1,3 +1,5 @@
+module enzymeDiff_grad_rheologyB
+
 using dJUICE
 using MAT
 using Test
@@ -20,10 +22,22 @@ md.inversion.iscontrol = 1
 md.inversion.independent = md.materials.rheology_B
 md.inversion.independent_string = "MaterialsRheologyB"
 
-md = solve(md, :sb)
+md = solve(md, :grad)
 
 # compute gradient by finite differences at each node
 addJ = md.results["StressbalanceSolution"]["Gradient"]
+
+@testset "Quick AD test with Cost function" begin
+   #Now call AD!
+   md.inversion.iscontrol = 1
+	md.inversion.independent = md.materials.rheology_B
+	md.inversion.independent_string = "MaterialsRheologyB"
+
+   α = md.inversion.independent
+   femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
+   J1 = dJUICE.costfunction(femmodel, α)
+   @test ~isnothing(J1)
+end
 
 @testset "AD results RheologyB" begin
 	α = md.inversion.independent
@@ -39,4 +53,6 @@ addJ = md.results["StressbalanceSolution"]["Gradient"]
 
 		@test abs(dJ - addJ[i])< 1e-6
 	end
+end
+
 end
