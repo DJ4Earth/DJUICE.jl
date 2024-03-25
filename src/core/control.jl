@@ -9,15 +9,16 @@ Enzyme.Compiler.RunAttributor[] = false
 
 function Control_Core(md::model, femmodel::FemModel) #{{{
 	# solve for optimization
+	# TODO: just a first try, need to add all the features
 	α = md.inversion.independent
 	n = length(α)
 	optprob = OptimizationFunction(costfunction, Optimization.AutoEnzyme())
 	prob = Optimization.OptimizationProblem(optprob, α, femmodel, lb=md.inversion.min_parameters, ub=md.inversion.max_parameters)
 	sol = Optimization.solve(prob, Optim.LBFGS())
 
-	#TODO: Put the solution back in results according to its Enum
-	#InputUpdateFromVectorx(femmodel, sol.u, GradientEnum, VertexSIdEnum)
-	#RequestedOutputsx(femmodel, [GradientEnum])
+	independent_enum = StringToEnum(md.inversion.independent_string)
+	InputUpdateFromVectorx(femmodel, sol.u, independent_enum, VertexSIdEnum)
+	RequestedOutputsx(femmodel, [independent_enum])
 end#}}}
 function computeGradient(md::model, femmodel::FemModel) #{{{
 	#independent variable

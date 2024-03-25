@@ -20,11 +20,13 @@ md.stressbalance.maxiter = 20
 #Now call AD!
 md.inversion.iscontrol = 1
 md.inversion.independent = md.friction.coefficient
+md.inversion.min_parameters = ones(md.mesh.numberofvertices)*(0.0)
+md.inversion.max_parameters = ones(md.mesh.numberofvertices)*(1.0e3)
 md.inversion.independent_string = "FrictionCoefficient"
 
 md = solve(md, :sb)
 
 # compute gradient by finite differences at each node
-addJ = md.results["StressbalanceSolution"]["Gradient"]
+#addJ = md.results["StressbalanceSolution"]["Gradient"]
 
 end
