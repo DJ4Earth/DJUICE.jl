@@ -1,9 +1,10 @@
 using Enzyme
+Enzyme.API.looseTypeAnalysis!(false)
+Enzyme.API.strictAliasing!(false)
+Enzyme.API.typeWarning!(false)
+
 using Optimization, OptimizationOptimJL
 
-#Enzyme.API.looseTypeAnalysis!(false)
-#Enzyme.API.strictAliasing!(false)
-#Enzyme.API.typeWarning!(false)
 Enzyme.Compiler.RunAttributor[] = false
 
 function Control_Core(md::model, femmodel::FemModel) #{{{
@@ -28,7 +29,7 @@ function computeGradient(md::model, femmodel::FemModel) #{{{
 	dfemmodel = Enzyme.Compiler.make_zero(Base.Core.Typeof(femmodel), IdDict(), femmodel)
 	# compute the gradient
 	#println("CALLING AUTODIFF, prepare to die...")
-	@time autodiff(Enzyme.Reverse, costfunction, Duplicated(femmodel, dfemmodel), Duplicated(α, ∂J_∂α))
+	@time autodiff(Enzyme.Reverse, costfunction, Duplicated(α, ∂J_∂α), Duplicated(femmodel,dfemmodel))
 
 	#Put gradient in results
 	InputUpdateFromVectorx(femmodel, ∂J_∂α, GradientEnum, VertexSIdEnum)
