@@ -5,6 +5,7 @@ using MAT
 using Test
 using Enzyme
 
+Enzyme.API.typeWarning!(false)
 Enzyme.Compiler.RunAttributor[] = false
 
 #Load model from MATLAB file
@@ -36,7 +37,7 @@ addJ = md.results["StressbalanceSolution"]["Gradient"]
 
    α = md.inversion.independent
    femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
-   J1 = dJUICE.costfunction(femmodel, α)
+   J1 = dJUICE.costfunction(α, femmodel)
    @test ~isnothing(J1)
 end
 
@@ -44,12 +45,12 @@ end
 	α = md.inversion.independent
 	delta = 1e-7
 	femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
-	J1 = dJUICE.costfunction(femmodel, α)
+	J1 = dJUICE.costfunction(α, femmodel)
 	for i in 1:md.mesh.numberofvertices
 		dα = zero(md.friction.coefficient)
 		dα[i] = delta
 		femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
-		J2 = dJUICE.costfunction(femmodel, α+dα)
+		J2 = dJUICE.costfunction(α+dα, femmodel)
 		dJ = (J2-J1)/delta
 
 		@test abs(dJ - addJ[i])< 1e-5
