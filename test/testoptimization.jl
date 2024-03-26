@@ -6,6 +6,7 @@ using Test
 using Enzyme
 
 Enzyme.Compiler.RunAttributor[] = false
+using Optimization, OptimizationOptimJL
 
 #Load model from MATLAB file
 #file = matopen(joinpath(@__DIR__, "..", "data","temp12k.mat")) #BIG model
@@ -24,7 +25,20 @@ md.inversion.min_parameters = ones(md.mesh.numberofvertices)*(0.0)
 md.inversion.max_parameters = ones(md.mesh.numberofvertices)*(1.0e3)
 md.inversion.independent_string = "FrictionCoefficient"
 
-md = solve(md, :sb)
+α = md.inversion.independent
+∂J_∂α = zero(α)
+
+femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
+n = length(α)
+# use user defined grad, errors!
+optprob = OptimizationFunction(dJUICE.costfunction, Optimization.AutoEnzyme(), grad=dJUICE.computeGradient)
+#optprob = OptimizationFunction(dJUICE.costfunction, Optimization.AutoEnzyme())
+#prob = Optimization.OptimizationProblem(optprob, α, femmodel, lb=md.inversion.min_parameters, ub=md.inversion.max_parameters)
+prob = Optimization.OptimizationProblem(optprob, α, femmodel)
+sol = Optimization.solve(prob, Optim.LBFGS())
+
+
+#md = solve(md, :sb)
 
 # compute gradient by finite differences at each node
 #addJ = md.results["StressbalanceSolution"]["Gradient"]
