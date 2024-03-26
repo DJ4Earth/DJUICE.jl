@@ -9,9 +9,9 @@ function costfunction(α::Vector{Float64}, femmodel::FemModel) #{{{
 	end
 	# compute cost function
 	# TODO: loop through all controls with respect to all the components in the cost function
-	costfunction(femmodel, α,  controlvar_enum, VertexSIdEnum)
+	costfunction(α, femmodel, controlvar_enum, VertexSIdEnum)
 end#}}}
-function costfunction(femmodel::FemModel, α::Vector{Float64}, controlvar_enum::IssmEnum, SId_enum::IssmEnum) #{{{
+function costfunction(α::Vector{Float64}, femmodel::FemModel, controlvar_enum::IssmEnum, SId_enum::IssmEnum) #{{{
 	#Update FemModel accordingly
 	InputUpdateFromVectorx(femmodel, α, controlvar_enum, SId_enum)
 
