@@ -264,6 +264,18 @@ function Base.show(io::IO, this::Inversion)# {{{
 	IssmStructDisp(io, this)
 end# }}}
 # }}}
+#Calving{{{
+mutable struct Calving
+	law::Int64
+	calvingrate::Vector{Float64}
+end
+function Calving() #{{{
+	return Calving( 0, Vector{Float64}(undef,0))
+end# }}}
+function Base.show(io::IO, this::Calving)# {{{
+	IssmStructDisp(io, this)
+end# }}}
+# }}}
 
 #Model structure
 mutable struct model{Mesh<:AbstractMesh, Friction<:AbstractFriction}
@@ -282,18 +294,19 @@ mutable struct model{Mesh<:AbstractMesh, Friction<:AbstractFriction}
 	masstransport::Masstransport
 	transient::Transient
 	inversion::Inversion
+	calving::Calving
 end
 function model() #{{{
       return model( Mesh2dTriangle(), Geometry(), Mask(), Materials(),
                                        Initialization(),Stressbalance(), Constants(), Dict(),
                                        BuddFriction(), Basalforcings(), SMBforcings(), Timestepping(),
-                                       Masstransport(), Transient(), Inversion())
+													Masstransport(), Transient(), Inversion(), Calving())
 end#}}}
 function model(md::model; mesh::AbstractMesh=md.mesh, friction::AbstractFriction=md.friction) #{{{
 	return model(mesh, md.geometry, md.mask, md.materials, 
 					 md.initialization, md.stressbalance, md.constants, md.results, 
 					 friction, md.basalforcings, md.smb, md.timestepping, 
-					 md.masstransport, md.transient, md.inversion)
+					 md.masstransport, md.transient, md.inversion, md.calving)
 end#}}}
 function model(matmd::Dict,verbose::Bool=true) #{{{
 
@@ -371,6 +384,7 @@ function Base.show(io::IO, md::model)# {{{
 	@printf "%19s: %-26s -- %s\n" "masstransport" typeof(md.masstransport) "parameters mass transport simulations"
 	@printf "%19s: %-26s -- %s\n" "transient" typeof(md.transient) "parameters for transient simulations"
 	@printf "%19s: %-26s -- %s\n" "inversion" typeof(md.inversion) "parameters for inverse methods"
+	@printf "%19s: %-26s -- %s\n" "calving" typeof(md.calving) "calving"
 	@printf "%19s: %-26s -- %s\n" "results" typeof(md.results) "model results"
 
 end# }}}
