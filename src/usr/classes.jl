@@ -287,6 +287,18 @@ function Base.show(io::IO, this::Levelset)# {{{
 	IssmStructDisp(io, this)
 end# }}}
 # }}}
+#Frontalforcings{{{
+mutable struct Frontalforcings
+	meltingrate::Vector{Float64}
+	ablationrate::Vector{Float64}
+end
+function Frontalforcings() #{{{
+	return Frontalforcings(Vector{Float64}(undef,0), Vector{Float64}(undef,0))
+end# }}}
+function Base.show(io::IO, this::Frontalforcings)# {{{
+	IssmStructDisp(io, this)
+end# }}}
+# }}}
 
 #Model structure
 mutable struct model{Mesh<:AbstractMesh, Friction<:AbstractFriction, Calving<:AbstractCalving}
@@ -307,18 +319,21 @@ mutable struct model{Mesh<:AbstractMesh, Friction<:AbstractFriction, Calving<:Ab
 	inversion::Inversion
 	calving::Calving
 	levelset::Levelset
+	frontalforcings::Frontalforcings
 end
 function model() #{{{
       return model( Mesh2dTriangle(), Geometry(), Mask(), Materials(),
                                        Initialization(),Stressbalance(), Constants(), Dict(),
                                        BuddFriction(), Basalforcings(), SMBforcings(), Timestepping(),
-													Masstransport(), Transient(), Inversion(), DefaultCalving(), Levelset())
+													Masstransport(), Transient(), Inversion(), DefaultCalving(), 
+													Levelset(), Frontalforcings())
 end#}}}
 function model(md::model; mesh::AbstractMesh=md.mesh, friction::AbstractFriction=md.friction, calving::AbstractCalving=md.calving) #{{{
 	return model(mesh, md.geometry, md.mask, md.materials, 
 					 md.initialization, md.stressbalance, md.constants, md.results, 
 					 friction, md.basalforcings, md.smb, md.timestepping, 
-					 md.masstransport, md.transient, md.inversion, md.calving, md.levelset)
+					 md.masstransport, md.transient, md.inversion, md.calving, 
+					 md.levelset, md.frontalforcings)
 end#}}}
 function model(matmd::Dict,verbose::Bool=true) #{{{
 
@@ -396,8 +411,9 @@ function Base.show(io::IO, md::model)# {{{
 	@printf "%19s: %-26s -- %s\n" "masstransport" typeof(md.masstransport) "parameters mass transport simulations"
 	@printf "%19s: %-26s -- %s\n" "transient" typeof(md.transient) "parameters for transient simulations"
 	@printf "%19s: %-26s -- %s\n" "inversion" typeof(md.inversion) "parameters for inverse methods"
-	@printf "%19s: %-26s -- %s\n" "calving" typeof(md.calving) "calving"
-	@printf "%19s: %-26s -- %s\n" "levelset" typeof(md.levelset) "Level-set parameters"
+	@printf "%19s: %-26s -- %s\n" "calving" typeof(md.calving) "parameters for calving"
+	@printf "%19s: %-26s -- %s\n" "levelset" typeof(md.levelset) "parameters for moving boundaries (level-set method)"
+	@printf "%19s: %-26s -- %s\n" "frontalforcings" typeof(md.frontalforcings) "parameters for frontalforcings"
 	@printf "%19s: %-26s -- %s\n" "results" typeof(md.results) "model results"
 
 end# }}}
