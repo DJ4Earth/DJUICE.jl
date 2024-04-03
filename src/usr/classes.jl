@@ -279,9 +279,13 @@ end# }}}
 #Levelset{{{
 mutable struct Levelset
 	spclevelset::Vector{Float64}
+	stabilization::Int64
+	reinit_frequency::Int64
+	kill_icebergs::Int64
+	migration_max::Float64
 end
 function Levelset() #{{{
-	return Levelset(Vector{Float64}(undef,0))
+	return Levelset(Vector{Float64}(undef,0), 1, 10, 1, 1.0e12)
 end# }}}
 function Base.show(io::IO, this::Levelset)# {{{
 	IssmStructDisp(io, this)

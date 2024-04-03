@@ -237,6 +237,21 @@ function GetGroundedPortion(element::Tria, xyz_list::Matrix{Float64}) #{{{
 
 	return phi
 end#}}}
+function InputUpdateFromSolutionOneDof(element::Tria, ug::Vector{Float64},enum::IssmEnum) #{{{
+	#Get dofs for this finite element
+   doflist = GetDofList(element,GsetEnum)
+
+   #Get solution vector for this element
+   numdof   = 3
+   values = Vector{Float64}(undef,numdof)
+   for i in 1:numdof values[i]=ug[doflist[i]] end
+
+   #Add back to Mask
+   AddInput(element, enum, value, P1Enum)
+
+   return nothing
+
+end#}}}
 function IsIcefront(element::Tria) #{{{
 
 	level = Vector{Float64}(undef,3)
@@ -307,6 +322,30 @@ function GetArea(element::Tria)#{{{
 
 	@assert x2*y3 - y2*x3 + x1*y2 - y1*x2 + x3*y1 - y3*x1>0
 	return (x2*y3 - y2*x3 + x1*y2 - y1*x2 + x3*y1 - y3*x1)/2
+end#}}}
+function GetElementSizes(element::Tria)#{{{
+
+	#Get xyz list
+	xyz_list = GetVerticesCoordinates(element.vertices)
+	x1 = xyz_list[1,1]; y1 = xyz_list[1,2]
+	x2 = xyz_list[2,1]; y2 = xyz_list[2,2]
+	x3 = xyz_list[3,1]; y3 = xyz_list[3,2]
+
+   xmin=xyz_list[1,1]; xmax=xyz_list[1,1];
+   ymin=xyz_list[1,2]; ymax=xyz_list[1,2];
+
+	for i in [2,3]
+		if(xyz_list[i,1]<xmin) xmin=xyz_list[i,1] end
+      if(xyz_list[i,1]>xmax) xmax=xyz_list[i,1] end
+      if(xyz_list[i,2]<ymin) ymin=xyz_list[i,2] end
+      if(xyz_list[i,2]>ymax) ymax=xyz_list[i,2] end
+	end
+
+   hx = xmax-xmin
+   hy = ymax-ymin
+   hz = 0.
+
+	return hx, hy, hz
 end#}}}
 function NormalSection(element::Tria, xyz_front::Matrix{Float64}) #{{{
 
