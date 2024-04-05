@@ -27,7 +27,7 @@ function ModelProcessor(md::model, solutionstring::Symbol) #{{{
 	if solutionstring===:StressbalanceSolution
 		analyses = Analysis[StressbalanceAnalysis()]
 	elseif solutionstring===:TransientSolution
-		analyses = Analysis[StressbalanceAnalysis(), MasstransportAnalysis()]
+		analyses = Analysis[StressbalanceAnalysis(), MasstransportAnalysis(), LevelsetAnalysis()]
 	else
 		error(solutionstring, " not supported by ModelProcessor")
 	end
@@ -116,6 +116,9 @@ function CreateParameters(parameters::Parameters,md::model) #{{{
 	#Set step and time, this will be overwritten if we run a transient
 	AddParam(parameters,1,StepEnum)
 	AddParam(parameters,0.0,TimeEnum)
+
+	#Is moving front 
+	AddParam(parameters,md.transient.ismovingfront,TransientIsmovingfrontEnum)
 
 	return nothing
 end# }}}

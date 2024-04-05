@@ -21,6 +21,7 @@ function Core(analysis::TransientAnalysis,femmodel::FemModel)# {{{
 	yts       = FindParam(Float64, femmodel.parameters, ConstantsYtsEnum)
 	dt        = FindParam(Float64, femmodel.parameters, TimesteppingTimeStepEnum)
 
+	ismovingfront   = FindParam(Bool, femmodel.parameters, TransientIsmovingfrontEnum)
 	isstressbalance = FindParam(Bool, femmodel.parameters, TransientIsstressbalanceEnum)
    ismasstransport = FindParam(Bool, femmodel.parameters, TransientIsmasstransportEnum)
 
@@ -32,6 +33,9 @@ function Core(analysis::TransientAnalysis,femmodel::FemModel)# {{{
 		println("iteration ", step, "/", Int(ceil((finaltime-time)/dt))+step," time [yr]: ", time/yts, " (time step: ",  dt/yts, " [yr])")
 
       if(isstressbalance) Core(StressbalanceAnalysis(), femmodel) end
+
+		if(ismovingfront) Core(LevelsetAnalysis(), femmodel) end
+
       if(ismasstransport) Core(MasstransportAnalysis(), femmodel) end
 		MigrateGroundinglinex(femmodel)
 

@@ -10,8 +10,8 @@ function CreateConstraints(analysis::LevelsetAnalysis,constraints::Vector{Constr
 
 	count = 1
 	for i in 1:md.mesh.numberofvertices
-		if ~isnan(spcvx[i])
-			push!(constraints,Constraint(count,i,1,spclevelset))
+		if ~isnan(spclevelset[i])
+			push!(constraints,Constraint(count,i,1,spclevelset[i]))
 			count+=1
 		end
 	end
@@ -78,6 +78,8 @@ end#}}}
 #Finite Element Analysis
 function Core(analysis::LevelsetAnalysis,femmodel::FemModel)# {{{
 
+	# moving front
+	MovingFrontalVel(femmodel)
 	#Activate formulation
 	SetCurrentConfiguration!(femmodel, analysis)
 
@@ -230,3 +232,11 @@ function UpdateConstraints(analysis::LevelsetAnalysis, femmodel::FemModel) #{{{
 	#Default do nothing
 	return nothing
 end#}}}
+
+# Moving front
+function MovingFrontalVel(femmodel::FemModel)# {{{
+	for i in 1:length(femmodel.elements)
+		MovingFrontalVelocity(femmodel.elements[i])
+	end
+	return nothing
+end #}}}
