@@ -240,7 +240,7 @@ mutable struct Transient
 	ismovingfront::Bool
 end
 function Transient() #{{{
-	return Transient( true, true, true, true, true)
+	return Transient( true, true, true, false, false)
 end# }}}
 function Base.show(io::IO, this::Transient)# {{{
 	IssmStructDisp(io, this)

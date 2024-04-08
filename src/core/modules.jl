@@ -27,7 +27,11 @@ function ModelProcessor(md::model, solutionstring::Symbol) #{{{
 	if solutionstring===:StressbalanceSolution
 		analyses = Analysis[StressbalanceAnalysis()]
 	elseif solutionstring===:TransientSolution
-		analyses = Analysis[StressbalanceAnalysis(), MasstransportAnalysis(), LevelsetAnalysis()]
+		if md.transient.ismovingfront
+			analyses = Analysis[StressbalanceAnalysis(), MasstransportAnalysis(), LevelsetAnalysis()]
+		else
+			analyses = Analysis[StressbalanceAnalysis(), MasstransportAnalysis()]
+		end
 	else
 		error(solutionstring, " not supported by ModelProcessor")
 	end
