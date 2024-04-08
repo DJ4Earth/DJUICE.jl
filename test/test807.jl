@@ -1,7 +1,7 @@
 using dJUICE
 
 md = model()
-md = triangle(md,issmdir()*"/test/Exp/Square.exp",50000.)
+md = triangle(md,issmdir()*"/test/Exp/Square.exp",200000.)
 md = setmask(md,"all","")
 
 #Geometry
@@ -52,7 +52,7 @@ md.basalforcings.groundedice_melting_rate=5*ones(md.mesh.numberofvertices)
 # mask
 Lx = xmax - xmin
 alpha = 2.0/3.0
-md.mask.ice_levelset = ((x .- alpha*Lx).>0) .- ((x .- alpha*Lx).<0)
+md.mask.ice_levelset = ((md.mesh.x .- alpha*Lx).>0) .- ((md.mesh.x .- alpha*Lx).<0)
 
 md.levelset.kill_icebergs = 0
 # time stepping

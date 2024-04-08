@@ -20,7 +20,7 @@ function CreateConstraints(analysis::LevelsetAnalysis,constraints::Vector{Constr
 end#}}}
 function CreateNodes(analysis::LevelsetAnalysis,nodes::Vector{Node},md::model) #{{{
 
-	numdof = 2
+	numdof = 1
 	for i in 1:md.mesh.numberofvertices
 		push!(nodes,Node(i,i,true,true,numdof,-ones(Int64,numdof), ones(Int64,numdof), -ones(Int64,numdof), zeros(numdof)))
 	end
@@ -87,6 +87,9 @@ function Core(analysis::LevelsetAnalysis,femmodel::FemModel)# {{{
 	println("   call computational core:");
 	solutionsequence_linear(femmodel,analysis)
 
+	# TODO: add reinitialization
+	# save
+   RequestedOutputsx(femmodel, [MaskIceLevelsetEnum])
 	return nothing
 end #}}}
 function CreateKMatrix(analysis::LevelsetAnalysis,element::Tria)# {{{

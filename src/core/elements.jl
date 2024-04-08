@@ -247,7 +247,7 @@ function InputUpdateFromSolutionOneDof(element::Tria, ug::Vector{Float64},enum::
    for i in 1:numdof values[i]=ug[doflist[i]] end
 
    #Add back to Mask
-   AddInput(element, enum, value, P1Enum)
+   AddInput(element, enum, values, P1Enum)
 
    return nothing
 
