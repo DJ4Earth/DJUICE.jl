@@ -1,36 +1,43 @@
 using Enzyme
+Enzyme.API.looseTypeAnalysis!(false)
+Enzyme.API.strictAliasing!(false)
+Enzyme.API.typeWarning!(false)
+
 using Optimization, OptimizationOptimJL
 
-#Enzyme.API.looseTypeAnalysis!(false)
-#Enzyme.API.strictAliasing!(false)
-#Enzyme.API.typeWarning!(false)
 Enzyme.Compiler.RunAttributor[] = false
 
 function Control_Core(md::model, femmodel::FemModel) #{{{
 	# solve for optimization
+	# TODO: just a first try, need to add all the features
 	α = md.inversion.independent
+	∂J_∂α = zero(α)
 	n = length(α)
+	# use user defined grad, errors!
+	#optprob = OptimizationFunction(costfunction, Optimization.AutoEnzyme(), grad=computeGradient(∂J_∂α, α, femmodel))
 	optprob = OptimizationFunction(costfunction, Optimization.AutoEnzyme())
 	prob = Optimization.OptimizationProblem(optprob, α, femmodel, lb=md.inversion.min_parameters, ub=md.inversion.max_parameters)
 	sol = Optimization.solve(prob, Optim.LBFGS())
 
-	#TODO: Put the solution back in results according to its Enum
-	#InputUpdateFromVectorx(femmodel, sol.u, GradientEnum, VertexSIdEnum)
-	#RequestedOutputsx(femmodel, [GradientEnum])
+	independent_enum = StringToEnum(md.inversion.independent_string)
+	InputUpdateFromVectorx(femmodel, sol.u, independent_enum, VertexSIdEnum)
+	RequestedOutputsx(femmodel, [independent_enum])
 end#}}}
 function computeGradient(md::model, femmodel::FemModel) #{{{
 	#independent variable
 	α = md.inversion.independent
 	#initialize derivative as 0
 	∂J_∂α = zero(α)
-
-	# zero ALL depth of the model, make sure we get correct gradient
-	dfemmodel = Enzyme.Compiler.make_zero(Base.Core.Typeof(femmodel), IdDict(), femmodel)
-	# compute the gradient
-	#println("CALLING AUTODIFF, prepare to die...")
-	@time autodiff(Enzyme.Reverse, costfunction, Duplicated(femmodel, dfemmodel), Duplicated(α, ∂J_∂α))
+	# Compute Gradient
+	computeGradient(∂J_∂α, α, femmodel)
 
 	#Put gradient in results
 	InputUpdateFromVectorx(femmodel, ∂J_∂α, GradientEnum, VertexSIdEnum)
 	RequestedOutputsx(femmodel, [GradientEnum])
+end#}}}
+function computeGradient(∂J_∂α::Vector{Float64}, α::Vector{Float64}, femmodel::FemModel) #{{{
+	# zero ALL depth of the model, make sure we get correct gradient
+	dfemmodel = Enzyme.Compiler.make_zero(Base.Core.Typeof(femmodel), IdDict(), femmodel)
+	# compute the gradient
+	@time autodiff(Enzyme.Reverse, costfunction, Duplicated(α, ∂J_∂α), Duplicated(femmodel,dfemmodel))
 end#}}}

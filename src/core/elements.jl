@@ -237,6 +237,21 @@ function GetGroundedPortion(element::Tria, xyz_list::Matrix{Float64}) #{{{
 
 	return phi
 end#}}}
+function InputUpdateFromSolutionOneDof(element::Tria, ug::Vector{Float64},enum::IssmEnum) #{{{
+	#Get dofs for this finite element
+   doflist = GetDofList(element,GsetEnum)
+
+   #Get solution vector for this element
+   numdof   = 3
+   values = Vector{Float64}(undef,numdof)
+   for i in 1:numdof values[i]=ug[doflist[i]] end
+
+   #Add back to Mask
+   AddInput(element, enum, values, P1Enum)
+
+   return nothing
+
+end#}}}
 function IsIcefront(element::Tria) #{{{
 
 	level = Vector{Float64}(undef,3)
@@ -308,6 +323,30 @@ function GetArea(element::Tria)#{{{
 	@assert x2*y3 - y2*x3 + x1*y2 - y1*x2 + x3*y1 - y3*x1>0
 	return (x2*y3 - y2*x3 + x1*y2 - y1*x2 + x3*y1 - y3*x1)/2
 end#}}}
+function GetElementSizes(element::Tria)#{{{
+
+	#Get xyz list
+	xyz_list = GetVerticesCoordinates(element.vertices)
+	x1 = xyz_list[1,1]; y1 = xyz_list[1,2]
+	x2 = xyz_list[2,1]; y2 = xyz_list[2,2]
+	x3 = xyz_list[3,1]; y3 = xyz_list[3,2]
+
+   xmin=xyz_list[1,1]; xmax=xyz_list[1,1];
+   ymin=xyz_list[1,2]; ymax=xyz_list[1,2];
+
+	for i in [2,3]
+		if(xyz_list[i,1]<xmin) xmin=xyz_list[i,1] end
+      if(xyz_list[i,1]>xmax) xmax=xyz_list[i,1] end
+      if(xyz_list[i,2]<ymin) ymin=xyz_list[i,2] end
+      if(xyz_list[i,2]>ymax) ymax=xyz_list[i,2] end
+	end
+
+   hx = xmax-xmin
+   hy = ymax-ymin
+   hz = 0.
+
+	return hx, hy, hz
+end#}}}
 function NormalSection(element::Tria, xyz_front::Matrix{Float64}) #{{{
 
 	#Build output pointing vector
@@ -370,6 +409,65 @@ function MigrateGroundingLine(element::Tria) #{{{
 	AddInput(element,MaskOceanLevelsetEnum,phi,P1Enum)
 	AddInput(element,SurfaceEnum,s,P1Enum)
 	AddInput(element,BaseEnum,b,P1Enum)
+
+	return nothing
+end#}}}
+function MovingFrontalVelocity(element::Tria) #{{{
+
+	mvx = Vector{Float64}(undef,3)
+	mvy = Vector{Float64}(undef,3)
+	
+	# get cavling law
+	calvinglaw			= FindParam(Int64, element, CalvingLawEnum)
+	
+	# load inputs
+	gr_input				= GetInput(element, MaskOceanLevelsetEnum)
+	#lsf_slopex_input	= GetInput(element, LevelsetfunctionSlopeXEnum)
+	#lsf_slopey_input	= GetInput(element, LevelsetfunctionSlopeYEnum)
+	#calvingratex_input= GetInput(element, CalvingratexEnum)
+	#calvingratey_input= GetInput(element, CalvingrateyEnum)
+	vx_input				= GetInput(element, VxEnum)
+	vy_input				= GetInput(element, VyEnum)
+	calvingrate_input = GetInput(element, CalvingCalvingrateEnum)
+	meltingrate_input = GetInput(element, CalvingMeltingrateEnum)
+
+	xyz_list = GetVerticesCoordinates(element.vertices)
+
+   gauss = GaussTria(2)
+   for ig in 1:3
+      vx  = GetInputValue(vx_input, gauss, ig)
+      vy  = GetInputValue(vy_input, gauss, ig)
+      groundedice  = GetInputValue(gr_input, gauss, ig)
+
+		dlsf = GetInputDerivativeValue(vx_input,xyz_list,gauss,ig)
+		#TODO: add L2Projection
+      #dlsfx  = GetInputValue(lsf_slopex_input, gauss, ig)
+      #dlsfy  = GetInputValue(lsf_slopey_input, gauss, ig)
+      #cx  = GetInputValue(calvingratex_input, gauss, ig)
+      #cy  = GetInputValue(calvingratey_input, gauss, ig)
+
+		norm_dlsf = sqrt(dlsf[1]^2+dlsf[2]^2)
+		
+		# TODO: depend on which calving law
+      calvingrate  = GetInputValue(calvingrate_input, gauss, ig)
+		cx = calvingrate * dlsf[1] /norm_dlsf
+		cy = calvingrate * dlsf[2] /norm_dlsf
+      meltingrate  = GetInputValue(meltingrate_input, gauss, ig)
+		if (groundedice < 0) meltingrate = 0; end
+		mx = meltingrate * dlsf[1] /norm_dlsf
+		my = meltingrate * dlsf[2] /norm_dlsf
+		if (norm_dlsf <1e-10)
+			cx = 0; cy = 0
+			mx = 0; my = 0
+		end
+
+		mvx[ig] = vx-cx-mx
+		mvy[ig] = vy-cy-my
+   end
+
+	#Update inputs
+	AddInput(element,MovingFrontalVxEnum,mvx,P1Enum)
+	AddInput(element,MovingFrontalVyEnum,mvy,P1Enum)
 
 	return nothing
 end#}}}

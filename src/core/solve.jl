@@ -19,6 +19,7 @@ include("./control.jl")
 include("./analyses/stressbalanceanalysis.jl")
 include("./analyses/masstransportanalysis.jl")
 include("./analyses/transientanalysis.jl")
+include("./analyses/levelsetanalysis.jl")
 
 include("./solutionsequences.jl")
 include("./modules.jl")

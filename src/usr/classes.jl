@@ -240,7 +240,7 @@ mutable struct Transient
 	ismovingfront::Bool
 end
 function Transient() #{{{
-	return Transient( true, true, true, true, true)
+	return Transient( true, true, true, false, false)
 end# }}}
 function Base.show(io::IO, this::Transient)# {{{
 	IssmStructDisp(io, this)
@@ -264,9 +264,48 @@ function Base.show(io::IO, this::Inversion)# {{{
 	IssmStructDisp(io, this)
 end# }}}
 # }}}
+#Calving {{{
+abstract type AbstractCalving end
+mutable struct DefaultCalving <: AbstractCalving
+	calvingrate::Vector{Float64}
+end
+function DefaultCalving() #{{{
+	return DefaultCalving(Vector{Float64}(undef,0))
+end# }}}
+function Base.show(io::IO, this::DefaultCalving)# {{{
+	IssmStructDisp(io, this)
+end# }}}
+# }}}
+#Levelset{{{
+mutable struct Levelset
+	spclevelset::Vector{Float64}
+	stabilization::Int64
+	reinit_frequency::Int64
+	kill_icebergs::Int64
+	migration_max::Float64
+end
+function Levelset() #{{{
+	return Levelset(Vector{Float64}(undef,0), 1, 10, 1, 1.0e12)
+end# }}}
+function Base.show(io::IO, this::Levelset)# {{{
+	IssmStructDisp(io, this)
+end# }}}
+# }}}
+#Frontalforcings{{{
+mutable struct Frontalforcings
+	meltingrate::Vector{Float64}
+	ablationrate::Vector{Float64}
+end
+function Frontalforcings() #{{{
+	return Frontalforcings(Vector{Float64}(undef,0), Vector{Float64}(undef,0))
+end# }}}
+function Base.show(io::IO, this::Frontalforcings)# {{{
+	IssmStructDisp(io, this)
+end# }}}
+# }}}
 
 #Model structure
-mutable struct model{Mesh<:AbstractMesh, Friction<:AbstractFriction}
+mutable struct model{Mesh<:AbstractMesh, Friction<:AbstractFriction, Calving<:AbstractCalving}
 	mesh::Mesh
 	geometry::Geometry
 	mask::Mask
@@ -282,18 +321,23 @@ mutable struct model{Mesh<:AbstractMesh, Friction<:AbstractFriction}
 	masstransport::Masstransport
 	transient::Transient
 	inversion::Inversion
+	calving::Calving
+	levelset::Levelset
+	frontalforcings::Frontalforcings
 end
 function model() #{{{
       return model( Mesh2dTriangle(), Geometry(), Mask(), Materials(),
                                        Initialization(),Stressbalance(), Constants(), Dict(),
                                        BuddFriction(), Basalforcings(), SMBforcings(), Timestepping(),
-                                       Masstransport(), Transient(), Inversion())
+													Masstransport(), Transient(), Inversion(), DefaultCalving(), 
+													Levelset(), Frontalforcings())
 end#}}}
-function model(md::model; mesh::AbstractMesh=md.mesh, friction::AbstractFriction=md.friction) #{{{
+function model(md::model; mesh::AbstractMesh=md.mesh, friction::AbstractFriction=md.friction, calving::AbstractCalving=md.calving) #{{{
 	return model(mesh, md.geometry, md.mask, md.materials, 
 					 md.initialization, md.stressbalance, md.constants, md.results, 
 					 friction, md.basalforcings, md.smb, md.timestepping, 
-					 md.masstransport, md.transient, md.inversion)
+					 md.masstransport, md.transient, md.inversion, md.calving, 
+					 md.levelset, md.frontalforcings)
 end#}}}
 function model(matmd::Dict,verbose::Bool=true) #{{{
 
@@ -371,6 +415,9 @@ function Base.show(io::IO, md::model)# {{{
 	@printf "%19s: %-26s -- %s\n" "masstransport" typeof(md.masstransport) "parameters mass transport simulations"
 	@printf "%19s: %-26s -- %s\n" "transient" typeof(md.transient) "parameters for transient simulations"
 	@printf "%19s: %-26s -- %s\n" "inversion" typeof(md.inversion) "parameters for inverse methods"
+	@printf "%19s: %-26s -- %s\n" "calving" typeof(md.calving) "parameters for calving"
+	@printf "%19s: %-26s -- %s\n" "levelset" typeof(md.levelset) "parameters for moving boundaries (level-set method)"
+	@printf "%19s: %-26s -- %s\n" "frontalforcings" typeof(md.frontalforcings) "parameters for frontalforcings"
 	@printf "%19s: %-26s -- %s\n" "results" typeof(md.results) "model results"
 
 end# }}}
