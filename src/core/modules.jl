@@ -153,13 +153,15 @@ function OutputResultsx(femmodel::FemModel, md::model, solutionkey::Symbol)# {{{
 		for i in 1:length(femmodel.results)
 			result = femmodel.results[i]
 			step   = femmodel.results[i].step
-			(output[step])[EnumToString(result.enum)] = result.value
+			scale = OutputEnumToScale(md, result.enum)
+			(output[step])[EnumToString(result.enum)] = result.value .* scale
 		end
 	else
 		output = Dict()
 		for i in 1:length(femmodel.results)
 			result = femmodel.results[i]
-			output[EnumToString(result.enum)] = result.value
+			scale = OutputEnumToScale(md, result.enum)
+			output[EnumToString(result.enum)] = result.value .* scale
 		end
 	end
 
@@ -420,4 +422,15 @@ function GetMaskOfIceVerticesLSMx0(femmodel::FemModel) #{{{
 	InputUpdateFromVectorx(femmodel, vec_mask_ice_serial, IceMaskNodeActivationEnum, VertexSIdEnum)
 
 	return nothing
+end#}}}
+function OutputEnumToScale(md::model, result::IssmEnum) #{{{
+	if (result == VxEnum) scale = md.constants.yts
+	elseif (result == VyEnum) scale = md.constants.yts
+	elseif (result == VzEnum) scale = md.constants.yts
+	elseif (result == VelEnum) scale = md.constants.yts
+	elseif (result == CalvingCalvingrateEnum) scale = md.constants.yts
+	else scale = 1.0
+	end
+
+	return scale
 end#}}}
