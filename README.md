@@ -9,5 +9,5 @@ Authors:
 
 License: MIT
 
-[build-stable-img]: https://github.com/DJ4Earth/dJUICE/workflows/Run%20tests/badge.svg?branch=master
+[build-stable-img]: https://github.com/DJ4Earth/DJUICE.jl/workflows/CI/badge.svg
 [build-url]: https://github.com/DJ4Earth/dJUICE/actions?query=workflow
