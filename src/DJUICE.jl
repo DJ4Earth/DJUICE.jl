@@ -3,7 +3,7 @@
 # Author: Mathieu Morlighem
 # email:  mathieu.morlighem@dartmouth.edu
 
-module dJUICE
+module DJUICE
 const userdir = "./usr"
 const coredir = "./core"
 
@@ -20,7 +20,7 @@ export triangle_issm
 include("$userdir/parameterization.jl")
 export setmask, InterpFromMeshToMesh2d
 include("$coredir/solve.jl")
-export solve, solve2
+export solve
 include("$userdir/plotmodel.jl")
 export plotmodel
 

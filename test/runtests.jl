@@ -1,4 +1,4 @@
-using dJUICE
+using DJUICE
 using Test
 
 function searchdir(path,key) 

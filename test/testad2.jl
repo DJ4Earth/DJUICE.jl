@@ -1,6 +1,6 @@
 module enzymeDiff_grad_rheologyB
 
-using dJUICE
+using DJUICE
 using MAT
 using Test
 using Enzyme
@@ -35,21 +35,21 @@ addJ = md.results["StressbalanceSolution"]["Gradient"]
 	md.inversion.independent_string = "MaterialsRheologyB"
 
    α = md.inversion.independent
-   femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
-   J1 = dJUICE.costfunction(α, femmodel)
+   femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
+   J1 = DJUICE.costfunction(α, femmodel)
    @test ~isnothing(J1)
 end
 
 @testset "AD results RheologyB" begin
 	α = md.inversion.independent
 	delta = 1e-8
-	femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
-	J1 = dJUICE.costfunction(α, femmodel)
+	femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
+	J1 = DJUICE.costfunction(α, femmodel)
 	for i in 1:md.mesh.numberofvertices
 		dα = zero(md.friction.coefficient)
 		dα[i] = delta
-		femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
-		J2 = dJUICE.costfunction(α+dα, femmodel)
+		femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
+		J2 = DJUICE.costfunction(α+dα, femmodel)
 		dJ = (J2-J1)/delta
 
 		@test abs(dJ - addJ[i])< 1e-6

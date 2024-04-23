@@ -1,4 +1,4 @@
-using dJUICE
+using DJUICE
 
 md = model()
 md = triangle(md,issmdir()*"/test/Exp/Square.exp",50000.)

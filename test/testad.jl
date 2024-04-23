@@ -1,12 +1,13 @@
 module enzymeDiff_grad_frictionC
 
-using dJUICE
-using MAT
-using Test
 using Enzyme
 
 Enzyme.API.typeWarning!(false)
 Enzyme.Compiler.RunAttributor[] = false
+
+using DJUICE
+using MAT
+using Test
 
 #Load model from MATLAB file
 #file = matopen(joinpath(@__DIR__, "..", "data","temp12k.mat")) #BIG model
@@ -36,21 +37,21 @@ addJ = md.results["StressbalanceSolution"]["Gradient"]
    md.inversion.independent_string = "FrictionCoefficient"
 
    α = md.inversion.independent
-   femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
-   J1 = dJUICE.costfunction(α, femmodel)
+   femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
+   J1 = DJUICE.costfunction(α, femmodel)
    @test ~isnothing(J1)
 end
 
 @testset "AD gradient calculation for FrictionC" begin
 	α = md.inversion.independent
 	delta = 1e-7
-	femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
-	J1 = dJUICE.costfunction(α, femmodel)
+	femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
+	J1 = DJUICE.costfunction(α, femmodel)
 	for i in 1:md.mesh.numberofvertices
 		dα = zero(md.friction.coefficient)
 		dα[i] = delta
-		femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
-		J2 = dJUICE.costfunction(α+dα, femmodel)
+		femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
+		J2 = DJUICE.costfunction(α+dα, femmodel)
 		dJ = (J2-J1)/delta
 
 		@test abs(dJ - addJ[i])< 1e-5
