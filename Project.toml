@@ -19,7 +19,6 @@ SciMLBase = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 Triangulate = "f7e6ffb2-c36d-4f8f-a77e-16e897189344"
-UnPack = "3a884ed6-31ef-47d7-9d2a-63182c4928ed"
 
 [extras]
 Enzyme = "7da242da-08ed-463a-9acd-ee780be4f1d9"
