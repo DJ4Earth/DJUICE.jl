@@ -1,33 +1,33 @@
 module ModelStruct
 
-using dJUICE
+using DJUICE
 using Test
 using MAT
 
 @testset "Model basic sturct" begin
 	md = model()
-	@test (typeof(md.mesh)) <: dJUICE.AbstractMesh
-	@test (typeof(md.mesh)) == dJUICE.Mesh2dTriangle
-	@test (typeof(md.friction)) <: dJUICE.AbstractFriction
-	@test (typeof(md.friction)) <: dJUICE.BuddFriction
+	@test (typeof(md.mesh)) <: DJUICE.AbstractMesh
+	@test (typeof(md.mesh)) == DJUICE.Mesh2dTriangle
+	@test (typeof(md.friction)) <: DJUICE.AbstractFriction
+	@test (typeof(md.friction)) <: DJUICE.BuddFriction
 
 	md = model(md; friction=DNNFriction())
-	@test (typeof(md.friction)) == dJUICE.DNNFriction
+	@test (typeof(md.friction)) == DJUICE.DNNFriction
 
 	md = model(md; friction=SchoofFriction())
-	@test (typeof(md.friction)) == dJUICE.SchoofFriction
+	@test (typeof(md.friction)) == DJUICE.SchoofFriction
 end
 
 @testset "Enums <-> String" begin
-	@test dJUICE.StringToEnum("FrictionCoefficient") == dJUICE.FrictionCoefficientEnum
-	@test dJUICE.StringToEnum("MaterialsRheologyB") == dJUICE.MaterialsRheologyBEnum
-	@test dJUICE.EnumToString(dJUICE.FrictionCoefficientEnum) == "FrictionCoefficient"
-	@test dJUICE.EnumToString(dJUICE.MaterialsRheologyBEnum) == "MaterialsRheologyB"
+	@test DJUICE.StringToEnum("FrictionCoefficient") == DJUICE.FrictionCoefficientEnum
+	@test DJUICE.StringToEnum("MaterialsRheologyB") == DJUICE.MaterialsRheologyBEnum
+	@test DJUICE.EnumToString(DJUICE.FrictionCoefficientEnum) == "FrictionCoefficient"
+	@test DJUICE.EnumToString(DJUICE.MaterialsRheologyBEnum) == "MaterialsRheologyB"
 end
 
 @testset "Triangle" begin
 	md = model()
-	c = dJUICE.ExpStruct()
+	c = DJUICE.ExpStruct()
 	c.name = "domainoutline"
 	c.nods = 5
 	c.density = 1.0

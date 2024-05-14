@@ -121,14 +121,14 @@ end #}}}
 function CreateKMatrix(analysis::StressbalanceAnalysis, element::Tria) #{{{
 	# a wrapper for Enzyme to know the type of friction law
 	frictionlaw = FindParam(Int64, element, FrictionLawEnum)
-	CreateKMatrix(analysis, element, Val(frictionlaw))::dJUICE.ElementMatrix
+	CreateKMatrix(analysis, element, Val(frictionlaw))::DJUICE.ElementMatrix
 end #}}}
 function CreateKMatrix(analysis::StressbalanceAnalysis, element::Tria, ::Val{frictionlaw}) where frictionlaw# {{{
 	#Internmediaries
 	numnodes = 3
 	
 	#Initialize Element matrix and basis function derivatives
-	Ke = ElementMatrix(element.nodes)::dJUICE.ElementMatrix
+	Ke = ElementMatrix(element.nodes)::DJUICE.ElementMatrix
 	dbasis = Matrix{Float64}(undef,numnodes,2)
 
 	#Retrieve all inputs and parameters

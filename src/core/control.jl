@@ -2,10 +2,10 @@ using Enzyme
 Enzyme.API.looseTypeAnalysis!(false)
 Enzyme.API.strictAliasing!(false)
 Enzyme.API.typeWarning!(false)
+Enzyme.Compiler.RunAttributor[] = false
 
 using Optimization, OptimizationOptimJL
 
-Enzyme.Compiler.RunAttributor[] = false
 
 function Control_Core(md::model, femmodel::FemModel) #{{{
 	# solve for optimization

@@ -1,5 +1,5 @@
 
-using dJUICE
+using DJUICE
 using MAT
 using Test
 using Enzyme
@@ -29,7 +29,7 @@ md.inversion.independent_string = "FrictionCoefficient"
 α[2] = 10.0
 ∂J_∂α = zero(α)
 
-femmodel=dJUICE.ModelProcessor(md, :StressbalanceSolution)
+femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
 n = length(α)
 # use user defined grad, errors!
 optprob = OptimizationFunction(DJUICE.costfunction, Optimization.AutoEnzyme())

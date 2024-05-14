@@ -5,7 +5,7 @@ function costfunction(α::Vector{Float64}, femmodel::FemModel) #{{{
 	# get the Enum
 	controlvar_enum = StringToEnum(control_string)
 	if isnothing(controlvar_enum)
-		error(control_string, " is not defined in dJUICE, therefore the derivative with respect to ", control_string, " is meaningless")
+		error(control_string, " is not defined in DJUICE, therefore the derivative with respect to ", control_string, " is meaningless")
 	end
 	# compute cost function
 	# TODO: loop through all controls with respect to all the components in the cost function

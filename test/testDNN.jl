@@ -1,5 +1,4 @@
-#!/Applications/Julia-1.6.app/Contents/Resources/julia/bin/julia
-using dJUICE
+using DJUICE
 using Flux
 using BSON: @load
 
