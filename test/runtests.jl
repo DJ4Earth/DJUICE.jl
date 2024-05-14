@@ -22,4 +22,7 @@ end
 
 	# GPU test
 	#@time include("testGPU.jl")
+	
+	# Optimization test
+	@time include("testoptimization.jl")
 end
