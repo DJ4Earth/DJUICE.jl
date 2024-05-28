@@ -1,6 +1,6 @@
 name = "DJUICE"
 uuid = "1cb5fe60-6b70-416b-9050-039c23a62a10"
-authors = ["Mathieu Morlighem <Mathieu.Morlighem@dartmouth.edu>"]
+authors = ["Mathieu Morlighem <Mathieu.Morlighem@dartmouth.edu>", "Gong Cheng <gong.cheng@dartmouth.edu>"]
 version = "0.1.0"
 
 [deps]
@@ -17,11 +17,19 @@ StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 Triangulate = "f7e6ffb2-c36d-4f8f-a77e-16e897189344"
 
 [compat]
-Enzyme = "0.11.20"
+ColorSchemes = "3.25"
+Enzyme = "0.12"
+Flux = "0.14.15"
+GLMakie = "0.9.11"
+MAT = "0.10.7"
+Optimization = "3.25.1"
+OptimizationOptimJL = "0.3.1"
+SparseArrays = "1.10.0"
+StatsBase = "0.34.3"
+Triangulate = "2.3.2"
 julia = "1.8"
 
 [extras]
-Enzyme = "7da242da-08ed-463a-9acd-ee780be4f1d9"
 SafeTestsets = "1bc83da4-3b8d-516f-aca4-4fe02f6d838f"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
