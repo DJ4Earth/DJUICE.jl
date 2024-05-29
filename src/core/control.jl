@@ -39,5 +39,5 @@ function computeGradient(∂J_∂α::Vector{Float64}, α::Vector{Float64}, femmo
 	# zero ALL depth of the model, make sure we get correct gradient
 	dfemmodel = Enzyme.Compiler.make_zero(Base.Core.Typeof(femmodel), IdDict(), femmodel)
 	# compute the gradient
-	@time autodiff(Enzyme.Reverse, costfunction, Duplicated(α, ∂J_∂α), Duplicated(femmodel,dfemmodel))
+	autodiff(Enzyme.Reverse, costfunction, Duplicated(α, ∂J_∂α), Duplicated(femmodel,dfemmodel))
 end#}}}

@@ -22,7 +22,7 @@ function costfunction(α::Vector{Float64}, femmodel::FemModel, controlvar_enum::
 	#Compute cost function
 	J = SurfaceAbsVelMisfitx(femmodel)
 
-	J += ControlVariableAbsGradientx(femmodel, α, controlvar_enum)
+	#J += ControlVariableAbsGradientx(femmodel, α, controlvar_enum)
 
 	#return cost function
 	return J
