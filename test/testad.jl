@@ -1,7 +1,4 @@
-module enzymeDiff_grad_frictionC
-
 using Enzyme
-
 Enzyme.API.typeWarning!(false)
 Enzyme.Compiler.RunAttributor[] = false
 
@@ -56,6 +53,4 @@ end
 
 		@test abs(dJ - addJ[i])< 1e-5
 	end
-end
-
 end

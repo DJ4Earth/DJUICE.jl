@@ -1,12 +1,11 @@
-module enzymeDiff_grad_rheologyB
-
-using DJUICE
-using MAT
-using Test
 using Enzyme
 
 Enzyme.API.typeWarning!(false)
 Enzyme.Compiler.RunAttributor[] = false
+
+using DJUICE
+using MAT
+using Test
 
 #Load model from MATLAB file
 #file = matopen(joinpath(@__DIR__, "..", "data","temp12k.mat")) #BIG model
@@ -54,6 +53,4 @@ end
 
 		@test abs(dJ - addJ[i])< 1e-6
 	end
-end
-
 end
