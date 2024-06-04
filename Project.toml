@@ -1,7 +1,7 @@
 name = "DJUICE"
 uuid = "1cb5fe60-6b70-416b-9050-039c23a62a10"
 authors = ["Mathieu Morlighem <Mathieu.Morlighem@dartmouth.edu>", "Gong Cheng <gong.cheng@dartmouth.edu>"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
