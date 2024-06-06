@@ -60,6 +60,7 @@ function ModelProcessor(md::model, solutionstring::Symbol) #{{{
 		FetchDataToInput(md, inputs, elements, md.inversion.vx_obs./md.constants.yts,VxObsEnum)
 		FetchDataToInput(md, inputs, elements, md.inversion.vy_obs./md.constants.yts,VyObsEnum)
 		AddParam(parameters, md.inversion.independent_string, InversionControlParametersEnum)
+		AddParam(parameters, md.inversion.dependent_string, InversionCostFunctionsEnum)
 	end
 
 	#Build FemModel
@@ -135,7 +136,6 @@ function CreateInputs(inputs::Inputs,elements::Vector{Tria},md::model) #{{{
 	return nothing
 end# }}}
 function OutputResultsx(femmodel::FemModel, md::model, solutionkey::Symbol)# {{{
-
 
 	if solutionkey===:TransientSolution
 
@@ -346,14 +346,42 @@ function RequestedOutputsx(femmodel::FemModel,outputlist::Vector{IssmEnum})# {{{
 			input_copy = Vector{Float64}(undef, length(input.values))
 			copyto!(input_copy, input.values)
 			result = Result(outputlist[i], step, time, input_copy)
-
-			#Add to femmodel.results dataset
-			push!(femmodel.results, result)
 		else
-			println("Output ",outputlist[i]," not supported yet")
+			if outputlist[i] == IceVolumeEnum
+				double_result = IceVolumex(femmodel)
+			elseif outputlist[i] == IceVolumeAboveFloatationEnum
+				double_result = IceVolumeAboveFloatationx(femmodel)
+			elseif outputlist[i] == SurfaceAbsVelMisfitEnum
+				double_result = SurfaceAbsVelMisfitx(femmodel)
+			elseif outputlist[i] == DragCoefficientAbsGradientEnum #TODO: define a new Enum
+				double_result = ControlVariableAbsGradientx(femmodel)
+			else
+				error("Output ",outputlist[i]," not supported yet")
+			end
+
+			result = Result(outputlist[i], step, time, double_result)
 		end
+		#Add to femmodel.results dataset
+		AddResult!(femmodel, result)
+#		push!(femmodel.results, result)
 	end
 	return nothing
+end# }}}
+function IceVolumeAboveFloatationx(femmodel::FemModel)# {{{
+
+	total_ice_volume_af = 0.0
+	for i=1:length(femmodel.elements)
+		total_ice_volume_af += IceVolumeAboveFloatation(femmodel.elements[i])
+	end
+	return total_ice_volume_af
+end# }}}
+function IceVolumex(femmodel::FemModel)# {{{
+
+	total_ice_volume = 0.0
+	for i=1:length(femmodel.elements)
+		total_ice_volume += IceVolume(femmodel.elements[i])
+	end
+	return total_ice_volume
 end# }}}
 function MigrateGroundinglinex(femmodel::FemModel)# {{{
 

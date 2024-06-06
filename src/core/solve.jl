@@ -42,11 +42,7 @@ function solve(md::model, solution::Symbol) #{{{
 
 	#Solve (FIXME: to be improved later...)
 	if (md.inversion.iscontrol) # solve inverse problem
-		if solution===:grad
-			computeGradient(md, femmodel)
-		else
-			Control_Core(md, femmodel)
-		end
+		Control_Core(md, femmodel, solution)
 	else # otherwise forward problem
 		if(solutionkey===:StressbalanceSolution)
 			analysis = StressbalanceAnalysis()

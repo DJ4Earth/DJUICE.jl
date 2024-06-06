@@ -39,3 +39,7 @@ function SetCurrentConfiguration!(femmodel::FemModel, analysis::Analysis) #{{{
 
 	return nothing
 end#}}}
+function AddResult!(femmodel::FemModel, result::Result) #{{{
+	# TODO: maybe need to check if the result already exist, then overwrite
+	push!(femmodel.results, result)
+end#}}}

@@ -28,57 +28,12 @@ function Tria(sid::Int64, pid::Int64, vertexids::Vector{Int64}) #{{{
 end #}}}
 
 #Element functions
-function InputCreate(element::Tria,inputs::Inputs,data::Vector{Float64},enum::IssmEnum) #{{{
-	if size(data,1)==inputs.numberofelements
-		SetTriaInput(inputs,enum,P0Enum,element.sid,data[element.sid])
-	elseif size(data,1)==inputs.numberofvertices
-		SetTriaInput(inputs,enum,P1Enum,element.vertexids,data[element.vertexids])
-	else
-		error("size ",size(data,1)," not supported for ", enum);
-	end
-
-	return nothing
-end #}}}
 function AddInput(element::Tria,inputenum::IssmEnum,data::Vector{Float64},interpolation::IssmEnum) #{{{
 	if interpolation==P1Enum
 		@assert length(data)==3
 		SetTriaInput(element.inputs,inputenum,P1Enum,element.vertexids,data)
 	else
 		error("interpolation ", interpolation, " not supported yet");
-	end
-
-	return nothing
-end #}}}
-function InputUpdateFromVector(element::Tria, vector::Vector{Float64}, enum::IssmEnum, layout::IssmEnum) #{{{
-
-	lidlist = element.vertexids
-	data = Vector{Float64}(undef, 3)
-
-	if(layout==VertexSIdEnum)
-		for i in 1:3
-			data[i] = vector[element.vertices[i].sid]
-			@assert isfinite(data[i])
-		end
-		SetTriaInput(element.inputs, enum, P1Enum, lidlist, data)
-	else
-		error("layout ", layout, " not supported yet");
-	end
-
-	return nothing
-end #}}}
-function Update(element::Tria, inputs::Inputs, index::Int64, md::model, finiteelement::IssmEnum) #{{{
-
-	if finiteelement==P1Enum
-		numnodes = 3
-		nodeids    = Vector{Int64}(undef,numnodes)
-		nodeids[1] = md.mesh.elements[index,1]
-		nodeids[2] = md.mesh.elements[index,2]
-		nodeids[3] = md.mesh.elements[index,3]
-
-		push!(element.nodes_ids_list, nodeids)
-		push!(element.nodes_list, Vector{Node}(undef, numnodes))
-	else
-		error("not supported yet")
 	end
 
 	return nothing
@@ -104,6 +59,26 @@ function Configure(element::Tria,nodes::Vector{Node},vertices::Vector{Vertex},pa
 
 	return nothing
 end # }}}
+function CharacteristicLength(element::Tria) #{{{
+
+	return sqrt(2*GetArea(element))
+end#}}}
+function FindParam(::Type{T}, element::Tria, enum::IssmEnum) where T # {{{
+
+	return FindParam(T, element.parameters, enum)
+
+end # }}}
+function GetArea(element::Tria)#{{{
+
+	#Get xyz list
+	xyz_list = GetVerticesCoordinates(element.vertices)
+	x1 = xyz_list[1,1]; y1 = xyz_list[1,2]
+	x2 = xyz_list[2,1]; y2 = xyz_list[2,2]
+	x3 = xyz_list[3,1]; y3 = xyz_list[3,2]
+
+	@assert x2*y3 - y2*x3 + x1*y2 - y1*x2 + x3*y1 - y3*x1>0
+	return (x2*y3 - y2*x3 + x1*y2 - y1*x2 + x3*y1 - y3*x1)/2
+end#}}}
 function GetDofList(element::Tria,setenum::IssmEnum) # {{{
 
 	#Define number of nodes
@@ -126,76 +101,101 @@ function GetDofList(element::Tria,setenum::IssmEnum) # {{{
 
 	return doflist
 end # }}}
-function GetInput(element::Tria,enum::IssmEnum) # {{{
+function GetElementSizes(element::Tria)#{{{
 
-	input = GetInput(element.inputs,enum)
-	InputServe!(element,input)
-	return input
+	#Get xyz list
+	xyz_list = GetVerticesCoordinates(element.vertices)
+	x1 = xyz_list[1,1]; y1 = xyz_list[1,2]
+	x2 = xyz_list[2,1]; y2 = xyz_list[2,2]
+	x3 = xyz_list[3,1]; y3 = xyz_list[3,2]
 
-end # }}}
-function GetInputListOnNodes!(element::Tria, vector::Vector{Float64}, enum::IssmEnum) # {{{
+   xmin=xyz_list[1,1]; xmax=xyz_list[1,1];
+   ymin=xyz_list[1,2]; ymax=xyz_list[1,2];
 
-	#Get Input first 
-	input = GetInput(element, enum)
-
-	#Get value at each vertex (i.e. P1 Nodes)
-	gauss=GaussTria(P1Enum)
-	for i in 1:gauss.numgauss
-		vector[i] = GetInputValue(input, gauss, i)
+	for i in [2,3]
+		if(xyz_list[i,1]<xmin) xmin=xyz_list[i,1] end
+      if(xyz_list[i,1]>xmax) xmax=xyz_list[i,1] end
+      if(xyz_list[i,2]<ymin) ymin=xyz_list[i,2] end
+      if(xyz_list[i,2]>ymax) ymax=xyz_list[i,2] end
 	end
 
-	return nothing
-end # }}}
-function GetInputValue(element::Tria, vector::Vector{Float64}, gauss::GaussTria, ig::Int64, enum::IssmEnum) # {{{
+   hx = xmax-xmin
+   hy = ymax-ymin
+   hz = 0.
 
-	# Allocate basis functions
-	basis = Vector{Float64}(undef, 3)
-	# Fetch number of nodes
-	numnodes = NumberofNodesTria(enum)
-	@assert numnodes <= 3
-	# Get basis functions at this point
-	NodalFunctions(element, basis, gauss, ig, enum)
-	
-	# Calculate parameter for this Gauss point
-	value::Float64 = 0.0
-	for i = 1:3
-		value += basis[i] * vector[i]
-	end
+	return hx, hy, hz
+end#}}}
+function GetFractionGeometry(element::Tria, gl::Vector{Float64})#{{{
+	trapezeisnegative = true
+   # Be sure that values are not zero
+	if(gl[1]==0.); gl[1]=gl[1]+eps(Float64) end
+	if(gl[2]==0.); gl[2]=gl[2]+eps(Float64) end
+	if(gl[3]==0.); gl[3]=gl[3]+eps(Float64) end
 
-	return value
-end # }}}
-function GetInputListOnVertices!(element::Tria, vector::Vector{Float64}, enum::IssmEnum) # {{{
-
-	#Get Input first 
-	input = GetInput(element, enum)
-
-	#Get value at each vertex (i.e. P1 Nodes)
-	gauss=GaussTria(P1Enum)
-	for i in 1:gauss.numgauss
-		vector[i] = GetInputValue(input, gauss, i)
-	end
-
-	return nothing
-end # }}}
-function FindParam(::Type{T}, element::Tria, enum::IssmEnum) where T # {{{
-
-	return FindParam(T, element.parameters, enum)
-
-end # }}}
-function InputServe!(element::Tria,input::Input) # {{{
-
-	if input.interp==P0Enum
-		input.element_values[1] = input.values[element.sid]
-	elseif input.interp==P1Enum
-		for i in 1:3
-			input.element_values[i] = input.values[element.vertices[i].sid]
+	# Check that not all nodes are positive or negative: 
+	if(gl[1]>0. && gl[2]>0. && gl[3]>0.) # All positive
+      point=1
+      f1=1.
+      f2=1.
+   elseif (gl[1]<0 && gl[2]<0 && gl[3]<0) #All negative
+      point=1
+      f1=0.
+      f2=0.
+   else
+		if(gl[1]*gl[2]*gl[3]<0) 
+			trapezeisnegative=false # no matter what configuration, there has to be two positive vertices, which means the trapeze is positive.
 		end
-	else
-		error("interpolation ",input.interp," not supported yet")
+
+      if (gl[1]*gl[2]>0) # Nodes 1 and 2 are similar, so points must be found on segment 1-3 and 2-3
+         point=3
+			f1=gl[3]/(gl[3]-gl[1])
+			f2=gl[3]/(gl[3]-gl[2])
+      elseif (gl[2]*gl[3]>0) # Nodes 2 and 3 are similar, so points must be found on segment 1-2 and 1-3
+         point=1
+         f1=gl[1]/(gl[1]-gl[2])
+         f2=gl[1]/(gl[1]-gl[3])
+      elseif (gl[1]*gl[3]>0) # Nodes 1 and 3 are similar, so points must be found on segment 2-1 and 2-3
+         point=2
+         f1=gl[2]/(gl[2]-gl[3])
+         f2=gl[2]/(gl[2]-gl[1])
+      else 
+			error("case not possible");
+		end
+	end
+   if (trapezeisnegative) 
+		phi=1-f1*f2
+   else 
+		phi=f1*f2
 	end
 
-	return nothing
-end # }}}
+	# Compute the weights
+	gauss = GaussTria(point, f1, f2, !trapezeisnegative, 2)
+	numnodes = 3
+
+	total_weight = 0.0
+	weights = Vector{Float64}(undef, numnodes)
+	loadweights_g = Vector{Float64}(undef,numnodes)
+
+   for ig in 1:gauss.numgauss
+      NodalFunctions(element, loadweights_g, gauss, ig, P1Enum)
+      for i in 1:numnodes
+			weights[i] += loadweights_g[i]*gauss.weights[ig]
+		end
+		total_weight += gauss.weights[ig]
+   end
+	# Normalizing to phi such that weights provide coefficients for integration over subelement (for averaging:phi*weights)
+   if (total_weight>0.) 
+		for i in 1:numnodes
+			weights[i] /= (total_weight/phi);
+		end
+   else 
+		for i in 1:numnodes
+			weights[i]=0.
+		end
+	end
+
+	return weights, phi
+end#}}}
 function GetGroundedPortion(element::Tria, xyz_list::Matrix{Float64}) #{{{
 
 	level = Vector{Float64}(undef,3)
@@ -208,12 +208,12 @@ function GetGroundedPortion(element::Tria, xyz_list::Matrix{Float64}) #{{{
 	end
 
 	if level[1]>0 && level[2]>0 && level[3]>0
-      #Completely grounded
+		#Completely grounded
 		phi = 1.0
-   elseif level[1]<0 && level[2]<0 && level[3]<0
-      #Completely floating
-      phi = 0.0
-   else
+	elseif level[1]<0 && level[2]<0 && level[3]<0
+		#Completely floating
+		phi = 0.0
+	else
 		#Partially floating,
 		if(level[1]*level[2]>0) #Nodes 0 and 1 are similar, so points must be found on segment 0-2 and 1-2
 			s1=level[3]/(level[3]-level[2]);
@@ -236,49 +236,6 @@ function GetGroundedPortion(element::Tria, xyz_list::Matrix{Float64}) #{{{
 	end
 
 	return phi
-end#}}}
-function InputUpdateFromSolutionOneDof(element::Tria, ug::Vector{Float64},enum::IssmEnum) #{{{
-	#Get dofs for this finite element
-   doflist = GetDofList(element,GsetEnum)
-
-   #Get solution vector for this element
-   numdof   = 3
-   values = Vector{Float64}(undef,numdof)
-   for i in 1:numdof values[i]=ug[doflist[i]] end
-
-   #Add back to Mask
-   AddInput(element, enum, values, P1Enum)
-
-   return nothing
-
-end#}}}
-function IsIcefront(element::Tria) #{{{
-
-	level = Vector{Float64}(undef,3)
-	GetInputListOnVertices!(element, level, MaskIceLevelsetEnum)
-
-	nbice = 0
-	for i in 1:3
-		if(level[i]<0.) nbice+=1 end
-	end
-
-	if(nbice==1)
-		return true
-	else
-		return false
-	end
-end#}}}
-function IsIceInElement(element::Tria) #{{{
-	#We consider that an element has ice if at least one of its nodes has a negative level set
-
-	input=GetInput(element, MaskIceLevelsetEnum)
-
-	if GetInputMin(input)<0
-		return true
-	else
-		return false
-	end
-
 end#}}}
 function GetIcefrontCoordinates!(element::Tria, xyz_front::Matrix{Float64}, xyz_list::Matrix{Float64}, levelsetenum::IssmEnum) #{{{
 
@@ -312,57 +269,225 @@ function GetIcefrontCoordinates!(element::Tria, xyz_front::Matrix{Float64}, xyz_
 	xyz_front[2,:]=xyz_list[indicesfront[2],:]
 	return nothing
 end#}}}
-function GetArea(element::Tria)#{{{
+function GetInput(element::Tria,enum::IssmEnum) # {{{
 
-	#Get xyz list
-	xyz_list = GetVerticesCoordinates(element.vertices)
-	x1 = xyz_list[1,1]; y1 = xyz_list[1,2]
-	x2 = xyz_list[2,1]; y2 = xyz_list[2,2]
-	x3 = xyz_list[3,1]; y3 = xyz_list[3,2]
+	input = GetInput(element.inputs,enum)
+	InputServe!(element,input)
+	return input
 
-	@assert x2*y3 - y2*x3 + x1*y2 - y1*x2 + x3*y1 - y3*x1>0
-	return (x2*y3 - y2*x3 + x1*y2 - y1*x2 + x3*y1 - y3*x1)/2
-end#}}}
-function GetElementSizes(element::Tria)#{{{
+end # }}}
+function GetInputListOnNodes!(element::Tria, vector::Vector{Float64}, enum::IssmEnum) # {{{
 
-	#Get xyz list
-	xyz_list = GetVerticesCoordinates(element.vertices)
-	x1 = xyz_list[1,1]; y1 = xyz_list[1,2]
-	x2 = xyz_list[2,1]; y2 = xyz_list[2,2]
-	x3 = xyz_list[3,1]; y3 = xyz_list[3,2]
+	#Get Input first 
+	input = GetInput(element, enum)
 
-   xmin=xyz_list[1,1]; xmax=xyz_list[1,1];
-   ymin=xyz_list[1,2]; ymax=xyz_list[1,2];
-
-	for i in [2,3]
-		if(xyz_list[i,1]<xmin) xmin=xyz_list[i,1] end
-      if(xyz_list[i,1]>xmax) xmax=xyz_list[i,1] end
-      if(xyz_list[i,2]<ymin) ymin=xyz_list[i,2] end
-      if(xyz_list[i,2]>ymax) ymax=xyz_list[i,2] end
+	#Get value at each vertex (i.e. P1 Nodes)
+	gauss=GaussTria(P1Enum)
+	for i in 1:gauss.numgauss
+		vector[i] = GetInputValue(input, gauss, i)
 	end
 
-   hx = xmax-xmin
-   hy = ymax-ymin
-   hz = 0.
+	return nothing
+end # }}}
+function GetInputListOnVertices!(element::Tria, vector::Vector{Float64}, enum::IssmEnum) # {{{
 
-	return hx, hy, hz
+	#Get Input first 
+	input = GetInput(element, enum)
+
+	#Get value at each vertex (i.e. P1 Nodes)
+	gauss=GaussTria(P1Enum)
+	for i in 1:gauss.numgauss
+		vector[i] = GetInputValue(input, gauss, i)
+	end
+
+	return nothing
+end # }}}
+function GetInputValue(element::Tria, vector::Vector{Float64}, gauss::GaussTria, ig::Int64, enum::IssmEnum) # {{{
+
+	# Allocate basis functions
+	basis = Vector{Float64}(undef, 3)
+	# Fetch number of nodes
+	numnodes = NumberofNodesTria(enum)
+	@assert numnodes <= 3
+	# Get basis functions at this point
+	NodalFunctions(element, basis, gauss, ig, enum)
+	
+	# Calculate parameter for this Gauss point
+	value::Float64 = 0.0
+	for i = 1:3
+		value += basis[i] * vector[i]
+	end
+
+	return value
+end # }}}
+function GetXcoord(element::Tria, xyz_list::Matrix{Float64}, gauss::GaussTria, ig::Int64) #{{{
+
+	# create a list of x
+	x_list = Vector{Float64}(undef,3)
+
+	for i in 1:3
+		x_list[i] = xyz_list[i,1]
+	end
+
+   # Get value at gauss point
+   return GetInputValue(element, x_list, gauss, ig, P1Enum);
 end#}}}
-function NormalSection(element::Tria, xyz_front::Matrix{Float64}) #{{{
+function GetYcoord(element::Tria, xyz_list::Matrix{Float64}, gauss::GaussTria, ig::Int64) #{{{
 
-	#Build output pointing vector
-	nx =  xyz_front[2,2] - xyz_front[1,2]
-	ny = -xyz_front[2,1] + xyz_front[1,1]
+	# create a list of y
+	y_list = Vector{Float64}(undef,3)
 
-	#normalize
-	norm = sqrt(nx^2 + ny^2)
-	nx = nx/norm
-	ny = ny/norm
+	for i in 1:3
+		y_list[i] = xyz_list[i,2]
+	end
 
-	return nx, ny
+   # Get value at gauss point
+   return GetInputValue(element, y_list, gauss, ig, P1Enum);
 end#}}}
-function CharacteristicLength(element::Tria) #{{{
+function IceVolume(element::Tria) # {{{
 
-	return sqrt(2*GetArea(element))
+	if (!IsIceInElement(element)); return 0.0 end
+
+	lsf = Vector{Float64}(undef,3)
+	GetInputListOnVertices!(element, lsf, MaskIceLevelsetEnum)
+
+	# partially ice-covered element
+	if (lsf[1]*lsf[2]<=0 || lsf[1]*lsf[3]<=0 || lsf[2]*lsf[3]<=0)
+		surfaces = Vector{Float64}(undef,3)
+		Hice = Vector{Float64}(undef,3)
+		bases = Vector{Float64}(undef,3)
+		GetInputListOnVertices!(element, surfaces, SurfaceEnum)
+		GetInputListOnVertices!(element, bases, BaseEnum)
+		weights, phi = GetFractionGeometry(element, lsf)
+		Hice = surfaces - bases
+		Haverage = sum(weights.*Hice)/phi
+		area_basetot = GetArea(element)
+		area_base = phi*area_basetot
+	else
+		area_base = GetArea(element)
+		surface_input = GetInput(element, SurfaceEnum)
+		base_input = GetInput(element, BaseEnum)
+
+		surface = GetInputAverageValue(surface_input)
+		base = GetInputAverageValue(base_input)
+		Haverage = surface - base
+	end
+
+	return area_base*Haverage
+end # }}}
+function IceVolumeAboveFloatation(element::Tria) # {{{
+
+	if (!IsIceInElement(element) || IsAllFloating(element)); return 0.0 end
+
+	rho_ice     = FindParam(Float64, element, MaterialsRhoIceEnum)
+	rho_water   = FindParam(Float64, element, MaterialsRhoSeawaterEnum)
+
+	area = GetArea(element)
+
+	surface_input = GetInput(element, SurfaceEnum)
+	base_input = GetInput(element, BaseEnum)
+	bed_input = GetInput(element, BedEnum)
+
+	surface = GetInputAverageValue(surface_input)
+	base = GetInputAverageValue(base_input)
+	bed = GetInputAverageValue(bed_input)
+
+	return area*(surface-base+min(rho_water/rho_ice*bed,0.))
+end # }}}
+function InputCreate(element::Tria,inputs::Inputs,data::Vector{Float64},enum::IssmEnum) #{{{
+	if size(data,1)==inputs.numberofelements
+		SetTriaInput(inputs,enum,P0Enum,element.sid,data[element.sid])
+	elseif size(data,1)==inputs.numberofvertices
+		SetTriaInput(inputs,enum,P1Enum,element.vertexids,data[element.vertexids])
+	else
+		error("size ",size(data,1)," not supported for ", enum);
+	end
+
+	return nothing
+end #}}}
+function InputServe!(element::Tria,input::Input) # {{{
+
+	if input.interp==P0Enum
+		input.element_values[1] = input.values[element.sid]
+	elseif input.interp==P1Enum
+		for i in 1:3
+			input.element_values[i] = input.values[element.vertices[i].sid]
+		end
+	else
+		error("interpolation ",input.interp," not supported yet")
+	end
+
+	return nothing
+end # }}}
+function InputUpdateFromSolutionOneDof(element::Tria, ug::Vector{Float64},enum::IssmEnum) #{{{
+	#Get dofs for this finite element
+   doflist = GetDofList(element,GsetEnum)
+
+   #Get solution vector for this element
+   numdof   = 3
+   values = Vector{Float64}(undef,numdof)
+   for i in 1:numdof values[i]=ug[doflist[i]] end
+
+   #Add back to Mask
+   AddInput(element, enum, values, P1Enum)
+
+   return nothing
+
+end#}}}
+function InputUpdateFromVector(element::Tria, vector::Vector{Float64}, enum::IssmEnum, layout::IssmEnum) #{{{
+
+	lidlist = element.vertexids
+	data = Vector{Float64}(undef, 3)
+
+	if(layout==VertexSIdEnum)
+		for i in 1:3
+			data[i] = vector[element.vertices[i].sid]
+			@assert isfinite(data[i])
+		end
+		SetTriaInput(element.inputs, enum, P1Enum, lidlist, data)
+	else
+		error("layout ", layout, " not supported yet");
+	end
+
+	return nothing
+end #}}}
+function IsAllFloating(element::Tria) #{{{
+   input = GetInput(element, MaskOceanLevelsetEnum)
+
+	# by default use subelment migration
+	if GetInputMax() <= 0. 
+		return true;
+	else
+		return false
+	end
+end#}}}
+function IsIcefront(element::Tria) #{{{
+
+	level = Vector{Float64}(undef,3)
+	GetInputListOnVertices!(element, level, MaskIceLevelsetEnum)
+
+	nbice = 0
+	for i in 1:3
+		if(level[i]<0.) nbice+=1 end
+	end
+
+	if(nbice==1)
+		return true
+	else
+		return false
+	end
+end#}}}
+function IsIceInElement(element::Tria) #{{{
+	#We consider that an element has ice if at least one of its nodes has a negative level set
+
+	input=GetInput(element, MaskIceLevelsetEnum)
+
+	if GetInputMin(input)<0
+		return true
+	else
+		return false
+	end
+
 end#}}}
 function MigrateGroundingLine(element::Tria) #{{{
 
@@ -471,32 +596,87 @@ function MovingFrontalVelocity(element::Tria) #{{{
 
 	return nothing
 end#}}}
-function GetXcoord(element::Tria, xyz_list::Matrix{Float64}, gauss::GaussTria, ig::Int64) #{{{
+function NormalSection(element::Tria, xyz_front::Matrix{Float64}) #{{{
 
-	# create a list of x
-	x_list = Vector{Float64}(undef,3)
+	#Build output pointing vector
+	nx =  xyz_front[2,2] - xyz_front[1,2]
+	ny = -xyz_front[2,1] + xyz_front[1,1]
 
-	for i in 1:3
-		x_list[i] = xyz_list[i,1]
+	#normalize
+	norm = sqrt(nx^2 + ny^2)
+	nx = nx/norm
+	ny = ny/norm
+
+	return nx, ny
+end#}}}
+function Update(element::Tria, inputs::Inputs, index::Int64, md::model, finiteelement::IssmEnum) #{{{
+
+	if finiteelement==P1Enum
+		numnodes = 3
+		nodeids    = Vector{Int64}(undef,numnodes)
+		nodeids[1] = md.mesh.elements[index,1]
+		nodeids[2] = md.mesh.elements[index,2]
+		nodeids[3] = md.mesh.elements[index,3]
+
+		push!(element.nodes_ids_list, nodeids)
+		push!(element.nodes_list, Vector{Node}(undef, numnodes))
+	else
+		error("not supported yet")
 	end
 
-   # Get value at gauss point
-   return GetInputValue(element, x_list, gauss, ig, P1Enum);
-end#}}}
-function GetYcoord(element::Tria, xyz_list::Matrix{Float64}, gauss::GaussTria, ig::Int64) #{{{
-
-	# create a list of y
-	y_list = Vector{Float64}(undef,3)
-
-	for i in 1:3
-		y_list[i] = xyz_list[i,2]
-	end
-
-   # Get value at gauss point
-   return GetInputValue(element, y_list, gauss, ig, P1Enum);
-end#}}}
+	return nothing
+end #}}}
 
 #Finite Element stuff
+function GaussTria(element::Tria, xyz_list::Matrix{Float64}, xyz_list_front::Matrix{Float64}, order::Int64) #{{{
+
+	area_coordinates = Matrix{Float64}(undef,2,3)
+	GetAreaCoordinates!(element, area_coordinates, xyz_list_front, xyz_list)
+
+	return GaussTria(area_coordinates, order)
+end# }}}
+function GetAreaCoordinates!(element::Tria, area_coordinates::Matrix{Float64}, xyz_zero::Matrix{Float64}, xyz_list::Matrix{Float64})#{{{
+
+	numpoints = size(area_coordinates,1)
+	area = GetArea(element)
+
+	#Copy original xyz_list
+	xyz_bis=copy(xyz_list)
+	for i in 1:numpoints
+		for j in 1:3
+
+			#Change appropriate line
+			xyz_bis[j,:] = xyz_zero[i,:]
+
+			#Compute area fraction
+			area_portion=abs(xyz_bis[2,1]*xyz_bis[3,2] - xyz_bis[2,2]*xyz_bis[3,1] + xyz_bis[1,1]*xyz_bis[2,2] - xyz_bis[1,2]*xyz_bis[2,1] + xyz_bis[3,1]*xyz_bis[1,2] - xyz_bis[3,2]*xyz_bis[1,1])/2
+			area_coordinates[i,j] = area_portion/area
+
+			#reinitialize xyz_list
+			xyz_bis[j,:] = xyz_list[j,:]
+		end
+	end
+
+	return nothing
+end #}}}
+function Jacobian(xyz_list::Matrix{Float64}) #{{{
+
+	J = Matrix{Float64}(undef,2,2)
+
+	x1 = xyz_list[1,1]
+	y1 = xyz_list[1,2]
+	x2 = xyz_list[2,1]
+	y2 = xyz_list[2,2]
+	x3 = xyz_list[3,1]
+	y3 = xyz_list[3,2]
+
+	J[1,1] = .5*(x2-x1)
+	J[1,2] = .5*(y2-y1)
+	J[2,1] = sqrt(3)/6*(2*x3 -x1 -x2)
+	J[2,2] = sqrt(3)/6*(2*y3 -y1 -y2)
+
+	return J
+end#}}}
 function JacobianDeterminant(xyz_list::Matrix{Float64}, gauss::GaussTria) #{{{
 
 	#Get Jacobian Matrix
@@ -520,24 +700,6 @@ function JacobianDeterminantSurface(xyz_list::Matrix{Float64}, gauss::GaussTria)
 	if(Jdet<0) error("negative Jacobian Determinant") end
 	return Jdet
 
-end#}}}
-function Jacobian(xyz_list::Matrix{Float64}) #{{{
-
-	J = Matrix{Float64}(undef,2,2)
-
-	x1 = xyz_list[1,1]
-	y1 = xyz_list[1,2]
-	x2 = xyz_list[2,1]
-	y2 = xyz_list[2,2]
-	x3 = xyz_list[3,1]
-	y3 = xyz_list[3,2]
-
-	J[1,1] = .5*(x2-x1)
-	J[1,2] = .5*(y2-y1)
-	J[2,1] = sqrt(3)/6*(2*x3 -x1 -x2)
-	J[2,2] = sqrt(3)/6*(2*y3 -y1 -y2)
-
-	return J
 end#}}}
 function JacobianInvert(xyz_list::Matrix{Float64}, gauss::GaussTria) #{{{
 
@@ -616,34 +778,3 @@ function NumberofNodesTria(finiteelement) #{{{
 
 	return nothing
 end#}}}
-function GaussTria(element::Tria, xyz_list::Matrix{Float64}, xyz_list_front::Matrix{Float64}, order::Int64) #{{{
-
-	area_coordinates = Matrix{Float64}(undef,2,3)
-	GetAreaCoordinates!(element, area_coordinates, xyz_list_front, xyz_list)
-
-	return GaussTria(area_coordinates, order)
-end# }}}
-function GetAreaCoordinates!(element::Tria, area_coordinates::Matrix{Float64}, xyz_zero::Matrix{Float64}, xyz_list::Matrix{Float64})#{{{
-
-	numpoints = size(area_coordinates,1)
-	area = GetArea(element)
-
-	#Copy original xyz_list
-	xyz_bis=copy(xyz_list)
-	for i in 1:numpoints
-		for j in 1:3
-
-			#Change appropriate line
-			xyz_bis[j,:] = xyz_zero[i,:]
-
-			#Compute area fraction
-			area_portion=abs(xyz_bis[2,1]*xyz_bis[3,2] - xyz_bis[2,2]*xyz_bis[3,1] + xyz_bis[1,1]*xyz_bis[2,2] - xyz_bis[1,2]*xyz_bis[2,1] + xyz_bis[3,1]*xyz_bis[1,2] - xyz_bis[3,2]*xyz_bis[1,1])/2
-			area_coordinates[i,j] = area_portion/area
-
-			#reinitialize xyz_list
-			xyz_bis[j,:] = xyz_list[j,:]
-		end
-	end
-
-	return nothing
-end #}}}
