@@ -20,7 +20,12 @@ end# }}}
 
 #Gauss constructor
 function GaussTria(order::Int64) #{{{
-	npoints, weights, coords1, coords2, coords3 = GaussLegendreTria(order)
+	npoints = GaussLegendreTriaNpoints(Val(order))
+	weights = Vector{Float64}(undef, npoints)
+	coords1 = Vector{Float64}(undef, npoints)
+	coords2 = Vector{Float64}(undef, npoints)
+	coords3 = Vector{Float64}(undef, npoints)
+	GaussLegendreTria(weights, coords1, coords2, coords3, Val(order))
 	return GaussTria(npoints,weights,coords1,coords2,coords3)
 end# }}}
 function GaussTria(finiteelement::IssmEnum) #{{{
@@ -91,7 +96,12 @@ function GaussTria(index::Int64, r1::Float64, r2::Float64, mainlyfloating::Bool,
 
 	if (mainlyfloating) 
 		# Get gauss points
-		numgauss, weights, coords1, coords2, coords3 = GaussLegendreTria(order)
+		numgauss = GaussLegendreTriaNpoints(Val(order))
+		weights = Vector{Float64}(undef, numgauss)
+		coords1 = Vector{Float64}(undef, numgauss)
+		coords2 = Vector{Float64}(undef, numgauss)
+		coords3 = Vector{Float64}(undef, numgauss)
+		GaussLegendreTria(weights, coords1, coords2, coords3, Val(order))
 
       xy_list[1,1]=0.;  xy_list[1,2]=0.;
       xy_list[2,1]=r1; xy_list[2,2]=0.;
@@ -185,7 +195,27 @@ function GaussTria(index::Int64, r1::Float64, r2::Float64, mainlyfloating::Bool,
 end# }}}
 
 #Numerics
-function GaussLegendreTria(order::Int64) #{{{
+function GaussLegendreTriaNpoints(::Val{order})  where order#{{{
+	#=Gauss quadrature points for the triangle.
+	Higher-order points from D.A. Dunavant, "High Degree Efficient
+	Symmetrical Gaussian Quadrature Rules for the Triangle", IJNME,
+	Vol. 21, pp. 1129-1148 (1985), as transcribed for Probe rules3.=#
+
+	if(order==1)
+		npoints = 1
+	elseif(order==2)
+		npoints = 3
+	elseif(order==3)
+		npoints = 4
+	elseif(order==4)
+		npoints = 6
+	else
+		error("order ",order," not supported yet");
+	end
+
+	return npoints
+end# }}}
+function GaussLegendreTria(weights::Vector{Float64}, coords1::Vector{Float64}, coords2::Vector{Float64}, coords3::Vector{Float64}, ::Val{order})  where order#{{{
 
 	#=Gauss quadrature points for the triangle.
 	Higher-order points from D.A. Dunavant, "High Degree Efficient
@@ -194,31 +224,31 @@ function GaussLegendreTria(order::Int64) #{{{
 
 	if(order==1)
 		npoints = 1
-		weights = [1.732050807568877]
-		coords1 = [0.333333333333333]
-		coords2 = [0.333333333333333]
-		coords3 = [0.333333333333333]
+		weights .= [1.732050807568877]
+		coords1 .= [0.333333333333333]
+		coords2 .= [0.333333333333333]
+		coords3 .= [0.333333333333333]
 	elseif(order==2)
 		npoints = 3
-		weights = [0.577350269189625; 0.577350269189625; 0.577350269189625]
-		coords1 = [0.666666666666667; 0.166666666666667; 0.166666666666667]
-		coords2 = [0.166666666666667; 0.666666666666667; 0.166666666666667]
-		coords3 = [0.166666666666667; 0.166666666666667; 0.666666666666667]
+		weights .= [0.577350269189625; 0.577350269189625; 0.577350269189625]
+		coords1 .= [0.666666666666667; 0.166666666666667; 0.166666666666667]
+		coords2 .= [0.166666666666667; 0.666666666666667; 0.166666666666667]
+		coords3 .= [0.166666666666667; 0.166666666666667; 0.666666666666667]
 	elseif(order==3)
 		npoints = 4
-		weights = [-0.974278579257493; 0.902109795608790; 0.902109795608790; 0.902109795608790]
-		coords1 = [ 0.333333333333333; 0.600000000000000; 0.200000000000000; 0.200000000000000]
-		coords2 = [ 0.333333333333333; 0.200000000000000; 0.600000000000000; 0.200000000000000]
-		coords3 = [ 0.333333333333333; 0.200000000000000; 0.200000000000000; 0.600000000000000]
+		weights .= [-0.974278579257493; 0.902109795608790; 0.902109795608790; 0.902109795608790]
+		coords1 .= [ 0.333333333333333; 0.600000000000000; 0.200000000000000; 0.200000000000000]
+		coords2 .= [ 0.333333333333333; 0.200000000000000; 0.600000000000000; 0.200000000000000]
+		coords3 .= [ 0.333333333333333; 0.200000000000000; 0.200000000000000; 0.600000000000000]
 	elseif(order==4)
-		npoints = 5
-		weights = [0.386908262797819; 0.386908262797819; 0.386908262797819; 0.190442006391807; 0.190442006391807; 0.190442006391807]
-		coords1 = [0.108103018168070; 0.445948490915965; 0.445948490915965; 0.816847572980459; 0.091576213509771; 0.091576213509771]
-		coords2 = [0.445948490915965; 0.108103018168070; 0.445948490915965; 0.091576213509771; 0.816847572980459; 0.091576213509771]
-		coords3 = [0.445948490915965; 0.445948490915965; 0.108103018168070; 0.091576213509771; 0.091576213509771; 0.816847572980459]
+		npoints = 6
+		weights .= [0.386908262797819; 0.386908262797819; 0.386908262797819; 0.190442006391807; 0.190442006391807; 0.190442006391807]
+		coords1 .= [0.108103018168070; 0.445948490915965; 0.445948490915965; 0.816847572980459; 0.091576213509771; 0.091576213509771]
+		coords2 .= [0.445948490915965; 0.108103018168070; 0.445948490915965; 0.091576213509771; 0.816847572980459; 0.091576213509771]
+		coords3 .= [0.445948490915965; 0.445948490915965; 0.108103018168070; 0.091576213509771; 0.091576213509771; 0.816847572980459]
 	else
 		error("order ",order," not supported yet");
 	end
 
-	return npoints, weights, coords1, coords2, coords3
+	return nothing
 end# }}}
