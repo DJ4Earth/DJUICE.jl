@@ -38,7 +38,12 @@ function SurfaceAbsVelMisfitx(femmodel::FemModel) #{{{
 
 	return J
 end#}}}
-function ControlVariableAbsGradientx(femmodel::FemModel, α::Vector{Float64}, controlvar_enum::IssmEnum) #{{{
+function ControlVariableAbsGradientx(femmodel::FemModel) #{{{
+	
+	# get the md.inversion.control_string
+   control_string = FindParam(String, femmodel.parameters, InversionControlParametersEnum)
+   # get the Enum
+   controlvar_enum = StringToEnum(control_string)
 
 	#Initialize output
 	J = 0.0
