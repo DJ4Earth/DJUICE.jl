@@ -21,6 +21,7 @@ md.stressbalance.maxiter = 20
 md.inversion.iscontrol = 1
 md.inversion.independent = md.materials.rheology_B
 md.inversion.independent_string = "MaterialsRheologyB"
+md.inversion.dependent_string = ["DragCoefficientAbsGradient"]
 
 md = solve(md, :grad)
 
