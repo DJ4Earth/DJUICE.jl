@@ -1,33 +1,4 @@
 
-function costfunction(α::Vector{Float64}, femmodel::FemModel) #{{{
-	# get the md.inversion.control_string
-	control_string = FindParam(String, femmodel.parameters, InversionControlParametersEnum)
-	# get the Enum
-	controlvar_enum = StringToEnum(control_string)
-	if isnothing(controlvar_enum)
-		error(control_string, " is not defined in DJUICE, therefore the derivative with respect to ", control_string, " is meaningless")
-	end
-	# compute cost function
-	# TODO: loop through all controls with respect to all the components in the cost function
-	costfunction(α, femmodel, controlvar_enum, VertexSIdEnum)
-end#}}}
-function costfunction(α::Vector{Float64}, femmodel::FemModel, controlvar_enum::IssmEnum, SId_enum::IssmEnum) #{{{
-	#Update FemModel accordingly
-	InputUpdateFromVectorx(femmodel, α, controlvar_enum, SId_enum)
-
-	#solve PDE
-	analysis = StressbalanceAnalysis()
-	Core(analysis, femmodel)
-
-	#Compute cost function
-	J = SurfaceAbsVelMisfitx(femmodel)
-
-	#J += ControlVariableAbsGradientx(femmodel, α, controlvar_enum)
-
-	#return cost function
-	return J
-end#}}}
-
 # The misfit functions
 function SurfaceAbsVelMisfitx(femmodel::FemModel) #{{{
 
@@ -67,7 +38,12 @@ function SurfaceAbsVelMisfitx(femmodel::FemModel) #{{{
 
 	return J
 end#}}}
-function ControlVariableAbsGradientx(femmodel::FemModel, α::Vector{Float64}, controlvar_enum::IssmEnum) #{{{
+function ControlVariableAbsGradientx(femmodel::FemModel) #{{{
+	
+	# get the md.inversion.control_string
+   control_string = FindParam(String, femmodel.parameters, InversionControlParametersEnum)
+   # get the Enum
+   controlvar_enum = StringToEnum(control_string)
 
 	#Initialize output
 	J = 0.0

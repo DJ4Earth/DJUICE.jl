@@ -23,5 +23,7 @@ include("$coredir/solve.jl")
 export solve
 include("$userdir/plotmodel.jl")
 export plotmodel
+include("$userdir/dataprocess.jl")
+export IntegrateOverDomain, GetAreas
 
 end

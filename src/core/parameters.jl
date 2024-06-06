@@ -16,6 +16,10 @@ struct StringParam <: Parameter #{{{
 	enum::IssmEnum
 	value::String
 end# }}}
+mutable struct StringArrayParam <: Parameter #{{{
+	enum::IssmEnum
+	value::Vector{String}
+end# }}}
 mutable struct FluxChainParam <: Parameter #{{{
 	enum::IssmEnum
 	value::Vector{Flux.Chain{}}
@@ -47,6 +51,9 @@ end#}}}
 function GetParameterValue(param::StringParam) #{{{
 	return param.value::String
 end#}}}
+function GetParameterValue(param::StringArrayParam) #{{{
+	return param.value::Vector{String}
+end#}}}
 function GetParameterValue(param::FluxChainParam) #{{{
 	return param.value::Vector{Flux.Chain{}}
 end#}}}
@@ -76,6 +83,12 @@ end#}}}
 function AddParam(parameters::Parameters,value::String, enum::IssmEnum) #{{{
 
 	parameters.lookup[enum] = StringParam(enum,value)
+
+	return nothing
+end#}}}
+function AddParam(parameters::Parameters,value::Vector{String}, enum::IssmEnum) #{{{
+
+	parameters.lookup[enum] = StringArrayParam(enum,value)
 
 	return nothing
 end#}}}

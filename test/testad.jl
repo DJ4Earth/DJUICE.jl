@@ -1,7 +1,4 @@
-module enzymeDiff_grad_frictionC
-
 using Enzyme
-
 Enzyme.API.typeWarning!(false)
 Enzyme.Compiler.RunAttributor[] = false
 
@@ -23,6 +20,7 @@ md.stressbalance.maxiter = 20
 md.inversion.iscontrol = 1
 md.inversion.independent = md.friction.coefficient
 md.inversion.independent_string = "FrictionCoefficient"
+md.inversion.dependent_string = ["SurfaceAbsVelMisfit"]
 
 md = solve(md, :grad)
 
@@ -56,6 +54,4 @@ end
 
 		@test abs(dJ - addJ[i])< 1e-5
 	end
-end
-
 end

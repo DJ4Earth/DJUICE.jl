@@ -40,4 +40,25 @@ end
 	@test md.mesh.numberofelements == 614
 end
 
+@testset "IceVolume" begin
+	file = matopen(joinpath(@__DIR__, "..", "data","temp.mat")) #SMALL model (35 elements)
+	mat  = read(file, "md")
+	close(file)
+	md = model(mat)
+
+	#make model run faster
+	md.stressbalance.maxiter = 20
+
+	#Now call AD!
+	md.inversion.iscontrol = 1
+	md.inversion.independent = md.friction.coefficient
+	md.inversion.independent_string = "FrictionCoefficient"
+	md.inversion.dependent_string = ["IceVolume"]
+	α = md.inversion.independent
+	femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
+	J1 = DJUICE.costfunction(α, femmodel)
+	intH = DJUICE.IntegrateOverDomain(md, md.geometry.thickness)
+	@test isapprox(J1, intH)
+end
+
 end
