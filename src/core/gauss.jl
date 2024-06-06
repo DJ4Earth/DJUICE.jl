@@ -77,17 +77,17 @@ function GaussTria(area_coordinates::Matrix{Float64}, order::Int64) #{{{
 		weights = [0.347854845137454, 0.652145154862546, 0.652145154862546, 0.347854845137454]
 		coords  = [-0.861136311594053,-0.339981043584856, 0.339981043584856, 0.861136311594053]
 	else
-      error("order ",order," not supported yet");
+		error("order ",order," not supported yet");
 	end
 
-   coords1  = Vector{Float64}(undef,npoints)
-   coords2  = Vector{Float64}(undef,npoints)
-   coords3  = Vector{Float64}(undef,npoints)
-   for i in 1:npoints
-      coords1[i]  = 0.5*(area_coordinates[1,1]+area_coordinates[2,1]) + 0.5*coords[i]*(area_coordinates[2,1]-area_coordinates[1,1]);
-      coords2[i]  = 0.5*(area_coordinates[1,2]+area_coordinates[2,2]) + 0.5*coords[i]*(area_coordinates[2,2]-area_coordinates[1,2]);
-      coords3[i]  = 0.5*(area_coordinates[1,3]+area_coordinates[2,3]) + 0.5*coords[i]*(area_coordinates[2,3]-area_coordinates[1,3]);
-   end
+	coords1  = Vector{Float64}(undef,npoints)
+	coords2  = Vector{Float64}(undef,npoints)
+	coords3  = Vector{Float64}(undef,npoints)
+	for i in 1:npoints
+		coords1[i]  = 0.5*(area_coordinates[1,1]+area_coordinates[2,1]) + 0.5*coords[i]*(area_coordinates[2,1]-area_coordinates[1,1]);
+		coords2[i]  = 0.5*(area_coordinates[1,2]+area_coordinates[2,2]) + 0.5*coords[i]*(area_coordinates[2,2]-area_coordinates[1,2]);
+		coords3[i]  = 0.5*(area_coordinates[1,3]+area_coordinates[2,3]) + 0.5*coords[i]*(area_coordinates[2,3]-area_coordinates[1,3]);
+	end
 
 	return GaussTria(npoints, weights, coords1, coords2, coords3)
 end# }}}
@@ -103,14 +103,14 @@ function GaussTria(index::Int64, r1::Float64, r2::Float64, mainlyfloating::Bool,
 		coords3 = Vector{Float64}(undef, numgauss)
 		GaussLegendreTria(weights, coords1, coords2, coords3, Val(order))
 
-      xy_list[1,1]=0.;  xy_list[1,2]=0.;
-      xy_list[2,1]=r1; xy_list[2,2]=0.;
-      xy_list[3,1]=0.;  xy_list[3,2]=r2;
+		xy_list[1,1]=0.;  xy_list[1,2]=0.;
+		xy_list[2,1]=r1; xy_list[2,2]=0.;
+		xy_list[3,1]=0.;  xy_list[3,2]=r2;
 
 		for ii in 1:numgauss
-         x = coords1[ii]*xy_list[1,1] + coords2[ii]*xy_list[2,1] + coords3[ii]*xy_list[3,1];
-         y = coords1[ii]*xy_list[1,2] + coords2[ii]*xy_list[2,2] + coords3[ii]*xy_list[3,2];
-			
+			x = coords1[ii]*xy_list[1,1] + coords2[ii]*xy_list[2,1] + coords3[ii]*xy_list[3,1];
+			y = coords1[ii]*xy_list[1,2] + coords2[ii]*xy_list[2,2] + coords3[ii]*xy_list[3,2];
+
 			if (index==1)
 				coords1[ii] = 1.0-x-y
 				coords2[ii] = x
@@ -131,14 +131,14 @@ function GaussTria(index::Int64, r1::Float64, r2::Float64, mainlyfloating::Bool,
 	else
 		# Double number of gauss points
 		gauss1 = GaussTria(order)
-      xy_list[1,1]=r1;  xy_list[1,2]=0.;
-      xy_list[2,1]=0.; xy_list[2,2]=1.;
-      xy_list[3,1]=0.;  xy_list[3,2]=r2;
+		xy_list[1,1]=r1;  xy_list[1,2]=0.;
+		xy_list[2,1]=0.; xy_list[2,2]=1.;
+		xy_list[3,1]=0.;  xy_list[3,2]=r2;
 
 		for ii in 1:gauss1.numgauss
-         x = gauss1.coords1[ii]*xy_list[1,1] + gauss1.coords2[ii]*xy_list[2,1] + gauss1.coords3[ii]*xy_list[3,1];
-         y = gauss1.coords1[ii]*xy_list[1,2] + gauss1.coords2[ii]*xy_list[2,2] + gauss1.coords3[ii]*xy_list[3,2];
-			
+			x = gauss1.coords1[ii]*xy_list[1,1] + gauss1.coords2[ii]*xy_list[2,1] + gauss1.coords3[ii]*xy_list[3,1];
+			y = gauss1.coords1[ii]*xy_list[1,2] + gauss1.coords2[ii]*xy_list[2,2] + gauss1.coords3[ii]*xy_list[3,2];
+
 			if (index==1)
 				gauss1.coords1[ii] = 1.0-x-y
 				gauss1.coords2[ii] = x
