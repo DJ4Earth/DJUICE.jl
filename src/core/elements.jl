@@ -173,7 +173,7 @@ function GetFractionGeometry(element::Tria, gl::Vector{Float64})#{{{
 	numnodes = 3
 
 	total_weight = 0.0
-	weights = Vector{Float64}(undef, numnodes)
+	weights = zeros(numnodes)
 	loadweights_g = Vector{Float64}(undef,numnodes)
 
    for ig in 1:gauss.numgauss
@@ -349,6 +349,7 @@ function IceVolume(element::Tria) # {{{
 	if (!IsIceInElement(element)); return 0.0 end
 
 	lsf = Vector{Float64}(undef,3)
+
 	GetInputListOnVertices!(element, lsf, MaskIceLevelsetEnum)
 
 	# partially ice-covered element
