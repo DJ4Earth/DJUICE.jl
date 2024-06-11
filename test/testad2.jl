@@ -1,8 +1,5 @@
 using Enzyme
 
-Enzyme.API.typeWarning!(false)
-Enzyme.Compiler.RunAttributor[] = false
-
 using DJUICE
 using MAT
 using Test

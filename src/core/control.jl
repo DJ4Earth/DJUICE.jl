@@ -1,6 +1,4 @@
 using Enzyme
-Enzyme.API.typeWarning!(false)
-Enzyme.Compiler.RunAttributor[] = false
 
 #using Optimization, OptimizationOptimJL
 
