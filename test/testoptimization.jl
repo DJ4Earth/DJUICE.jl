@@ -5,7 +5,6 @@ using MAT
 using Test
 using Enzyme
 
-Enzyme.Compiler.RunAttributor[] = false
 using Optimization, OptimizationOptimJL
 
 #Load model from MATLAB file

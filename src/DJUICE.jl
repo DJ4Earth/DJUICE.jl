@@ -7,6 +7,12 @@ module DJUICE
 const userdir = "./usr"
 const coredir = "./core"
 
+using Enzyme
+
+function __init__()
+    Enzyme.Compiler.RunAttributor[] = false
+end
+
 include("$userdir/classes.jl")
 export model, WeertmanFriction, SchoofFriction, DNNFriction
 include("$userdir/exp.jl")
