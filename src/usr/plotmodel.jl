@@ -1,5 +1,5 @@
 import ColorSchemes.jet
-using GLMakie
+using Makie
 
 function plotmodel( md::model, data::Vector; showvertices::Bool=false, showfacets::Bool=false, caxis::Tuple{Float64, Float64}=(0.0, 0.0)) #{{{
 
