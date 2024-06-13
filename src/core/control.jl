@@ -31,14 +31,19 @@ function ComputeGradient(∂J_∂α::Vector{Float64}, α::Vector{Float64}, femmo
 	# compute the gradient
 	autodiff(Enzyme.Reverse, costfunction, Active, Duplicated(α, ∂J_∂α), Duplicated(femmodel,dfemmodel))
 end#}}}
-function CostFunctionx(femmodel::FemModel, α::Vector{Float64}, controlvar_enum::IssmEnum, SId_enum::IssmEnum, cost_enum_list::Vector{IssmEnum}) #{{{
+function CostFunctionx(femmodel::FemModel, α::Vector{Float64}, controlvar_enum::IssmEnum, SId_enum::IssmEnum, cost_enum_list::Vector{IssmEnum}, ::Val{solutionstring}) where solutionstring #{{{
 	#Update FemModel accordingly
 	InputUpdateFromVectorx(femmodel, α, controlvar_enum, SId_enum)
 
 	#solve PDE
-	#solutionstring = FindParam(Symbol, femmodel.parameters, SolutionTypeEnum)
+	if(solutionstring===:StressbalanceSolution)
+		analysis = StressbalanceAnalysis()
+	elseif (solutionstring===:TransientSolution)
+		analysis = TransientAnalysis()
+	else
+		error("not supported")
+	end
 
-	analysis = StressbalanceAnalysis()
 	Core(analysis, femmodel)
 
 	#update all values of the cost functions
@@ -70,5 +75,6 @@ function costfunction(α::Vector{Float64}, femmodel::FemModel) #{{{
 
 	# compute cost function
 	# TODO: loop through all controls with respect to all the components in the cost function
-	CostFunctionx(femmodel, α, controlvar_enum, VertexSIdEnum, cost_enum_list)
+	solutionstring = FindParam(Symbol, femmodel.parameters, SolutionTypeEnum)
+	CostFunctionx(femmodel, α, controlvar_enum, VertexSIdEnum, cost_enum_list, Val(solutionstring))
 end#}}}

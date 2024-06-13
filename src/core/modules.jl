@@ -57,10 +57,13 @@ function ModelProcessor(md::model, solutionstring::Symbol) #{{{
 
 	#Inversion?
 	if md.inversion.iscontrol
-		FetchDataToInput(md, inputs, elements, md.inversion.vx_obs./md.constants.yts,VxObsEnum)
-		FetchDataToInput(md, inputs, elements, md.inversion.vy_obs./md.constants.yts,VyObsEnum)
 		AddParam(parameters, md.inversion.independent_string, InversionControlParametersEnum)
 		AddParam(parameters, md.inversion.dependent_string, InversionCostFunctionsEnum)
+		# need to load obs vx and vy
+		if issubset(["SurfaceAbsVelMisfit"], md.inversion.dependent_string)
+			FetchDataToInput(md, inputs, elements, md.inversion.vx_obs./md.constants.yts,VxObsEnum)
+			FetchDataToInput(md, inputs, elements, md.inversion.vy_obs./md.constants.yts,VyObsEnum)
+		end
 	end
 
 	#Build FemModel
