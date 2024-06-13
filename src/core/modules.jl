@@ -17,7 +17,7 @@ function ModelProcessor(md::model, solutionstring::Symbol) #{{{
 	#Create  elements, vertices and materials (independent of the analysis)
 	CreateElements(elements, md)
 	CreateVertices(vertices, md)
-	CreateParameters(parameters, md)
+	CreateParameters(parameters, md, solutionstring)
 	CreateInputs(inputs,elements, md)
 	if solutionstring===:TransientSolution
 		UpdateParameters(TransientAnalysis(), parameters, md)
@@ -110,7 +110,7 @@ function CreateVertices(vertices::Vector{Vertex},md::model) #{{{
 
 	return nothing
 end# }}}
-function CreateParameters(parameters::Parameters,md::model) #{{{
+function CreateParameters(parameters::Parameters,md::model,solutionstring::Symbol) #{{{
 
 	#Get data from md
 	AddParam(parameters,md.materials.rho_ice,MaterialsRhoIceEnum)
@@ -118,6 +118,9 @@ function CreateParameters(parameters::Parameters,md::model) #{{{
 	AddParam(parameters,md.materials.rho_freshwater,MaterialsRhoFreshwaterEnum)
 	AddParam(parameters,md.constants.g,ConstantsGEnum)
 
+	#some parameters that did not come with the iomodel
+	AddParam(parameters, solutionstring, SolutionTypeEnum)
+	
 	#Set step and time, this will be overwritten if we run a transient
 	AddParam(parameters,1,StepEnum)
 	AddParam(parameters,0.0,TimeEnum)

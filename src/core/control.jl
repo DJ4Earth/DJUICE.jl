@@ -2,12 +2,12 @@ using Enzyme
 
 #using Optimization, OptimizationOptimJL
 
-function Control_Core(md::model, femmodel::FemModel, solution::Symbol) #{{{
+function Control_Core(md::model, femmodel::FemModel)
 	#independent variable
 	α = md.inversion.independent
 	#initialize derivative as 0
 	∂J_∂α = zero(α)
-	if solution ===:grad
+	if md.inversion.onlygrad
 		# only compute the gradient
 		ComputeGradient(∂J_∂α, α, femmodel)
 		#Put gradient in results
@@ -36,6 +36,8 @@ function CostFunctionx(femmodel::FemModel, α::Vector{Float64}, controlvar_enum:
 	InputUpdateFromVectorx(femmodel, α, controlvar_enum, SId_enum)
 
 	#solve PDE
+	#solutionstring = FindParam(Symbol, femmodel.parameters, SolutionTypeEnum)
+
 	analysis = StressbalanceAnalysis()
 	Core(analysis, femmodel)
 

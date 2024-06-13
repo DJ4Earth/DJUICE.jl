@@ -16,11 +16,12 @@ md.stressbalance.maxiter = 20
 
 #Now call AD!
 md.inversion.iscontrol = 1
+md.inversion.onlygrad = 1
 md.inversion.independent = md.friction.coefficient
 md.inversion.independent_string = "FrictionCoefficient"
 md.inversion.dependent_string = ["SurfaceAbsVelMisfit"]
 
-md = solve(md, :grad)
+md = solve(md, :sb)
 
 # compute gradient by finite differences at each node
 addJ = md.results["StressbalanceSolution"]["Gradient"]

@@ -249,6 +249,7 @@ end# }}}
 #Inversion{{{
 mutable struct Inversion
 	iscontrol::Bool
+	onlygrad::Bool
 	vx_obs::Vector{Float64}
 	vy_obs::Vector{Float64}
 	min_parameters::Vector{Float64}
@@ -259,7 +260,7 @@ mutable struct Inversion
 	dependent_string::Vector{String}
 end
 function Inversion() #{{{
-	return Inversion( false, Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), 0, "Friction", Vector{String}(undef,0))
+	return Inversion( false, true, Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), 0, "Friction", Vector{String}(undef,0))
 end# }}}
 function Base.show(io::IO, this::Inversion)# {{{
 	IssmStructDisp(io, this)
