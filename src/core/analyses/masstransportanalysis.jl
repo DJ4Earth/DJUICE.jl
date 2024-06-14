@@ -76,14 +76,11 @@ function Core(analysis::MasstransportAnalysis,femmodel::FemModel)# {{{
 end #}}}
 function CreateKMatrix(analysis::MasstransportAnalysis,element::Tria)# {{{
 
-	#Return if there is no ice in this element
-	if(!IsIceInElement(element)) return end
-
 	#Internmediaries
 	numnodes = 3
 	
 	#Initialize Element matrix and basis function derivatives
-	Ke = ElementMatrix(element.nodes)
+	Ke = ElementMatrix(element.nodes)::DJUICE.ElementMatrix
 	dbasis = Matrix{Float64}(undef,numnodes,2)
 	basis  = Vector{Float64}(undef,numnodes)
 
@@ -126,28 +123,24 @@ function CreateKMatrix(analysis::MasstransportAnalysis,element::Tria)# {{{
       end
 
 		#Stabilization
-		if(stabilization==0)
-			#do nothing
-		elseif (stabilization==1)
-			vx = GetInputAverageValue(vx_input)
-			vy = GetInputAverageValue(vy_input)
-			D  = dt*gauss.weights[ig]*Jdet*[h/2*abs(vx) 0; 0 h/2*abs(vy)]
-			for i in 1:numnodes; for j in 1:numnodes
-					Ke.values[i ,j] += (dbasis[i,1]*(D[1,1]*dbasis[j,1] + D[1,2]*dbasis[j,2]) +
-											  dbasis[i,2]*(D[2,1]*dbasis[j,1] + D[2,2]*dbasis[j,2]))
-			end end
-		else
-			error("Stabilization ",stabilization, " not supported yet")
-		end
+	#	if(stabilization==0)
+	#		#do nothing
+	#	elseif (stabilization==1)
+	#		vx = GetInputAverageValue(vx_input)
+	#		vy = GetInputAverageValue(vy_input)
+	#		D  = dt*gauss.weights[ig]*Jdet*[h/2*abs(vx) 0; 0 h/2*abs(vy)]
+	#		for i in 1:numnodes; for j in 1:numnodes
+	#				Ke.values[i ,j] += (dbasis[i,1]*(D[1,1]*dbasis[j,1] + D[1,2]*dbasis[j,2]) +
+	#										  dbasis[i,2]*(D[2,1]*dbasis[j,1] + D[2,2]*dbasis[j,2]))
+	#		end end
+	#	else
+	#		error("Stabilization ",stabilization, " not supported yet")
+	#	end
 	end
 
 	return Ke
 end #}}}
 function CreatePVector(analysis::MasstransportAnalysis,element::Tria)# {{{
-
-	#Return if there is no ice in this element
-	if(!IsIceInElement(element)) return end
-
 	#Internmediaries
 	numnodes = 3
 
