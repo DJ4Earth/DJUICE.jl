@@ -75,10 +75,14 @@ function Core(analysis::MasstransportAnalysis,femmodel::FemModel)# {{{
 	return nothing
 end #}}}
 function CreateKMatrix(analysis::MasstransportAnalysis,element::Tria)# {{{
+	stabilization = FindParam(Int64, element, MasstransportStabilizationEnum)
+	CreateKMatrix(analysis, element, Val(stabilization))::DJUICE.ElementMatrix
+end #}}}
+function CreateKMatrix(analysis::MasstransportAnalysis,element::Tria, ::Val{stabilization}) where stabilization# {{{
 
 	#Internmediaries
 	numnodes = 3
-	
+
 	#Initialize Element matrix and basis function derivatives
 	Ke = ElementMatrix(element.nodes)::DJUICE.ElementMatrix
 	dbasis = Matrix{Float64}(undef,numnodes,2)
@@ -89,7 +93,6 @@ function CreateKMatrix(analysis::MasstransportAnalysis,element::Tria)# {{{
 	vx_input      = GetInput(element, VxEnum)
 	vy_input      = GetInput(element, VyEnum)
 	dt            = FindParam(Float64, element, TimesteppingTimeStepEnum)
-	stabilization = FindParam(Int64, element, MasstransportStabilizationEnum)
 
 	h = CharacteristicLength(element)
 
@@ -101,41 +104,45 @@ function CreateKMatrix(analysis::MasstransportAnalysis,element::Tria)# {{{
 		NodalFunctionsDerivatives(element, dbasis, xyz_list, gauss)
 		NodalFunctions(element, basis, gauss, ig, P1Enum)
 
-      #Transient term
+		#Transient term
 		for i in 1:numnodes
 			for j in 1:numnodes
 				Ke.values[i ,j] += gauss.weights[ig]*Jdet*basis[i]*basis[j]
 			end
 		end
 
-      #Advection term
+		#Advection term
 		vx  = GetInputValue(vx_input, gauss, ig)
-      vy  = GetInputValue(vy_input, gauss, ig)
+		vy  = GetInputValue(vy_input, gauss, ig)
 		dvx = GetInputDerivativeValue(vx_input, xyz_list, gauss, ig)
-      dvy = GetInputDerivativeValue(vy_input, xyz_list, gauss, ig)
-      for i in 1:numnodes
-         for j in 1:numnodes
-            #\phi_i \phi_j \nabla\cdot v
-            Ke.values[i ,j] += dt*gauss.weights[ig]*Jdet*basis[i]*basis[j]*(dvx[1] + dvy[2])
-            #\phi_i v\cdot\nabla\phi_j
-            Ke.values[i ,j] += dt*gauss.weights[ig]*Jdet*basis[i]*(vx*dbasis[j,1] + vy*dbasis[j,2])
-         end
-      end
+		dvy = GetInputDerivativeValue(vy_input, xyz_list, gauss, ig)
+		for i in 1:numnodes
+			for j in 1:numnodes
+				#\phi_i \phi_j \nabla\cdot v
+				Ke.values[i ,j] += dt*gauss.weights[ig]*Jdet*basis[i]*basis[j]*(dvx[1] + dvy[2])
+				#\phi_i v\cdot\nabla\phi_j
+				Ke.values[i ,j] += dt*gauss.weights[ig]*Jdet*basis[i]*(vx*dbasis[j,1] + vy*dbasis[j,2])
+			end
+		end
 
 		#Stabilization
-	#	if(stabilization==0)
-	#		#do nothing
-	#	elseif (stabilization==1)
-	#		vx = GetInputAverageValue(vx_input)
-	#		vy = GetInputAverageValue(vy_input)
-	#		D  = dt*gauss.weights[ig]*Jdet*[h/2*abs(vx) 0; 0 h/2*abs(vy)]
-	#		for i in 1:numnodes; for j in 1:numnodes
-	#				Ke.values[i ,j] += (dbasis[i,1]*(D[1,1]*dbasis[j,1] + D[1,2]*dbasis[j,2]) +
-	#										  dbasis[i,2]*(D[2,1]*dbasis[j,1] + D[2,2]*dbasis[j,2]))
-	#		end end
-	#	else
-	#		error("Stabilization ",stabilization, " not supported yet")
-	#	end
+		if(stabilization==0)
+			#do nothing
+		elseif (stabilization==1)
+			vx = GetInputAverageValue(vx_input)
+			vy = GetInputAverageValue(vy_input)
+			D_scalar  = dt*gauss.weights[ig]*Jdet*h*0.5
+			# D= | abs(vx),     0 |
+			#    | 0,      abs(vy)|
+			for i in 1:numnodes 
+				for j in 1:numnodes
+					Ke.values[i ,j] += D_scalar*(dbasis[i,1]*(abs(vx)*dbasis[j,1]) +
+														  dbasis[i,2]*(abs(vy)*dbasis[j,2]))
+				end 
+			end
+		else
+			error("Stabilization ",stabilization, " not supported yet")
+		end
 	end
 
 	return Ke
@@ -153,12 +160,12 @@ function CreatePVector(analysis::MasstransportAnalysis,element::Tria)# {{{
 	H_input         = GetInput(element, ThicknessEnum)
 	gmb_input       = GetInput(element, BasalforcingsGroundediceMeltingRateEnum)
 	fmb_input       = GetInput(element, BasalforcingsFloatingiceMeltingRateEnum)
-   smb_input       = GetInput(element, SmbMassBalanceEnum)
+	smb_input       = GetInput(element, SmbMassBalanceEnum)
 	olevelset_input = GetInput(element, MaskOceanLevelsetEnum)
 	dt            = FindParam(Float64, element, TimesteppingTimeStepEnum)
 	stabilization = FindParam(Int64, element, MasstransportStabilizationEnum)
 
-   #How much is actually grounded?
+	#How much is actually grounded?
 	phi=GetGroundedPortion(element, xyz_list)
 
 	#Start integrating
@@ -169,17 +176,17 @@ function CreatePVector(analysis::MasstransportAnalysis,element::Tria)# {{{
 		NodalFunctions(element, basis, gauss, ig, P1Enum)
 
 		smb = GetInputValue(smb_input, gauss, ig)
-      H   = GetInputValue(H_input, gauss, ig)
+		H   = GetInputValue(H_input, gauss, ig)
 
-      #Only apply melt on fully floating cells
-      if(phi<0.00000001)
-         mb = GetInputValue(fmb_input, gauss, ig)
-      else
-         mb = GetInputValue(gmb_input, gauss, ig)
-      end
+		#Only apply melt on fully floating cells
+		if(phi<0.00000001)
+			mb = GetInputValue(fmb_input, gauss, ig)
+		else
+			mb = GetInputValue(gmb_input, gauss, ig)
+		end
 
 		for i in 1:numnodes
-         pe.values[i] += gauss.weights[ig]*Jdet*(H + dt*(smb - mb))*basis[i]
+			pe.values[i] += gauss.weights[ig]*Jdet*(H + dt*(smb - mb))*basis[i]
 		end
 	end
 
@@ -246,26 +253,26 @@ function InputUpdateFromSolution(analysis::MasstransportAnalysis,ug::Vector{Floa
 	phi          = Vector{Float64}(undef,3)
 	bed          = Vector{Float64}(undef,3)
 	GetInputListOnVertices!(element, newthickness, ThicknessEnum)
-   GetInputListOnVertices!(element, oldthickness, ThicknessOldEnum)
-   GetInputListOnVertices!(element, oldbase, BaseOldEnum)
-   GetInputListOnVertices!(element, oldsurface, SurfaceOldEnum)
-   GetInputListOnVertices!(element, phi, MaskOceanLevelsetEnum)
+	GetInputListOnVertices!(element, oldthickness, ThicknessOldEnum)
+	GetInputListOnVertices!(element, oldbase, BaseOldEnum)
+	GetInputListOnVertices!(element, oldsurface, SurfaceOldEnum)
+	GetInputListOnVertices!(element, phi, MaskOceanLevelsetEnum)
 	GetInputListOnVertices!(element, bed, BedEnum)
-   sealevel = zeros(3)
+	sealevel = zeros(3)
 	newsurface = Vector{Float64}(undef,3)
 	newbase    = Vector{Float64}(undef,3)
 
-   for i in 1:3
-      if(phi[i]>0.)
-         #this is grounded ice: just add thickness to base.
-         newsurface[i] = bed[i]+newthickness[i] #surface = bed + newthickness
-         newbase[i]    = bed[i]                 #new base at new bed
-      else
-         #this is an ice shelf: hydrostatic equilibrium
-         newsurface[i] = newthickness[i]*(1-rho_ice/rho_water) + sealevel[i]
-         newbase[i]    = newthickness[i]*(-rho_ice/rho_water)  + sealevel[i]
-      end
-   end
+	for i in 1:3
+		if(phi[i]>0.)
+			#this is grounded ice: just add thickness to base.
+			newsurface[i] = bed[i]+newthickness[i] #surface = bed + newthickness
+			newbase[i]    = bed[i]                 #new base at new bed
+		else
+			#this is an ice shelf: hydrostatic equilibrium
+			newsurface[i] = newthickness[i]*(1-rho_ice/rho_water) + sealevel[i]
+			newbase[i]    = newthickness[i]*(-rho_ice/rho_water)  + sealevel[i]
+		end
+	end
 
 	AddInput(element, SurfaceEnum, newsurface, P1Enum)
 	AddInput(element, BaseEnum,    newbase,    P1Enum)
