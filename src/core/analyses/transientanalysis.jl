@@ -34,7 +34,7 @@ function Core(analysis::TransientAnalysis,femmodel::FemModel)# {{{
 
       if(isstressbalance) Core(StressbalanceAnalysis(), femmodel) end
 
-#		if(ismovingfront) Core(LevelsetAnalysis(), femmodel) end
+		if(ismovingfront) Core(LevelsetAnalysis(), femmodel) end
 
       if(ismasstransport) Core(MasstransportAnalysis(), femmodel) end
 		MigrateGroundinglinex(femmodel)

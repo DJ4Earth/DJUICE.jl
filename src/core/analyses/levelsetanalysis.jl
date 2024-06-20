@@ -93,6 +93,10 @@ function Core(analysis::LevelsetAnalysis,femmodel::FemModel)# {{{
 	return nothing
 end #}}}
 function CreateKMatrix(analysis::LevelsetAnalysis,element::Tria)# {{{
+	stabilization = FindParam(Int64, element, LevelsetStabilizationEnum)
+	CreateKMatrix(analysis, element, Val(stabilization))::DJUICE.ElementMatrix
+end #}}}
+function CreateKMatrix(analysis::LevelsetAnalysis,element::Tria, ::Val{stabilization}) where stabilization# {{{
 
 	#Internmediaries
 	numnodes = 3
@@ -107,7 +111,6 @@ function CreateKMatrix(analysis::LevelsetAnalysis,element::Tria)# {{{
 	mf_vx_input      = GetInput(element, MovingFrontalVxEnum)
 	mf_vy_input      = GetInput(element, MovingFrontalVyEnum)
 	dt            = FindParam(Float64, element, TimesteppingTimeStepEnum)
-	stabilization = FindParam(Int64, element, LevelsetStabilizationEnum)
 	migration_max  = FindParam(Float64, element, MigrationMaxEnum)
 
 	h = CharacteristicLength(element)

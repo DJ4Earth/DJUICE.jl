@@ -579,12 +579,12 @@ function MovingFrontalVelocity(element::Tria) #{{{
 		cx = calvingrate * dlsf[1] /norm_dlsf
 		cy = calvingrate * dlsf[2] /norm_dlsf
       meltingrate  = GetInputValue(meltingrate_input, gauss, ig)
-		if (groundedice < 0) meltingrate = 0; end
+		if (groundedice < 0) meltingrate = 0.0; end
 		mx = meltingrate * dlsf[1] /norm_dlsf
 		my = meltingrate * dlsf[2] /norm_dlsf
 		if (norm_dlsf <1e-10)
-			cx = 0; cy = 0
-			mx = 0; my = 0
+			cx = 0.0; cy = 0.0
+			mx = 0.0; my = 0.0
 		end
 
 		mvx[ig] = vx-cx-mx
