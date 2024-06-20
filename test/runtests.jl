@@ -8,10 +8,6 @@ end
 @time begin
 	@time @testset "Model Struct Tests" begin include("modelstructtests.jl") end
 
-	# AD test first
-	@time include("testad.jl")
-	@time include("testad2.jl")
-
 	# test each individual cases, name with test[0-9]*.jl
 	testsolutions = searchdir("./", r"test[0-9]*.jl")
 	@time @testset "Model Solution Tests" begin

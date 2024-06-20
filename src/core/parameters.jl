@@ -1,5 +1,9 @@
 #Parameter class definition
 abstract type Parameter end
+struct BoolParam <: Parameter #{{{
+	enum::IssmEnum
+	value::Bool
+end# }}}
 struct DoubleParam <: Parameter #{{{
 	enum::IssmEnum
 	value::Float64
@@ -8,13 +12,13 @@ struct IntParam <: Parameter #{{{
 	enum::IssmEnum
 	value::Int64
 end# }}}
-struct BoolParam <: Parameter #{{{
-	enum::IssmEnum
-	value::Bool
-end# }}}
 struct StringParam <: Parameter #{{{
 	enum::IssmEnum
 	value::String
+end# }}}
+struct SymbolParam <: Parameter #{{{
+	enum::IssmEnum
+	value::Symbol
 end# }}}
 mutable struct StringArrayParam <: Parameter #{{{
 	enum::IssmEnum
@@ -39,17 +43,20 @@ function Parameters() #{{{
 end # }}}
 
 #Parameter functions
+function GetParameterValue(param::BoolParam) #{{{
+	return param.value::Bool
+end#}}}
 function GetParameterValue(param::DoubleParam) #{{{
 	return param.value::Float64
 end#}}}
 function GetParameterValue(param::IntParam) #{{{
 	return param.value::Int64
 end#}}}
-function GetParameterValue(param::BoolParam) #{{{
-	return param.value::Bool
-end#}}}
 function GetParameterValue(param::StringParam) #{{{
 	return param.value::String
+end#}}}
+function GetParameterValue(param::SymbolParam) #{{{
+	return param.value::Symbol
 end#}}}
 function GetParameterValue(param::StringArrayParam) #{{{
 	return param.value::Vector{String}
@@ -58,10 +65,16 @@ function GetParameterValue(param::FluxChainParam) #{{{
 	return param.value::Vector{Flux.Chain{}}
 end#}}}
 function GetParameterValue(param::StatsBaseTransformParam) #{{{
-	return param.value::Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64}}}
+	return param.value::Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64} }}
 end#}}}
 
 #Parameters functions
+function AddParam(parameters::Parameters,value::Bool, enum::IssmEnum) #{{{
+
+	parameters.lookup[enum] = BoolParam(enum,value)
+
+	return nothing
+end#}}}
 function AddParam(parameters::Parameters,value::Float64,enum::IssmEnum) #{{{
 
 	parameters.double_lookup[enum] = DoubleParam(enum,value)
@@ -74,15 +87,15 @@ function AddParam(parameters::Parameters,value::Int64, enum::IssmEnum) #{{{
 
 	return nothing
 end#}}}
-function AddParam(parameters::Parameters,value::Bool, enum::IssmEnum) #{{{
-
-	parameters.lookup[enum] = BoolParam(enum,value)
-
-	return nothing
-end#}}}
 function AddParam(parameters::Parameters,value::String, enum::IssmEnum) #{{{
 
 	parameters.lookup[enum] = StringParam(enum,value)
+
+	return nothing
+end#}}}
+function AddParam(parameters::Parameters,value::Symbol, enum::IssmEnum) #{{{
+
+	parameters.lookup[enum] = SymbolParam(enum,value)
 
 	return nothing
 end#}}}

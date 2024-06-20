@@ -29,7 +29,7 @@ include("./utils.jl")
 function solve(md::model, solution::Symbol) #{{{
 
 	#Process incoming string
-	if solution===:sb || solution===:Stressbalance || solution===:grad
+	if solution===:sb || solution===:Stressbalance 
 		solutionkey = :StressbalanceSolution
 	elseif solution===:tr || solution===:Transient
 		solutionkey = :TransientSolution
@@ -42,7 +42,7 @@ function solve(md::model, solution::Symbol) #{{{
 
 	#Solve (FIXME: to be improved later...)
 	if (md.inversion.iscontrol) # solve inverse problem
-		Control_Core(md, femmodel, solution)
+		Control_Core(md, femmodel)
 	else # otherwise forward problem
 		if(solutionkey===:StressbalanceSolution)
 			analysis = StressbalanceAnalysis()

@@ -1,3 +1,4 @@
+# AD stressbalance rheology
 using Enzyme
 
 using DJUICE
@@ -20,7 +21,7 @@ md.inversion.independent = md.materials.rheology_B
 md.inversion.independent_string = "MaterialsRheologyB"
 md.inversion.dependent_string = ["DragCoefficientAbsGradient"]
 
-md = solve(md, :grad)
+md = solve(md, :sb)
 
 # compute gradient by finite differences at each node
 addJ = md.results["StressbalanceSolution"]["Gradient"]
