@@ -12,9 +12,7 @@ function compareArchive(id, procedure::Symbol)
 		# update Archive
 	else
 		# check Archive
-		if isempty(archive_path)
-			@warn "$archive_name does not exist! Skip the comparison of the results"
-		else
+		if isfile(archive_path)
 			for k=1:length(field_names)
 				# Get field and tolerance
 				field=field_values[k];
@@ -29,6 +27,8 @@ function compareArchive(id, procedure::Symbol)
 				@test isnan(error_diff) == false
 				@test error_diff < tolerance
 			end
+		else
+			@warn "$archive_name does not exist! Skip the comparison of the results"
 		end
 	end
 end
