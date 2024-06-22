@@ -22,12 +22,12 @@ y     = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","y")
 vx    = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","vx")
 vy    = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","vy")
 index = Int.(archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","index"))
-md.initialization.vx=0 .*InterpFromMeshToMesh2d(index,x,y,vx,md.mesh.x,md.mesh.y,0.0)
-md.initialization.vy=0 .*InterpFromMeshToMesh2d(index,x,y,vy,md.mesh.x,md.mesh.y,0.0)
+md.initialization.vx=InterpFromMeshToMesh2d(index,x,y,vx,md.mesh.x,md.mesh.y,0.0)
+md.initialization.vy=InterpFromMeshToMesh2d(index,x,y,vy,md.mesh.x,md.mesh.y,0.0)
 
-md.materials.rheology_B=1.815730284801701e+08*ones(md.mesh.numberofvertices)
+md.materials.rheology_B=1.815730284801701e08*ones(md.mesh.numberofvertices)
 md.materials.rheology_n=3*ones(md.mesh.numberofelements)
-md.friction.coefficient=20*ones(md.mesh.numberofvertices)
+md.friction.coefficient=0.0*ones(md.mesh.numberofvertices)
 md.friction.p=ones(md.mesh.numberofvertices)
 md.friction.q=ones(md.mesh.numberofvertices)
 
@@ -43,3 +43,10 @@ md.stressbalance.spcvx[pos] .= 0.0
 md.stressbalance.spcvy[pos] .= 0.0
 
 md=solve(md,:Stressbalance)
+
+# Fields and tolerances to track changes
+field_names =["Vx","Vy","Vel"]
+field_tolerances=[4e-13,4e-13,4e-13]
+field_values= [(md.results["StressbalanceSolution"]["Vx"]),
+					(md.results["StressbalanceSolution"]["Vy"]),
+					(md.results["StressbalanceSolution"]["Vel"]) ]
