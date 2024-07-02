@@ -15,6 +15,7 @@ md.stressbalance.maxiter = 20
 md.inversion.iscontrol = 1
 md.inversion.independent = md.friction.coefficient
 md.inversion.independent_string = "FrictionCoefficient"
+md.inversion.dependent_string = ["SurfaceAbsVelMisfit"]
 
 md = solve(md, :sb)
 
