@@ -16,7 +16,7 @@ md.inversion.iscontrol = 1
 md.inversion.independent = md.friction.coefficient
 md.inversion.independent_string = "FrictionCoefficient"
 
-md = solve(md, :grad)
+md = solve(md, :sb)
 
 # the gradient
 g = md.results["StressbalanceSolution"]["Gradient"]
