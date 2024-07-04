@@ -63,7 +63,7 @@ md.timestepping.final_time = 30;
 md.transient.isstressbalance=1;
 md.transient.ismasstransport=1;
 md.transient.issmb=1;
-md.transient.ismovingfront=1;
+md.transient.ismovingfront=0;
 
 md.calving.calvingrate=0*ones(md.mesh.numberofvertices)
 md.frontalforcings.meltingrate=10000*ones(md.mesh.numberofvertices)

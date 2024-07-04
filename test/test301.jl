@@ -43,3 +43,9 @@ md.stressbalance.spcvx[pos] .= 0.0
 md.stressbalance.spcvy[pos] .= 0.0
 
 md=solve(md,:Stressbalance)
+
+field_names =["Vx","Vy","Vel"]
+field_tolerances=[NaN,NaN,NaN]
+field_values= [(md.results["StressbalanceSolution"]["Vx"]),
+					(md.results["StressbalanceSolution"]["Vy"]),
+					(md.results["StressbalanceSolution"]["Vel"]) ]
