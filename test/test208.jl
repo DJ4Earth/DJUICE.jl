@@ -1,4 +1,5 @@
 using DJUICE
+include("utils.jl")
 
 md = model()
 md = triangle(md,issmdir()*"/test/Exp/Square.exp", 150000.)
@@ -65,10 +66,11 @@ field_tolerances=[2e-10,2e-10,2e-10,NaN,2e-10,2e-10,2e-10,NaN,NaN]
 field_values= [(md.results["TransientSolution"][1]["Vx"]),
 					(md.results["TransientSolution"][1]["Vy"]),
 					(md.results["TransientSolution"][1]["Vel"]),
-					(NaN),
+					([NaN]),
 					(md.results["TransientSolution"][1]["Base"]),
 					(md.results["TransientSolution"][1]["Surface"]),
 					(md.results["TransientSolution"][1]["Thickness"]),
-					(NaN),
-					(NaN),
+					([NaN]),
+					([NaN]),
 					]
+compareArchive(@__FILE__, field_names, field_tolerances, field_values, :test)

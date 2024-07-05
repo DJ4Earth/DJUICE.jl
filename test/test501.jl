@@ -1,4 +1,5 @@
 using DJUICE
+include("utils.jl")
 
 md = model()
 md = triangle(md,issmdir()*"/test/Exp/Pig.exp",20000.)
@@ -54,3 +55,4 @@ field_tolerances=[NaN,NaN,NaN]
 field_values= [(md.results["StressbalanceSolution"]["Vx"]),
                (md.results["StressbalanceSolution"]["Vy"]),
                (md.results["StressbalanceSolution"]["Vel"]) ]
+compareArchive(@__FILE__, field_names, field_tolerances, field_values, :test)

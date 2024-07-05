@@ -1,4 +1,5 @@
 using DJUICE
+include("utils.jl")
 
 md = model()
 md = triangle(md,issmdir()*"/test/Exp/Square.exp",150000.)
@@ -17,13 +18,13 @@ md.geometry.surface   = md.geometry.base+md.geometry.thickness
 md.geometry.bed       = md.geometry.base
 
 #Initial velocity
-#x     = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","x")
-#y     = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","y")
-#vx    = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","vx")
-#vy    = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","vy")
-#index = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","index")
-md.initialization.vx=zeros(md.mesh.numberofvertices)#InterpFromMeshToMesh2d(index,x,y,vx,md.mesh.x,md.mesh.y)
-md.initialization.vy=zeros(md.mesh.numberofvertices)#InterpFromMeshToMesh2d(index,x,y,vy,md.mesh.x,md.mesh.y)
+x     = archread(issmdir()*"/test/Data/SquareSheetConstrained.arch","x")
+y     = archread(issmdir()*"/test/Data/SquareSheetConstrained.arch","y")
+vx    = archread(issmdir()*"/test/Data/SquareSheetConstrained.arch","vx")
+vy    = archread(issmdir()*"/test/Data/SquareSheetConstrained.arch","vy")
+index = Int.(archread(issmdir()*"/test/Data/SquareSheetConstrained.arch","index"))
+md.initialization.vx=InterpFromMeshToMesh2d(index,x,y,vx,md.mesh.x,md.mesh.y,0.0)
+md.initialization.vy=InterpFromMeshToMesh2d(index,x,y,vy,md.mesh.x,md.mesh.y,0.0)
 
 md.materials.rheology_B=1.815730284801701e+08*ones(md.mesh.numberofvertices)
 md.materials.rheology_n=3*ones(md.mesh.numberofelements)
@@ -45,7 +46,8 @@ md.stressbalance.spcvy[pos] .= 0.0
 md=solve(md,:Stressbalance)
 
 field_names =["Vx","Vy","Vel"]
-field_tolerances=[NaN,NaN,NaN]
+field_tolerances=[2e-10,1e-10,1e-10]
 field_values= [(md.results["StressbalanceSolution"]["Vx"]),
 					(md.results["StressbalanceSolution"]["Vy"]),
 					(md.results["StressbalanceSolution"]["Vel"]) ]
+compareArchive(@__FILE__, field_names, field_tolerances, field_values, :test)
