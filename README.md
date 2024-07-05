@@ -1,6 +1,5 @@
 # DJUICE.jl
-
-[![][build-stable-img]][build-url]
+[![Build Status](https://github.com/DJ4Earth/DJUICE.jl/workflows/CI/badge.svg)](https://github.com/DJ4Earth/DJUICE.jl/actions)
 
 **Differentiable JUlia ICE model**
 
