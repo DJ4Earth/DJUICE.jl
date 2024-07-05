@@ -5,6 +5,13 @@ function FetchDataToInput(md::model,inputs::Inputs,elements::Vector{Tria},data::
 	end
 	return nothing
 end#}}}
+function FetchDataToInput(md::model, inputs::Inputs, elements::Vector{Tria}, data::Matrix{Float64}, enum::IssmEnum) #{{{
+	for i in 1:length(elements)
+		#InputCreate(elements[i],inputs,data,enum)
+		error("TransientInput not supported yet")
+	end
+	return nothing
+end#}}}
 function ModelProcessor(md::model, solutionstring::Symbol) #{{{
 
 	#Initialize structures

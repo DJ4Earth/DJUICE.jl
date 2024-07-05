@@ -195,10 +195,10 @@ end# }}}
 # }}}
 #Surfaceforcings {{{
 mutable struct SMBforcings
-	mass_balance::Vector{Float64}
+	mass_balance::Union{Vector{Float64},Matrix{Float64}}
 end
 function SMBforcings() #{{{
-	return SMBforcings( Vector{Float64}(undef,0))
+	return SMBforcings(Vector{Float64}(undef, 0))
 end# }}}
 function Base.show(io::IO, this::SMBforcings)# {{{
 	IssmStructDisp(io, this)
