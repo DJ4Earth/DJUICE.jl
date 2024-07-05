@@ -5,7 +5,10 @@ function searchdir(path,key)
 	filter(x->occursin(key,x), readdir(path))
 end
 
-function compareArchive(id, procedure::Symbol)
+function compareArchive(tf::String, procedure::Symbol)
+	# run test
+	@inline include(tf)
+	id = match(r"test(\d+).jl", tf).captures[1]
 	archive_name = "Archive"*string(id)
 	archive_path = issmdir()*"/test/Archives/"*archive_name*".arch"
 	if procedure===:update
@@ -20,12 +23,14 @@ function compareArchive(id, procedure::Symbol)
 				tolerance=field_tolerances[k];
 
 				# Compare to archive
-				# Our output is in the correct order (n,1) or (1,1), so we do not need to transpose again
-				archive = archread(archive_path, archive_name*"_field"*string(k))
-				error_diff = (maximum(abs.(archive-field))/(maximum(abs.(archive))+eps(Float64)))
+				if !isnan(tolerance)
+					# Our output is in the correct order (n,1) or (1,1), so we do not need to transpose again
+					archive = archread(archive_path, archive_name*"_field"*string(k))
+					error_diff = (maximum(abs.(archive-field))/(maximum(abs.(archive))+eps(Float64)))
 
-				@test isnan(error_diff) == false
-				@test error_diff < tolerance
+					@test isnan(error_diff) == false
+					@test error_diff < tolerance skip = isnan(tolerance)
+				end
 			end
 		else
 			@warn "$archive_name does not exist! Skip the comparison of the results"
@@ -33,18 +38,15 @@ function compareArchive(id, procedure::Symbol)
 	end
 end
 
-@time begin
+@time @testset "DJUICE" begin
 	@time @testset "Model Struct Tests" begin include("modelstructtests.jl") end
 
 	# test each individual cases, name with test[0-9]*.jl
 	testsolutions = searchdir("./", r"test\d+.jl")
-	@time @testset "Model Solution Tests" begin
-		for tf in testsolutions
-			# run the test
-			include(tf)
+	for tf in testsolutions
+		@time @testset "Model Solution Tests: $tf"  begin
 			# check the results vs. saved archive
-			testid = match(r"test(\d+).jl", tf).captures[1]
-			compareArchive(testid, :test)
+			compareArchive(tf, :test)
 		end
 	end
 

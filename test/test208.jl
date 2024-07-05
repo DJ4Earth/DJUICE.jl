@@ -14,20 +14,21 @@ xmax=maximum(md.mesh.x)
 md.geometry.thickness = hmax .+ (hmin-hmax)*(md.mesh.y .- ymin)./(ymax-ymin) .+ 0.1*(hmin-hmax)*(md.mesh.x .- xmin)./(xmax-xmin)
 md.geometry.base      = -md.materials.rho_ice/md.materials.rho_water*md.geometry.thickness
 md.geometry.surface   = md.geometry.base+md.geometry.thickness
-md.geometry.bed       = md.geometry.base .-10
+md.geometry.bed       = md.geometry.base .- 500
 
 #Initial velocity
-x     = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","x")
-y     = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","y")
-vx    = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","vx")
-vy    = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","vy")
-index = archread(issmdir()*"/test/Data/SquareShelfConstrained.arch","index")
-md.initialization.vx=zeros(md.mesh.numberofvertices)#InterpFromMeshToMesh2d(index,x,y,vx,md.mesh.x,md.mesh.y)
-md.initialization.vy=zeros(md.mesh.numberofvertices)#InterpFromMeshToMesh2d(index,x,y,vy,md.mesh.x,md.mesh.y)
+x     = archread(issmdir()*"/test/Data/SquareShelf.arch","x")
+y     = archread(issmdir()*"/test/Data/SquareShelf.arch","y")
+vx    = archread(issmdir()*"/test/Data/SquareShelf.arch","vx")
+vy    = archread(issmdir()*"/test/Data/SquareShelf.arch","vy")
+index = round.(Int64, archread(issmdir()*"/test/Data/SquareShelf.arch","index"))
+md.initialization.vx=InterpFromMeshToMesh2d(index,x,y,vx,md.mesh.x,md.mesh.y,0.0)
+md.initialization.vy=InterpFromMeshToMesh2d(index,x,y,vy,md.mesh.x,md.mesh.y,0.0)
 
 md.materials.rheology_B=1.815730284801701e+08*ones(md.mesh.numberofvertices)
 md.materials.rheology_n=3*ones(md.mesh.numberofelements)
 md.friction.coefficient=20*ones(md.mesh.numberofvertices)
+md.friction.coefficient[md.mask.ocean_levelset.<0.] .= 0.0
 md.friction.p=ones(md.mesh.numberofvertices)
 md.friction.q=ones(md.mesh.numberofvertices)
 
@@ -57,3 +58,17 @@ md.basalforcings.floatingice_melting_rate = ones(md.mesh.numberofvertices)
 md.masstransport.spcthickness = NaN*ones(md.mesh.numberofvertices)
 
 md=solve(md,:Transient)
+
+# Fields and tolerances to track changes
+field_names =["Vx1","Vy1","Vel1","Presure1", "Bed1","Surface1","Thickness1", "TotalGroundedBmb1", "TotalFloatingBmb1"]
+field_tolerances=[2e-10,2e-10,2e-10,NaN,2e-10,2e-10,2e-10,NaN,NaN]
+field_values= [(md.results["TransientSolution"][1]["Vx"]),
+					(md.results["TransientSolution"][1]["Vy"]),
+					(md.results["TransientSolution"][1]["Vel"]),
+					(NaN),
+					(md.results["TransientSolution"][1]["Base"]),
+					(md.results["TransientSolution"][1]["Surface"]),
+					(md.results["TransientSolution"][1]["Thickness"]),
+					(NaN),
+					(NaN),
+					]
