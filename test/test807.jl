@@ -1,4 +1,5 @@
 using DJUICE
+include("utils.jl")
 
 md = model()
 md = triangle(md,issmdir()*"/test/Exp/Square.exp",200000.)
@@ -72,3 +73,5 @@ md.levelset.spclevelset=NaN*ones(md.mesh.numberofvertices)
 md.levelset.spclevelset[pos] = md.mask.ice_levelset[pos]
 
 md=solve(md,:Transient)
+compareArchive(@__FILE__, field_names, field_tolerances, field_values, :test)
+
