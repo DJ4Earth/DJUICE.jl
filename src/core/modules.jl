@@ -1,5 +1,5 @@
 #Model Processor and Core I/O
-function FetchDataToInput(md::model,inputs::Inputs,elements::Vector{Tria},data::Vector{Float64},enum::IssmEnum) #{{{
+function FetchDataToInput(md::model, inputs::Inputs, elements::Vector{Tria}, data::Vector{Float64}, enum::IssmEnum) #{{{
 	for i in 1:length(elements)
 		InputCreate(elements[i],inputs,data,enum)
 	end

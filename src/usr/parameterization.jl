@@ -19,14 +19,14 @@ function setmask(md::model,floatingicename::String,groundedicename::String)
 	elementonfloatingice = FlagElements( md, floatingicename)
 	elementongroundedice = FlagElements( md, groundedicename)
 
-	elementonfloatingice = convert( Array{Float64}, (elementonfloatingice.>0) .&  (elementongroundedice.==0.))
-	elementongroundedice = convert( Array{Float64}, elementonfloatingice.==0.)
+	elementonfloatingice = convert( Vector{Float64}, elementonfloatingice .&  .~elementongroundedice)
+	elementongroundedice = convert( Vector{Float64}, elementonfloatingice .== 0.)
 
 	vertexonfloatingice=zeros(md.mesh.numberofvertices)
 	vertexongroundedice=zeros(md.mesh.numberofvertices)
 
-	vertexongroundedice[md.mesh.elements[findall(elementongroundedice.>0),:]] .= 1.
-	vertexonfloatingice[findall(vertexongroundedice.==0.)] .= 1.
+	vertexongroundedice[md.mesh.elements[findall(elementongroundedice .>0 ),:]] .= 1.
+	vertexonfloatingice[findall(vertexongroundedice .== 0.)] .= 1.
 
 	#define levelsets
 	md.mask.ocean_levelset = vertexongroundedice
@@ -40,13 +40,21 @@ end
 function FlagElements(md::model,region::String)
 
 	if isempty(region)
-		flags = zeros(md.mesh.numberofelements)
+		flags = zeros(Bool, md.mesh.numberofelements)
 	elseif region == "all"
-		flags = ones(md.mesh.numberofelements)
+		flags = ones(Bool, md.mesh.numberofelements)
 	else
-		xcenter = md.mesh.x[md.mesh.elements]*[1;1;1]/3
-		ycenter = md.mesh.y[md.mesh.elements]*[1;1;1]/3
-		flags = ContourToNodes(xcenter, ycenter, region, 2.)
+
+		if false
+			#test center of elements only
+			xcenter = md.mesh.x[md.mesh.elements]*[1;1;1]/3
+			ycenter = md.mesh.y[md.mesh.elements]*[1;1;1]/3
+			flags = ContourToNodes(xcenter, ycenter, region, 2.)
+		else
+			#Follow ISSM's philosophy, all nodes need to be inside
+			flags_nodes = ContourToNodes(md.mesh.x, md.mesh.y, region, 2.)
+			flags = Vector{Bool}(vec((sum(flags_nodes[md.mesh.elements], dims=2).==3)))
+		end
 	end
 
 	return flags
