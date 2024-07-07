@@ -238,3 +238,53 @@ function meshgrid(x::Vector, y::Vector) # {{{
 	Y = [j for i in 1:length(x), j in y]
 	return X, Y
 end #}}}
+function comparemodels(md1::model, md2::model)# {{{
+	model_fields1 = fieldnames(typeof(md1))
+	model_fields2 = fieldnames(typeof(md2))
+	for f in model_fields1
+		if (f in model_fields2) & (f != :results)
+			field1 = getfield(md1, f)
+			field2 = getfield(md2, f)
+			object_fields = fieldnames(typeof(field1))
+			for o in object_fields
+				obj1 = getfield(field1, o)
+				obj2 = getfield(field2, o)
+				comparefields(String(f)*"."*String(o), obj1, obj2)
+			end
+		else
+			@printf "Skipping %s because classes are not consistent\n" f
+		end
+	end
+end #}}}
+function comparefields(fieldname::String, f1::Any, f2::Any)# {{{
+	if typeof(f1) != typeof(f2)
+		@printf "%s do not have the same type\n" fieldname
+	end
+end #}}}
+function comparefields(fieldname::String, f1::String, f2::String)# {{{
+	if f1 != f2
+		@printf "%s differs\n" fieldname
+	end
+end #}}}
+function comparefields(fieldname::String, f1::Union{Bool,Float64,Int64,Vector,Matrix}, f2::Union{Bool,Float64,Int64,Vector,Matrix})# {{{
+	if size(f1) != size(f2)
+		@printf "%s do not have the same size\n" fieldname
+	else
+		if size(f1) == () 
+			if (!isnan(f1)) & (!isnan(f2)) & (f1!=f2)
+				@printf "%s differs\n" fieldname
+			end
+		elseif any(f1 .!= f2)
+			# deal with NaN
+			pos1 = findall(isnan.(f1) .== false)
+			pos2 = findall(isnan.(f2) .== false)
+			if pos1 == pos2
+				if f1[pos1] != f2[pos2]
+					@printf "%s differs\n" fieldname
+				end
+			else
+				@printf "%s differs\n" fieldname
+			end
+		end
+	end
+end #}}}
