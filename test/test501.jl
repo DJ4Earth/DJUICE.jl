@@ -19,15 +19,17 @@ md.initialization.vy=InterpFromMeshToMesh2d(index, x, y, vy_obs, md.mesh.x, md.m
 md.geometry.surface = InterpFromMeshToMesh2d(index, x, y, surface, md.mesh.x, md.mesh.y, 0.0)
 md.geometry.thickness = InterpFromMeshToMesh2d(index, x, y, thickness, md.mesh.x, md.mesh.y, 0.0)
 md.geometry.base=md.geometry.surface .- md.geometry.thickness
-md.geometry.bed =md.geometry.base
+md.geometry.bed = copy(md.geometry.base)
 pos = findall(md.mask.ocean_levelset.<0)
 md.geometry.bed[pos] = InterpFromMeshToMesh2d(index, x, y, bed, md.mesh.x[pos], md.mesh.y[pos])
+md.masstransport.min_thickness = 1.0
 
 md.materials.rheology_B=1.815730284801701e+08*ones(md.mesh.numberofvertices)
 md.materials.rheology_n=3*ones(md.mesh.numberofelements)
 md.friction.coefficient=50*ones(md.mesh.numberofvertices)
-md.friction.p=ones(md.mesh.numberofvertices)
-md.friction.q=ones(md.mesh.numberofvertices)
+md.friction.coefficient[findall(md.mask.ocean_levelset.<0.)] .= 0.
+md.friction.p=ones(md.mesh.numberofelements)
+md.friction.q=ones(md.mesh.numberofelements)
 
 md.stressbalance.restol=0.05
 md.stressbalance.reltol=1.0
@@ -45,13 +47,13 @@ md.stressbalance.spcvy = NaN*ones(md.mesh.numberofvertices)
 segmentsfront=md.mask.ice_levelset[md.mesh.segments[:,1:2]]==0
 segments = findall(vec(sum(Int64.(md.mask.ice_levelset[md.mesh.segments[:,1:2]].==0), dims=2)) .!=2)
 pos=md.mesh.segments[segments,1:2]
-md.stressbalance.spcvx[pos] .= 0.0
-md.stressbalance.spcvy[pos] .= 0.0
+md.stressbalance.spcvx[pos] .= md.initialization.vx[pos]
+md.stressbalance.spcvy[pos] .= md.initialization.vy[pos]
 
 md=solve(md, :Stressbalance)
 
 field_names =["Vx","Vy","Vel"]
-field_tolerances=[NaN,NaN,NaN]
+field_tolerances=[2.0e-1,2.0e-1,2.0e-1]
 field_values= [(md.results["StressbalanceSolution"]["Vx"]),
                (md.results["StressbalanceSolution"]["Vy"]),
                (md.results["StressbalanceSolution"]["Vel"]) ]

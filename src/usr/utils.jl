@@ -266,6 +266,31 @@ function comparefields(fieldname::String, f1::String, f2::String)# {{{
 		@printf "%s differs\n" fieldname
 	end
 end #}}}
+function comparefields(fieldname::String, f1::Union{Bool, Float64, Int64}, f2::Union{Bool, Float64, Int64})# {{{
+	if f1!=f2
+		if ((!isnan(f1)) | (!isnan(f2)))
+			@printf "%s differs by %s \n" fieldname (f1-f2)
+		end
+	end
+end #}}}
+function comparefields(fieldname::String, f1::Union{Vector,Matrix}, f2::Union{Vector,Matrix})# {{{
+	if size(f1) != size(f2)
+		@printf "%s do not have the same size\n" fieldname
+	else
+		if any(f1 .!= f2)
+			# deal with NaN
+			pos1 = findall(isnan.(f1) .== false)
+			pos2 = findall(isnan.(f2) .== false)
+			if pos1 == pos2
+				if f1[pos1] != f2[pos2]
+					@printf "%s differs by norm2=%s\n" fieldname sum((f1[pos1]-f2[pos2]).^2)
+				end
+			else
+				@printf "%s differs, not the same size of NaN\n" fieldname
+			end
+		end
+	end
+end #}}}
 function comparefields(fieldname::String, f1::Union{Bool,Float64,Int64,Vector,Matrix}, f2::Union{Bool,Float64,Int64,Vector,Matrix})# {{{
 	if size(f1) != size(f2)
 		@printf "%s do not have the same size\n" fieldname
