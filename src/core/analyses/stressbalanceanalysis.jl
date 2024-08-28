@@ -159,7 +159,11 @@ function CreateKMatrix(analysis::StressbalanceAnalysis, element::Tria, ::Val{fri
 	end
 
 	#Add basal friction
-	phi=GetGroundedPortion(element, xyz_list)
+	if (IsAllFloating(element) || !IsIceInElement(element))
+		phi = 0.0
+	else
+		phi=GetGroundedPortion(element, xyz_list)
+	end
 
 	if(phi>0)
 		basis = Vector{Float64}(undef,numnodes)

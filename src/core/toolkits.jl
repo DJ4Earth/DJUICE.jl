@@ -75,6 +75,13 @@ function Assemble!(matrix::IssmMatrix)#{{{
 	#Nothing to do here :)
 	return nothing
 end#}}}
+function Echo(matrix::IssmMatrix)#{{{
+	@printf "IssmMatrix (dense) size %sx%s \n" matrix.M matrix.N
+	for i = 1: matrix.M
+		@printf "%s \n" matrix.matrix[i,:]
+	end
+	return nothing
+end#}}}
 
 #Vector
 mutable struct IssmVector #{{{
@@ -157,6 +164,14 @@ function Norm(x::IssmVector,type::Int64)#{{{
 
 	return norm
 
+end#}}}
+function Echo(vector::IssmVector)#{{{
+	n = size(vector.vector, 1)
+	@printf "IssmVector size %s \n" n
+	for i = 1:n
+		@printf "%s \n" vector.vector[i]
+	end
+	return nothing
 end#}}}
 
 #Operations

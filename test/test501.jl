@@ -53,7 +53,7 @@ md.stressbalance.spcvy[pos] .= md.initialization.vy[pos]
 md=solve(md, :Stressbalance)
 
 field_names =["Vx","Vy","Vel"]
-field_tolerances=[2.0e-1,2.0e-1,2.0e-1]
+field_tolerances=[2.0e-7,2.0e-7,2.0e-7]
 field_values= [(md.results["StressbalanceSolution"]["Vx"]),
                (md.results["StressbalanceSolution"]["Vy"]),
                (md.results["StressbalanceSolution"]["Vel"]) ]
