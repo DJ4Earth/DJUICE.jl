@@ -5,12 +5,18 @@ mutable struct Input#{{{
 	values::Vector{Float64}
 	element_values::Vector{Float64}
 end# }}}
+mutable struct TransientInput #{{{
+	enum::IssmEnum
+	times::Vector{Float64}
+	N::Int64
+	inputs::Vector{Input}
+end# }}}
 
 #Inputs dataset definition
 mutable struct Inputs #{{{
 	numberofelements::Int64
 	numberofvertices::Int64
-	lookup::Dict{IssmEnum,Input}
+	lookup::Dict{IssmEnum,Union{Input,TransientInput}}
 end# }}}
 
 #Inputs functions
@@ -25,7 +31,7 @@ function DuplicateInput(inputs::Inputs, old::IssmEnum, new::IssmEnum)#{{{
 
 	return nothing
 end#}}}
-function GetInput(inputs::Inputs,enum::IssmEnum) #{{{
+function GetInput(inputs::Inputs, enum::IssmEnum) #{{{
 
 	#Does this input exist
 	if !haskey(inputs.lookup,enum)
@@ -33,6 +39,19 @@ function GetInput(inputs::Inputs,enum::IssmEnum) #{{{
 	end
 
 	#return input
+	if typeof(inputs.lookup[enum])!=Input error("Input ",enum," is not an Input") end
+	return inputs.lookup[enum]
+
+end#}}}
+function GetTransientInput(inputs::Inputs, enum::IssmEnum) #{{{
+
+	#Does this input exist
+	if !haskey(inputs.lookup,enum)
+		error("Input ",enum," not found")
+	end
+
+	#return input
+	if typeof(inputs.lookup[enum])!=TransientInput error("Input ",enum," is not a TransientInput") end
 	return inputs.lookup[enum]
 
 end#}}}
@@ -141,10 +160,48 @@ function SetTriaInput(inputs::Inputs,enum::IssmEnum,interp::IssmEnum,indices::Ve
 	#Get this input and check type
 	input::Input = inputs.lookup[enum]
 	if typeof(input)!=Input error("input type not consistent") end
-	if interp!=input.interp        error("input interpolations not consistent") end
+	if interp!=input.interp error("input interpolations not consistent") end
 
 	#set value
 	input.values[indices] = values
+
+	return nothing
+end#}}}
+
+function AddTimeInput(inputs::Inputs, trinput::TransientInput, index::Int64, interp::IssmEnum,indices::Vector{Int64},values::Vector{Float64}) #{{{
+
+	#Check index
+	@assert index>0 && index<=trinput.N
+
+	#Is input already assigned?
+	if ~isassigned(trinput.inputs, index)
+		@assert inputs.numberofelements > 0
+		if interp==P1Enum
+			trinput.inputs[index] = Input(trinput.enum, interp,zeros(inputs.numberofvertices), Vector{Float64}(undef,3))
+		else
+			error("not supported yet")
+		end
+	end
+
+	#set value
+	trinput.inputs[index].values[indices] = values
+
+	return nothing
+end#}}}
+function SetTransientInput(inputs::Inputs,enum::IssmEnum,times::Vector{Float64}) #{{{
+
+	#Does this input exist?
+	if !haskey(inputs.lookup, enum)
+		#it does not exist yet, we need to create it...
+		N = length(times)
+		@assert N>0
+		inputs.lookup[enum] = TransientInput(enum, times, length(times), Vector{Input}(undef,N))
+	end
+
+	#Some checks that everything is consistent
+	transientinput::TransientInput = inputs.lookup[enum]
+	if typeof(transientinput)!=TransientInput error("input type not consistent") end
+	if length(times)!=transientinput.N        error("input time series consistent") end
 
 	return nothing
 end#}}}

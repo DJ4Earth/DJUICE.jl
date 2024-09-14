@@ -7,8 +7,7 @@ function FetchDataToInput(md::model, inputs::Inputs, elements::Vector{Tria}, dat
 end#}}}
 function FetchDataToInput(md::model, inputs::Inputs, elements::Vector{Tria}, data::Matrix{Float64}, enum::IssmEnum) #{{{
 	for i in 1:length(elements)
-		#InputCreate(elements[i],inputs,data,enum)
-		error("TransientInput not supported yet")
+		InputCreate(elements[i],inputs,data,enum)
 	end
 	return nothing
 end#}}}

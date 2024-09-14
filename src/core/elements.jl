@@ -406,6 +406,27 @@ function InputCreate(element::Tria,inputs::Inputs,data::Vector{Float64},enum::Is
 
 	return nothing
 end #}}}
+function InputCreate(element::Tria,inputs::Inputs,data::Matrix{Float64},enum::IssmEnum) #{{{
+	if size(data,1)==inputs.numberofelements+1
+		error("not supported yet")
+	elseif size(data,1)==inputs.numberofvertices+1
+		#Extract time first
+		times = data[end,:]
+
+		#Create Transient Input
+		SetTransientInput(inputs, enum, times)
+		transientinput = GetTransientInput(inputs, enum)
+
+		#Set values for all time slices
+		for i in 1:length(times)
+			AddTimeInput(inputs, transientinput, i, P1Enum, element.vertexids, data[element.vertexids])
+		end
+	else
+		error("size ",size(data,1)," not supported for ", enum);
+	end
+
+	return nothing
+end #}}}
 function InputServe!(element::Tria,input::Input) # {{{
 
 	if input.interp==P0Enum
