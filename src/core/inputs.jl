@@ -10,6 +10,9 @@ mutable struct TransientInput #{{{
 	times::Vector{Float64}
 	N::Int64
 	inputs::Vector{Input}
+	parameters::Parameters
+	currentinput::Input
+	currentstep::Float64
 end# }}}
 
 #Inputs dataset definition
@@ -20,6 +23,18 @@ mutable struct Inputs #{{{
 end# }}}
 
 #Inputs functions
+function Configure(inputs::Inputs, parameters::Parameters) #{{{
+
+	#Loop over all inputs and find transient inputs
+	for (key, value) in inputs.lookup
+		if isa(value, TransientInput)
+			value.parameters = parameters
+		end
+	end
+
+	return nothing
+
+end#}}}
 function DuplicateInput(inputs::Inputs, old::IssmEnum, new::IssmEnum)#{{{
 
 	#Fetch input that needs to be copied
@@ -39,20 +54,20 @@ function GetInput(inputs::Inputs, enum::IssmEnum) #{{{
 	end
 
 	#return input
-	if typeof(inputs.lookup[enum])!=Input error("Input ",enum," is not an Input") end
-	return inputs.lookup[enum]
+	input = inputs.lookup[enum]
+	if isa(input, TransientInput)
 
-end#}}}
-function GetTransientInput(inputs::Inputs, enum::IssmEnum) #{{{
+		#Find time in parameters
+		time = FindParam(Float64, input.parameters, TimeEnum)
 
-	#Does this input exist
-	if !haskey(inputs.lookup,enum)
-		error("Input ",enum," not found")
+		#Interpolate input if necessary
+		SetCurrentTimeInput(input, time)
+		input = input.currentinput
 	end
 
-	#return input
-	if typeof(inputs.lookup[enum])!=TransientInput error("Input ",enum," is not a TransientInput") end
-	return inputs.lookup[enum]
+	#Make sure this is a regular input
+	if ~isa(input, Input) error("Input ",enum," is not an Input") end
+	return input
 
 end#}}}
 function GetInputAverageValue(input::Input) #{{{
@@ -168,23 +183,36 @@ function SetTriaInput(inputs::Inputs,enum::IssmEnum,interp::IssmEnum,indices::Ve
 	return nothing
 end#}}}
 
-function AddTimeInput(inputs::Inputs, trinput::TransientInput, index::Int64, interp::IssmEnum,indices::Vector{Int64},values::Vector{Float64}) #{{{
+#TransientInput functions
+function GetTransientInput(inputs::Inputs, enum::IssmEnum) #{{{
+
+	#Does this input exist
+	if !haskey(inputs.lookup,enum)
+		error("Input ",enum," not found")
+	end
+
+	#return input
+	if typeof(inputs.lookup[enum])!=TransientInput error("Input ",enum," is not a TransientInput") end
+	return inputs.lookup[enum]
+
+end#}}}
+function AddTimeInput(inputs::Inputs, tr_input::TransientInput, index::Int64, interp::IssmEnum,indices::Vector{Int64},values::Vector{Float64}) #{{{
 
 	#Check index
-	@assert index>0 && index<=trinput.N
+	@assert index>0 && index<=tr_input.N
 
 	#Is input already assigned?
-	if ~isassigned(trinput.inputs, index)
+	if ~isassigned(tr_input.inputs, index)
 		@assert inputs.numberofelements > 0
 		if interp==P1Enum
-			trinput.inputs[index] = Input(trinput.enum, interp,zeros(inputs.numberofvertices), Vector{Float64}(undef,3))
+			tr_input.inputs[index] = Input(tr_input.enum, interp,zeros(inputs.numberofvertices), Vector{Float64}(undef,3))
 		else
 			error("not supported yet")
 		end
 	end
 
 	#set value
-	trinput.inputs[index].values[indices] = values
+	tr_input.inputs[index].values[indices] = values
 
 	return nothing
 end#}}}
@@ -195,13 +223,48 @@ function SetTransientInput(inputs::Inputs,enum::IssmEnum,times::Vector{Float64})
 		#it does not exist yet, we need to create it...
 		N = length(times)
 		@assert N>0
-		inputs.lookup[enum] = TransientInput(enum, times, length(times), Vector{Input}(undef,N))
+		inputs.lookup[enum] = TransientInput(enum, times, length(times), Vector{Input}(undef,N), Parameters(), Input(enum, P0Enum ,zeros(0), Vector{Float64}(undef,0)), -1.)
 	end
 
 	#Some checks that everything is consistent
 	transientinput::TransientInput = inputs.lookup[enum]
 	if typeof(transientinput)!=TransientInput error("input type not consistent") end
 	if length(times)!=transientinput.N        error("input time series consistent") end
+
+	return nothing
+end#}}}
+function SetCurrentTimeInput(tr_input::TransientInput, time::Float64) #{{{
+
+	#Binary search where time is in our series
+	p = searchsorted(tr_input.times, time)
+
+	println("time is ",time, " and p is ", p)
+
+	if p.stop==0
+		#Before our time series
+		@assert time<=tr_input.times[1]
+
+		#If already processed return
+		if(tr_input.currentstep==0.) return nothing end
+
+		#Copy first input
+		tr_input.currentinput = tr_input.inputs[0]
+		tr_input.currentstep  = 0.
+
+	elseif p.start==length(tr_input.times)+1
+		#After the end of our time series
+		@assert time>=tr_input.times[end]
+
+		#If already processed return
+		if(tr_input.currentstep==Float64(tr_input.N)) return nothing end
+
+		#Copy last input
+		tr_input.currentinput = tr_input.inputs[end]
+		tr_input.currentstep  = Float64(tr_input.N)
+	else
+		#General case...
+		error("Not implemented yet, see C++ code")
+	end
 
 	return nothing
 end#}}}

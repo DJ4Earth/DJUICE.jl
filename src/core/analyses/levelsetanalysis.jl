@@ -7,6 +7,8 @@ function CreateConstraints(analysis::LevelsetAnalysis,constraints::Vector{Constr
 
 	#load constraints from model
 	spclevelset = md.levelset.spclevelset
+	@assert size(spclevelset,1)==md.mesh.numberofvertices
+	@assert size(spclevelset,2)==1
 
 	count = 1
 	for i in 1:md.mesh.numberofvertices
@@ -37,8 +39,8 @@ function UpdateElements(analysis::LevelsetAnalysis,elements::Vector{Tria}, input
 	#Add necessary inputs to perform this analysis
 	FetchDataToInput(md,inputs,elements,md.mask.ice_levelset,MaskIceLevelsetEnum)
 	FetchDataToInput(md,inputs,elements,md.mask.ocean_levelset,MaskOceanLevelsetEnum)
-	FetchDataToInput(md,inputs,elements,md.initialization.vx./md.constants.yts,VxEnum)
-	FetchDataToInput(md,inputs,elements,md.initialization.vy./md.constants.yts,VyEnum)
+	FetchDataToInput(md,inputs,elements,md.initialization.vx,VxEnum, 1.0/md.constants.yts)
+	FetchDataToInput(md,inputs,elements,md.initialization.vy,VyEnum, 1.0/md.constants.yts)
 
 	FetchDataToInput(md,inputs,elements,md.geometry.thickness,ThicknessEnum)
 	FetchDataToInput(md,inputs,elements,md.geometry.surface,SurfaceEnum)

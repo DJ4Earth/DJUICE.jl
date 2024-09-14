@@ -9,6 +9,11 @@ function CreateConstraints(analysis::StressbalanceAnalysis,constraints::Vector{C
 	spcvx = md.stressbalance.spcvx
 	spcvy = md.stressbalance.spcvy
 
+	@assert size(spcvx,1)==md.mesh.numberofvertices
+	@assert size(spcvx,2)==1
+	@assert size(spcvy,1)==md.mesh.numberofvertices
+	@assert size(spcvy,2)==1
+
 	count = 1
 	for i in 1:md.mesh.numberofvertices
 		if ~isnan(spcvx[i])
@@ -44,8 +49,8 @@ function UpdateElements(analysis::StressbalanceAnalysis,elements::Vector{Tria}, 
 	FetchDataToInput(md,inputs,elements,md.geometry.thickness,ThicknessEnum)
 	FetchDataToInput(md,inputs,elements,md.geometry.surface,SurfaceEnum)
 	FetchDataToInput(md,inputs,elements,md.geometry.base,BaseEnum)
-	FetchDataToInput(md,inputs,elements,md.initialization.vx./md.constants.yts,VxEnum)
-	FetchDataToInput(md,inputs,elements,md.initialization.vy./md.constants.yts,VyEnum)
+	FetchDataToInput(md,inputs,elements,md.initialization.vx,VxEnum, 1.0/md.constants.yts)
+	FetchDataToInput(md,inputs,elements,md.initialization.vy,VyEnum, 1.0/md.constants.yts)
 	FetchDataToInput(md,inputs,elements,md.mask.ice_levelset, MaskIceLevelsetEnum)
 	FetchDataToInput(md,inputs,elements,md.mask.ocean_levelset, MaskOceanLevelsetEnum)
 

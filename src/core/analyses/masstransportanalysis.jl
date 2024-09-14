@@ -7,6 +7,8 @@ function CreateConstraints(analysis::MasstransportAnalysis,constraints::Vector{C
 
 	#load constraints from model
 	spcthickness = md.masstransport.spcthickness
+	@assert size(spcthickness,1)==md.mesh.numberofvertices
+	@assert size(spcthickness,2)==1
 
 	count = 1
 	for i in 1:md.mesh.numberofvertices
@@ -39,13 +41,13 @@ function UpdateElements(analysis::MasstransportAnalysis,elements::Vector{Tria}, 
 	FetchDataToInput(md,inputs,elements,md.geometry.surface,SurfaceEnum)
 	FetchDataToInput(md,inputs,elements,md.geometry.base,BaseEnum)
 	FetchDataToInput(md,inputs,elements,md.geometry.bed,BedEnum)
-	FetchDataToInput(md,inputs,elements,md.basalforcings.groundedice_melting_rate./md.constants.yts,BasalforcingsGroundediceMeltingRateEnum)
-	FetchDataToInput(md,inputs,elements,md.basalforcings.floatingice_melting_rate./md.constants.yts,BasalforcingsFloatingiceMeltingRateEnum)
-	FetchDataToInput(md,inputs,elements,md.smb.mass_balance./md.constants.yts,SmbMassBalanceEnum)
+	FetchDataToInput(md,inputs,elements,md.basalforcings.groundedice_melting_rate,BasalforcingsGroundediceMeltingRateEnum, 1.0/md.constants.yts)
+	FetchDataToInput(md,inputs,elements,md.basalforcings.floatingice_melting_rate,BasalforcingsFloatingiceMeltingRateEnum, 1.0/md.constants.yts)
+	FetchDataToInput(md,inputs,elements,md.smb.mass_balance,SmbMassBalanceEnum, 1.0/md.constants.yts)
 	FetchDataToInput(md,inputs,elements,md.mask.ice_levelset, MaskIceLevelsetEnum)
 	FetchDataToInput(md,inputs,elements,md.mask.ocean_levelset, MaskOceanLevelsetEnum)
-	FetchDataToInput(md,inputs,elements,md.initialization.vx./md.constants.yts,VxEnum)
-	FetchDataToInput(md,inputs,elements,md.initialization.vy./md.constants.yts,VyEnum)
+	FetchDataToInput(md,inputs,elements,md.initialization.vx,VxEnum, 1.0/md.constants.yts)
+	FetchDataToInput(md,inputs,elements,md.initialization.vy,VyEnum, 1.0/md.constants.yts)
 
 	return nothing
 end#}}}

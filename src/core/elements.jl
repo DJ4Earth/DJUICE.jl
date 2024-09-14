@@ -395,23 +395,23 @@ function IceVolumeAboveFloatation(element::Tria) # {{{
 
 	return area*(surface-base+min(rho_water/rho_ice*bed,0.))
 end # }}}
-function InputCreate(element::Tria,inputs::Inputs,data::Vector{Float64},enum::IssmEnum) #{{{
+function InputCreate(element::Tria,inputs::Inputs,data::Vector{Float64},enum::IssmEnum, scaling::Float64) #{{{
 	if size(data,1)==inputs.numberofelements
-		SetTriaInput(inputs,enum,P0Enum,element.sid,data[element.sid])
+		SetTriaInput(inputs, enum, P0Enum, element.sid, scaling.*data[element.sid])
 	elseif size(data,1)==inputs.numberofvertices
-		SetTriaInput(inputs,enum,P1Enum,element.vertexids,data[element.vertexids])
+		SetTriaInput(inputs, enum, P1Enum, element.vertexids, scaling.*data[element.vertexids])
 	else
 		error("size ",size(data,1)," not supported for ", enum);
 	end
 
 	return nothing
 end #}}}
-function InputCreate(element::Tria,inputs::Inputs,data::Matrix{Float64},enum::IssmEnum) #{{{
+function InputCreate(element::Tria, inputs::Inputs, data::Matrix{Float64}, enum::IssmEnum, scaling::Float64) #{{{
 	if size(data,1)==inputs.numberofelements+1
 		error("not supported yet")
 	elseif size(data,1)==inputs.numberofvertices+1
 		#Extract time first
-		times = data[end,:]
+		times = data[end,:].*(365*24*3600.) #FIXME where should this conversion happen?
 
 		#Create Transient Input
 		SetTransientInput(inputs, enum, times)
@@ -419,7 +419,7 @@ function InputCreate(element::Tria,inputs::Inputs,data::Matrix{Float64},enum::Is
 
 		#Set values for all time slices
 		for i in 1:length(times)
-			AddTimeInput(inputs, transientinput, i, P1Enum, element.vertexids, data[element.vertexids])
+			AddTimeInput(inputs, transientinput, i, P1Enum, element.vertexids, scaling.*data[element.vertexids])
 		end
 	else
 		error("size ",size(data,1)," not supported for ", enum);

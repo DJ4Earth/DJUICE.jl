@@ -1,13 +1,13 @@
 #Model Processor and Core I/O
-function FetchDataToInput(md::model, inputs::Inputs, elements::Vector{Tria}, data::Vector{Float64}, enum::IssmEnum) #{{{
+function FetchDataToInput(md::model, inputs::Inputs, elements::Vector{Tria}, data::Vector{Float64}, enum::IssmEnum, scaling::Float64=1.) #{{{
 	for i in 1:length(elements)
-		InputCreate(elements[i],inputs,data,enum)
+		InputCreate(elements[i], inputs, data, enum, scaling)
 	end
 	return nothing
 end#}}}
-function FetchDataToInput(md::model, inputs::Inputs, elements::Vector{Tria}, data::Matrix{Float64}, enum::IssmEnum) #{{{
+function FetchDataToInput(md::model, inputs::Inputs, elements::Vector{Tria}, data::Matrix{Float64}, enum::IssmEnum, scaling::Float64=1.) #{{{
 	for i in 1:length(elements)
-		InputCreate(elements[i],inputs,data,enum)
+		InputCreate(elements[i], inputs, data, enum, scaling)
 	end
 	return nothing
 end#}}}
@@ -24,7 +24,7 @@ function ModelProcessor(md::model, solutionstring::Symbol) #{{{
 	CreateElements(elements, md)
 	CreateVertices(vertices, md)
 	CreateParameters(parameters, md, solutionstring)
-	CreateInputs(inputs,elements, md)
+	CreateInputs(inputs, elements, md)
 	if solutionstring===:TransientSolution
 		UpdateParameters(TransientAnalysis(), parameters, md)
 	end
@@ -185,9 +185,13 @@ end# }}}
 #Other modules
 function ConfigureObjectx(elements::Vector{Tria}, nodes::Vector{Node}, vertices::Vector{Vertex}, parameters::Parameters, inputs::Inputs, analysis::Int64) #{{{
 
+	#Configure elements
 	for i in 1:length(elements)
 		Configure(elements[i], nodes, vertices, parameters, inputs, analysis)
 	end
+
+	#Configure inputs
+	Configure(inputs, parameters)
 
 	return nothing
 end# }}}
