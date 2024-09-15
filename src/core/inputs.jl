@@ -238,9 +238,7 @@ function SetCurrentTimeInput(tr_input::TransientInput, time::Float64) #{{{
 	#Binary search where time is in our series
 	p = searchsorted(tr_input.times, time)
 
-	println("time is ",time, " and p is ", p)
-
-	if p.stop==0
+	if p.start==1
 		#Before our time series
 		@assert time<=tr_input.times[1]
 
@@ -251,7 +249,7 @@ function SetCurrentTimeInput(tr_input::TransientInput, time::Float64) #{{{
 		tr_input.currentinput = tr_input.inputs[0]
 		tr_input.currentstep  = 0.
 
-	elseif p.start==length(tr_input.times)+1
+	elseif p.stop==length(tr_input.times)
 		#After the end of our time series
 		@assert time>=tr_input.times[end]
 
@@ -263,7 +261,23 @@ function SetCurrentTimeInput(tr_input::TransientInput, time::Float64) #{{{
 		tr_input.currentstep  = Float64(tr_input.N)
 	else
 		#General case...
-		error("Not implemented yet, see C++ code")
+		i1 = p.stop
+		i2 = p.start
+		@assert time>=tr_input.times[i1] && time<=tr_input.times[i2]
+
+		deltat = tr_input.times[i2] - tr_input.times[i1]
+		@assert deltat>0.
+		this_step = Float64(i1) + (time - tr_input.times[i1])/deltat
+
+		#If already processed return
+      if(abs(tr_input.currentstep - this_step)<1.e-5) return nothing end
+
+		#Prepare this time input
+		alpha = (time - tr_input.times[i1])/deltat
+		@assert alpha>=0.0 && alpha<=1.0
+		values = (1. - alpha).*tr_input.inputs[i1].values + alpha.*tr_input.inputs[i2].values
+		tr_input.currentinput = Input(tr_input.enum, tr_input.inputs[i1].interp, values, Vector{Float64}(undef,3))
+		tr_input.currentstep  = this_step
 	end
 
 	return nothing
