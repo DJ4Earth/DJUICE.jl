@@ -419,7 +419,7 @@ function InputCreate(element::Tria, inputs::Inputs, data::Matrix{Float64}, enum:
 
 		#Set values for all time slices
 		for i in 1:length(times)
-			AddTimeInput(inputs, transientinput, i, P1Enum, element.vertexids, scaling.*data[element.vertexids])
+			AddTimeInput(inputs, transientinput, i, P1Enum, element.vertexids, scaling.*data[element.vertexids,i])
 		end
 	else
 		error("size ",size(data,1)," not supported for ", enum);
