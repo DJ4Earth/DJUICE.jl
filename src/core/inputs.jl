@@ -1,11 +1,12 @@
 #Input class definition
-mutable struct Input#{{{
+abstract type AbstractInput end
+mutable struct Input <: AbstractInput#{{{
 	enum::IssmEnum
 	interp::IssmEnum
 	values::Vector{Float64}
 	element_values::Vector{Float64}
 end# }}}
-mutable struct TransientInput #{{{
+mutable struct TransientInput <: AbstractInput#{{{
 	enum::IssmEnum
 	times::Vector{Float64}
 	N::Int64
@@ -19,7 +20,7 @@ end# }}}
 mutable struct Inputs #{{{
 	numberofelements::Int64
 	numberofvertices::Int64
-	lookup::Dict{IssmEnum,Union{Input,TransientInput}}
+	lookup::Dict{IssmEnum, AbstractInput}
 end# }}}
 
 #Inputs functions
@@ -47,6 +48,9 @@ function DuplicateInput(inputs::Inputs, old::IssmEnum, new::IssmEnum)#{{{
 	return nothing
 end#}}}
 function GetInput(inputs::Inputs, enum::IssmEnum) #{{{
+	return GetInput(inputs, Val(enum))
+end#}}}
+function GetInput(inputs::Inputs, ::Val{enum}) where enum #{{{
 
 	#Does this input exist
 	if !haskey(inputs.lookup,enum)
