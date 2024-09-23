@@ -1,7 +1,7 @@
 import ColorSchemes.jet
 using Makie
 
-function plotmodel( md::model, data::Vector; showvertices::Bool=false, showfacets::Bool=false, caxis::Tuple{Float64, Float64}=(0.0, 0.0)) #{{{
+function plotmodel( md::model, data::Vector; showvertices::Bool=false, showfacets::Bool=false, colormap=jet, caxis::Tuple{Float64, Float64}=(0.0, 0.0)) #{{{
 
 	vertexcolor  = :black
 	facetcolor   = :blue
@@ -20,12 +20,12 @@ function plotmodel( md::model, data::Vector; showvertices::Bool=false, showfacet
 			ps = [Makie.GeometryBasics.Polygon([Point2(x[index[i,1]], y[index[i,1]]), Point2(x[index[i,2]], y[index[i,2]]), Point2(x[index[i,3]], y[index[i,3]])])
 					for i in 1:md.mesh.numberofelements]
 
-			fig, ax, h = Makie.poly(ps, color = data, colormap = jet, colorrange = caxis)
+			fig, ax, h = Makie.poly(ps, color = data, colormap = colormap, colorrange = caxis)
 
 			#Add colorbar
 			Colorbar(fig[1, 2], limits = caxis, colormap = jet)
 		elseif length(data)==md.mesh.numberofvertices
-			fig, ax, h = Makie.mesh( [md.mesh.x md.mesh.y], md.mesh.elements, shading = NoShading, color = data, colormap = jet, colorrange = caxis)
+			fig, ax, h = Makie.mesh( [md.mesh.x md.mesh.y], md.mesh.elements, shading = NoShading, color = data, colormap = colormap, colorrange = caxis)
 
 			#Add colorbar
 			Colorbar(fig[1, 2], h, width=25)
@@ -35,7 +35,7 @@ function plotmodel( md::model, data::Vector; showvertices::Bool=false, showfacet
 	else
 		# default to single color
 		@assert length(data)==1
-		fig, ax, h = Makie.mesh( [md.mesh.x md.mesh.y], md.mesh.elements, shading = NoShading, color = data, colormap = jet)
+		fig, ax, h = Makie.mesh( [md.mesh.x md.mesh.y], md.mesh.elements, shading = NoShading, color = data, colormap = colormap)
 	end
 
 	if showfacets
