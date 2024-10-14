@@ -3,7 +3,7 @@ struct StressbalanceAnalysis <: Analysis#{{{
 end #}}}
 
 #Model Processing
-function CreateConstraints(analysis::StressbalanceAnalysis,constraints::Vector{Constraint},md::model) #{{{
+function CreateConstraints(analysis::StressbalanceAnalysis,constraints::Vector{AbstractConstraint},md::model) #{{{
 
 	#load constraints from model
 	spcvx = md.stressbalance.spcvx

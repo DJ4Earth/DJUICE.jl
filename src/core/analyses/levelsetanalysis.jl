@@ -3,19 +3,41 @@ struct LevelsetAnalysis <: Analysis#{{{
 end #}}}
 
 #Model Processing
-function CreateConstraints(analysis::LevelsetAnalysis,constraints::Vector{Constraint},md::model) #{{{
+function CreateConstraints(analysis::LevelsetAnalysis,constraints::Vector{AbstractConstraint},md::model) #{{{
 
 	#load constraints from model
 	spclevelset = md.levelset.spclevelset
-	@assert size(spclevelset,1)==md.mesh.numberofvertices
-	@assert size(spclevelset,2)==1
 
 	count = 1
-	for i in 1:md.mesh.numberofvertices
-		if ~isnan(spclevelset[i])
-			push!(constraints,Constraint(count,i,1,spclevelset[i]))
-			count+=1
+	if size(spclevelset,1)==md.mesh.numberofvertices
+		@assert size(spclevelset,2)==1
+		for i in 1:md.mesh.numberofvertices
+			if ~isnan(spclevelset[i])
+				push!(constraints,Constraint(count,i,1,spclevelset[i]))
+				count+=1
+			end
 		end
+
+	elseif size(spclevelset,1)==md.mesh.numberofvertices+1
+
+		times = spclevelset[end,:]
+		N     = size(spclevelset, 2)
+
+		for i in 1:md.mesh.numberofvertices
+			spcpresent = false
+			for j in 1:N
+				if(~isnan(spclevelset[i,j]))
+					spcpresent = true
+					break
+				end
+			end
+			if spcpresent
+				push!(constraints, ConstraintTransient(count, i, 1, times, spclevelset[i,:]))
+				count+=1
+			end
+		end
+	else
+		error("Size of spclevelset not supported yet")
 	end
 
 	return nothing

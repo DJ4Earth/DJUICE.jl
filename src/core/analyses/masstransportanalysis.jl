@@ -3,7 +3,7 @@ struct MasstransportAnalysis <: Analysis#{{{
 end #}}}
 
 #Model Processing
-function CreateConstraints(analysis::MasstransportAnalysis,constraints::Vector{Constraint},md::model) #{{{
+function CreateConstraints(analysis::MasstransportAnalysis,constraints::Vector{AbstractConstraint},md::model) #{{{
 
 	#load constraints from model
 	spcthickness = md.masstransport.spcthickness

@@ -280,7 +280,7 @@ end# }}}
 # }}}
 #Levelset{{{
 mutable struct Levelset
-	spclevelset::Vector{Float64}
+	spclevelset::Union{Vector{Float64},Matrix{Float64}}
 	stabilization::Int64
 	reinit_frequency::Int64
 	kill_icebergs::Int64

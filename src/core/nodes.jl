@@ -167,6 +167,14 @@ function GetGlobalDofList(nodes::Vector{Node},ndofs::Int64,setenum::IssmEnum) #{
 	return doflist
 
 end# }}}
+function RelaxConstraint(node::Node, dof::Int8) #{{{
+
+	node.indexingupdate = true
+	node.fdoflist[dof]  = +1
+	node.sdoflist[dof]  = -1
+
+	return nothing
+end# }}}
 function VecReduce(node::Node,ug::Vector{Float64},uf::IssmVector) #{{{
 
 	for i=1:node.gsize

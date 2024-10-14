@@ -10,8 +10,8 @@ mutable struct FemModel #{{{
 	parameters::Parameters
 	inputs::Inputs
 
-	constraints::Vector{Constraint}
-	constraints_list::Vector{Vector{Constraint}}
+	constraints::Vector{AbstractConstraint}
+	constraints_list::Vector{Vector{AbstractConstraint}}
 
 	#loads::Vector{Loads}
 

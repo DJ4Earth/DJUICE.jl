@@ -45,7 +45,7 @@ function ModelProcessor(md::model, solutionstring::Symbol) #{{{
 	#Initialize analysis specific datasets
 	numanalyses = length(analyses)
 	nodes       = Vector{Vector{Node}}(undef,numanalyses)
-	constraints = Vector{Vector{Constraint}}(undef,numanalyses)
+	constraints = Vector{Vector{AbstractConstraint}}(undef,numanalyses)
 	for i in 1:numanalyses
 		analysis = analyses[i]
 		println("   creating datasets for analysis ", typeof(analysis))
@@ -431,7 +431,7 @@ function SetActiveNodesLSMx(femmodel::FemModel) #{{{
 	end
 	return nothing
 end#}}}
-function SpcNodesx(nodes::Vector{Node},constraints::Vector{Constraint},parameters::Parameters) #{{{
+function SpcNodesx(nodes::Vector{Node},constraints::Vector{AbstractConstraint},parameters::Parameters) #{{{
 
 	for i in 1:length(constraints)
 		ConstrainNode(constraints[i],nodes,parameters)
