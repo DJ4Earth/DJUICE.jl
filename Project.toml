@@ -4,11 +4,15 @@ authors = ["Mathieu Morlighem <Mathieu.Morlighem@dartmouth.edu>", "Gong Cheng <g
 version = "0.1.1"
 
 [deps]
+CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
 ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
 Enzyme = "7da242da-08ed-463a-9acd-ee780be4f1d9"
 Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
+GLMakie = "e9467ef8-e4e7-5192-8a1a-b1aee30e663a"
 MAT = "23992714-dd62-5051-b70f-ba57cb901cac"
 Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
+Optimization = "7f7a1694-90dd-40f0-9382-eb1efda571ba"
+OptimizationOptimJL = "36348300-93cb-4f02-beb5-3c3902f8871e"
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
@@ -16,14 +20,14 @@ Triangulate = "f7e6ffb2-c36d-4f8f-a77e-16e897189344"
 
 [compat]
 ColorSchemes = "3.25"
-Enzyme = "0.12"
+Enzyme = "0.13"
 Flux = "0.14"
 MAT = "0.10"
 Makie = "0.21"
-SparseArrays = "1.8.0"
+SparseArrays = "1"
 StatsBase = "0.34"
 Triangulate = "2.3"
-julia = "1.8"
+julia = "1.10"
 
 [extras]
 SafeTestsets = "1bc83da4-3b8d-516f-aca4-4fe02f6d838f"

@@ -71,7 +71,10 @@ function costfunction(α::Vector{Float64}, femmodel::FemModel) #{{{
 
 	# get the cost function list from md.inversion.dependent_string
 	cost_list = FindParam(Vector{String}, femmodel.parameters, InversionCostFunctionsEnum)
-	cost_enum_list = map(StringToEnum, cost_list)
+	cost_enum_list = Vector{IssmEnum}(undef, length(cost_list))
+	for (index, value) in enumerate(cost_list)
+		cost_enum_list[index] = StringToEnum(value)
+	end
 
 	# compute cost function
 	# TODO: loop through all controls with respect to all the components in the cost function
