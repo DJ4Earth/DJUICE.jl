@@ -277,8 +277,7 @@ function InputUpdateFromSolutionx(analysis::Analysis,ug::IssmVector,femmodel::Fe
 		InputUpdateFromSolution(analysis,ug.vector,femmodel.elements[i])
 	end
 
-	return ug
-
+	return Nothing
 end#}}}
 function InputUpdateFromVectorx(femmodel::FemModel, vector::Vector{Float64}, enum::IssmEnum, layout::IssmEnum)# {{{
 

@@ -61,7 +61,7 @@ end#}}}
 
 # cost function handler for autodiff
 function costfunction(α::Vector{Float64}, femmodel::FemModel) #{{{
-	# get the md.inversion.control_string
+	# get the md.inversion.independent_string
 	control_string = FindParam(String, femmodel.parameters, InversionControlParametersEnum)
 	# get the Enum
 	controlvar_enum = StringToEnum(control_string)
