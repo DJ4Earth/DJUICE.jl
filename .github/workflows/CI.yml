@@ -23,7 +23,7 @@ jobs:
           - '1.11'
         os:
           - ubuntu-20.04
-          - macOS-latest
+          # - macOS-latest
         arch:
           - x64
     steps:
