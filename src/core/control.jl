@@ -29,7 +29,7 @@ function ComputeGradient(∂J_∂α::Vector{Float64}, α::Vector{Float64}, femmo
 	# zero ALL depth of the model, make sure we get correct gradient
 	dfemmodel = Enzyme.Compiler.make_zero(Base.Core.Typeof(femmodel), IdDict(), femmodel)
 	# compute the gradient
-	autodiff(Enzyme.Reverse, costfunction, Active, Duplicated(α, ∂J_∂α), Duplicated(femmodel,dfemmodel))
+	autodiff(set_runtime_activity(Enzyme.Reverse), costfunction, Active, Duplicated(α, ∂J_∂α), Duplicated(femmodel,dfemmodel))
 end#}}}
 function CostFunctionx(femmodel::FemModel, α::Vector{Float64}, controlvar_enum::IssmEnum, SId_enum::IssmEnum, cost_enum_list::Vector{IssmEnum}, ::Val{solutionstring}) where solutionstring #{{{
 	#Update FemModel accordingly
@@ -61,7 +61,7 @@ end#}}}
 
 # cost function handler for autodiff
 function costfunction(α::Vector{Float64}, femmodel::FemModel) #{{{
-	# get the md.inversion.control_string
+	# get the md.inversion.independent_string
 	control_string = FindParam(String, femmodel.parameters, InversionControlParametersEnum)
 	# get the Enum
 	controlvar_enum = StringToEnum(control_string)
@@ -71,7 +71,10 @@ function costfunction(α::Vector{Float64}, femmodel::FemModel) #{{{
 
 	# get the cost function list from md.inversion.dependent_string
 	cost_list = FindParam(Vector{String}, femmodel.parameters, InversionCostFunctionsEnum)
-	cost_enum_list = map(StringToEnum, cost_list)
+	cost_enum_list = Vector{IssmEnum}(undef, length(cost_list))
+	for (index, value) in enumerate(cost_list)
+		cost_enum_list[index] = StringToEnum(value)
+	end
 
 	# compute cost function
 	# TODO: loop through all controls with respect to all the components in the cost function

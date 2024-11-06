@@ -29,14 +29,15 @@ md.inversion.dependent_string = ["SurfaceAbsVelMisfit"]
 femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
 n = length(α)
 
+DJUICE.costfunction(α, femmodel)
 # test Enzyme autodiff only
 dfemmodel = Enzyme.Compiler.make_zero(Base.Core.Typeof(femmodel), IdDict(), femmodel)
-autodiff(Enzyme.Reverse, DJUICE.costfunction, Active, Duplicated(α, ∂J_∂α), Duplicated(femmodel,dfemmodel))
+autodiff(set_runtime_activity(Enzyme.Reverse), DJUICE.costfunction, Active, Duplicated(α, ∂J_∂α), Duplicated(femmodel,dfemmodel))
 
 # use user defined grad, errors!
-optprob = OptimizationFunction(DJUICE.costfunction, Optimization.AutoEnzyme())
+#optprob = OptimizationFunction(DJUICE.costfunction, Optimization.AutoEnzyme())
 #prob = Optimization.OptimizationProblem(optprob, α, femmodel, lb=md.inversion.min_parameters, ub=md.inversion.max_parameters)
-prob = Optimization.OptimizationProblem(optprob, α, femmodel)
-sol = Optimization.solve(prob,  Optimization.LBFGS())
+#prob = Optimization.OptimizationProblem(optprob, α, femmodel)
+#sol = Optimization.solve(prob,  Optimization.LBFGS())
 #sol = Optimization.solve(prob, Optim.GradientDescent())
 #sol = Optimization.solve(prob, Optim.NelderMead())
