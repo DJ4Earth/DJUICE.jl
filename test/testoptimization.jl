@@ -11,12 +11,12 @@ mat  = read(file, "md")
 close(file)
 md = model(mat)
 
-#make model run faster 
+#make model run faster
 md.stressbalance.maxiter = 20
 
 #Now call AD!
 md.inversion.iscontrol = 1
-md.inversion.onlygrad = 1
+md.inversion.onlygrad = 0
 md.inversion.independent = md.friction.coefficient
 md.inversion.min_parameters = ones(md.mesh.numberofvertices)*(0.0)
 md.inversion.max_parameters = ones(md.mesh.numberofvertices)*(1.0e3)
@@ -35,9 +35,11 @@ dfemmodel = Enzyme.Compiler.make_zero(Base.Core.Typeof(femmodel), IdDict(), femm
 autodiff(set_runtime_activity(Enzyme.Reverse), DJUICE.costfunction, Active, Duplicated(α, ∂J_∂α), Duplicated(femmodel,dfemmodel))
 
 # use user defined grad, errors!
-#optprob = OptimizationFunction(DJUICE.costfunction, Optimization.AutoEnzyme())
-#prob = Optimization.OptimizationProblem(optprob, α, femmodel, lb=md.inversion.min_parameters, ub=md.inversion.max_parameters)
+optprob = OptimizationFunction(DJUICE.costfunction, Optimization.AutoEnzyme(; mode=set_runtime_activity(Enzyme.Reverse)))
+prob = Optimization.OptimizationProblem(optprob, α, femmodel, lb=md.inversion.min_parameters, ub=md.inversion.max_parameters)
 #prob = Optimization.OptimizationProblem(optprob, α, femmodel)
-#sol = Optimization.solve(prob,  Optimization.LBFGS())
-#sol = Optimization.solve(prob, Optim.GradientDescent())
+sol = Optimization.solve(prob,  Optimization.LBFGS(), maxiters=10)
+#sol = Optimization.solve(prob, Optim.GradientDescent(), maxiters=10)
 #sol = Optimization.solve(prob, Optim.NelderMead())
+#sol = Optimization.solve(prob, Optimization.LBFGS(), maxiters = 100)
+
