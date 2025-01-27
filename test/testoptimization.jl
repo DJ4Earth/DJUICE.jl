@@ -35,11 +35,12 @@ dfemmodel = Enzyme.Compiler.make_zero(Base.Core.Typeof(femmodel), IdDict(), femm
 autodiff(set_runtime_activity(Enzyme.Reverse), DJUICE.costfunction, Active, Duplicated(α, ∂J_∂α), Duplicated(femmodel,dfemmodel))
 
 # use user defined grad, errors!
-optprob = OptimizationFunction(DJUICE.costfunction, Optimization.AutoEnzyme(; mode=set_runtime_activity(Enzyme.Reverse)))
-prob = Optimization.OptimizationProblem(optprob, α, femmodel, lb=md.inversion.min_parameters, ub=md.inversion.max_parameters)
+#optprob = OptimizationFunction(DJUICE.costfunction, Optimization.AutoEnzyme(; mode=set_runtime_activity(Enzyme.Reverse)))
+#prob = Optimization.OptimizationProblem(optprob, α, femmodel, lb=md.inversion.min_parameters, ub=md.inversion.max_parameters)
 #prob = Optimization.OptimizationProblem(optprob, α, femmodel)
-sol = Optimization.solve(prob,  Optimization.LBFGS(), maxiters=10)
+#sol = Optimization.solve(prob,  Optimization.LBFGS(), maxiters=10)
 #sol = Optimization.solve(prob, Optim.GradientDescent(), maxiters=10)
+#sol = Optimization.solve(prob, Optim.LBFGS(), maxiters=10)
 #sol = Optimization.solve(prob, Optim.NelderMead())
 #sol = Optimization.solve(prob, Optimization.LBFGS(), maxiters = 100)
 
