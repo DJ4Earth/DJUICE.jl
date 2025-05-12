@@ -1,20 +1,19 @@
-# setmask {{{
-"""
-SETMASK - establish boundaries between grounded and floating ice.
+function setmask(md::model,floatingicename::String,groundedicename::String) #{{{
+	"""
+	SETMASK - establish boundaries between grounded and floating ice.
 
-   By default, ice is considered grounded. The contour floatingicename defines nodes 
-   for which ice is floating. The contour groundedicename defines nodes inside an floatingice, 
-   that are grounded (ie: ice rises, islands, etc ...)
-   All input files are in the Argus format (extension .exp).
+	By default, ice is considered grounded. The contour floatingicename defines nodes 
+	for which ice is floating. The contour groundedicename defines nodes inside an floatingice, 
+	that are grounded (ie: ice rises, islands, etc ...)
+	All input files are in the Argus format (extension .exp).
 
-   Usage:
-      md=setmask(md,floatingicename,groundedicename)
+	Usage:
+	md=setmask(md,floatingicename,groundedicename)
 
-   Examples:
-      md=setmask(md,'all','');
-      md=setmask(md,'Iceshelves.exp','Islands.exp');
-"""
-function setmask(md::model,floatingicename::String,groundedicename::String)
+	Examples:
+	md=setmask(md,'all','');
+	md=setmask(md,'Iceshelves.exp','Islands.exp');
+	"""
 
 	elementonfloatingice = FlagElements( md, floatingicename)
 	elementongroundedice = FlagElements( md, groundedicename)
@@ -36,8 +35,7 @@ function setmask(md::model,floatingicename::String,groundedicename::String)
 	return md
 end
 #}}}
-# FlagElements {{{
-function FlagElements(md::model,region::String)
+function FlagElements(md::model,region::String) #{{{
 
 	if isempty(region)
 		flags = zeros(Bool, md.mesh.numberofelements)
@@ -60,3 +58,48 @@ function FlagElements(md::model,region::String)
 	return flags
 end
 #}}}
+function SetIceShelfBC(md::model) # {{{
+	nodeonicefront=BitArray(zeros(Bool,md.mesh.numberofvertices))
+	SetIceShelfBC(md, nodeonicefront)
+end# }}}
+function SetIceShelfBC(md::model, icefrontfile::String) # {{{
+	nodeinsideicefront = ContourToNodes(md.mesh.x,md.mesh.y,icefrontfile,2.)
+   nodeonicefront = (md.mesh.vertexonboundary .& nodeinsideicefront)
+	SetIceShelfBC(md, nodeonicefront)
+end# }}}
+function SetIceShelfBC(md::model, nodeonicefront::BitVector) #{{{
+	if length(nodeonicefront) == md.mesh.numberofvertices
+		pos=findall(md.mesh.vertexonboundary .& .!(nodeonicefront))
+		md.stressbalance.spcvx=NaN*ones(md.mesh.numberofvertices)
+		md.stressbalance.spcvy=NaN*ones(md.mesh.numberofvertices)
+		#md.stressbalance.spcvz=NaN*ones(md.mesh.numberofvertices)
+
+		# Ice front position
+		md.mask.ice_levelset[findall((nodeonicefront))] .= 0.0
+
+		if typeof(md.mesh)==DJUICE.Mesh2dTriangle
+			numbernodesfront = 2
+		elseif typeof(md.mesh)==DJUICE.Mesh3dPrism
+			numbernodesfront = 4
+		else
+			error("mesh type not supported yet")
+		end
+		segmentsfront=md.mask.ice_levelset[md.mesh.segments[:,1:numbernodesfront]] .== 0
+		segments=findall(sum(segmentsfront,dims=2).!=numbernodesfront)
+		pos=md.mesh.segments[first.(Tuple.(segments)), 1:numbernodesfront]
+		md.stressbalance.spcvx[pos[:]] .= 0.0
+		md.stressbalance.spcvy[pos[:]] .= 0.0
+
+		# Dirichlet Values
+		if length(md.inversion.vx_obs)==md.mesh.numberofvertices & length(md.inversion.vy_obs)==md.mesh.numberofvertices
+			@printf "   boundary conditions for stressbalance model: spc set as observed velocities\n"
+			md.stressbalance.spcvx[pos]=md.inversion.vx_obs[pos]
+			md.stressbalance.spcvy[pos]=md.inversion.vy_obs[pos]
+		else
+			@printf "   boundary conditions for stressbalance model: spc set as zero\n"
+		end
+	else
+		error("Size of the input vector is not consistent with the mesh")
+	end
+	return md
+end# }}}

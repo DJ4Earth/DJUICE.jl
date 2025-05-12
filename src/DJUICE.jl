@@ -24,7 +24,7 @@ export triangle
 include("$userdir/triangle_issm.jl")
 export triangle_issm
 include("$userdir/parameterization.jl")
-export setmask, InterpFromMeshToMesh2d
+export setmask, InterpFromMeshToMesh2d, SetIceShelfBC
 include("$coredir/solve.jl")
 export solve
 include("$userdir/plotmodel.jl")
