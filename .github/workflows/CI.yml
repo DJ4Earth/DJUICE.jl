@@ -22,7 +22,7 @@ jobs:
           - '1.10'   # the minimum version 
           - '1.11'
         os:
-          - ubuntu-20.04
+          - ubuntu-latest
           # - macOS-latest
         arch:
           - x64
