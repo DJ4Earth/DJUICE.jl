@@ -40,16 +40,17 @@ md.stressbalance.abstol=NaN
 md.stressbalance.spcvx = NaN*ones(md.mesh.numberofvertices)
 md.stressbalance.spcvy = NaN*ones(md.mesh.numberofvertices)
 md.masstransport.spcthickness = NaN*ones(md.mesh.numberofvertices)
+md.masstransport.min_thickness = 1.0
 pos = findall(md.mesh.vertexonboundary)
 md.stressbalance.spcvx[pos] .= 0.0
 md.stressbalance.spcvy[pos] .= 0.0
-md.masstransport.spcthickness[pos] .= md.geometry.thickness[pos]
+#md.masstransport.spcthickness[pos] .= md.geometry.thickness[pos]
 
 md = SetIceShelfBC(md,issmdir()*"/test/Exp/SquareFront.exp")
 # surface mass balance and basal melting
-md.smb.mass_balance=10*ones(md.mesh.numberofvertices)
-md.basalforcings.floatingice_melting_rate=5*ones(md.mesh.numberofvertices)
-md.basalforcings.groundedice_melting_rate=5*ones(md.mesh.numberofvertices)
+md.smb.mass_balance=0*ones(md.mesh.numberofvertices)
+md.basalforcings.floatingice_melting_rate=0*ones(md.mesh.numberofvertices)
+md.basalforcings.groundedice_melting_rate=0*ones(md.mesh.numberofvertices)
 
 # mask
 Lx = xmax - xmin
@@ -65,7 +66,7 @@ md.timestepping.final_time = 30;
 md.transient.isstressbalance=1;
 md.transient.ismasstransport=1;
 md.transient.issmb=1;
-md.transient.ismovingfront=0;
+md.transient.ismovingfront=1;
 
 md.calving.calvingrate=0*ones(md.mesh.numberofvertices)
 md.frontalforcings.meltingrate=10000*ones(md.mesh.numberofvertices)

@@ -24,7 +24,7 @@ function setmask(md::model,floatingicename::String,groundedicename::String) #{{{
 	vertexonfloatingice=zeros(md.mesh.numberofvertices)
 	vertexongroundedice=zeros(md.mesh.numberofvertices)
 
-	vertexongroundedice[md.mesh.elements[findall(elementongroundedice .>0 ),:]] .= 1.
+	vertexongroundedice[md.mesh.elements[findall(elementongroundedice .>0 ),:]] .= 1. # this could be an issue, since findall gives CartesianIndex, this will only take the first column from md.mesh.elements
 	vertexonfloatingice[findall(vertexongroundedice .== 0.)] .= 1.
 
 	#define levelsets
