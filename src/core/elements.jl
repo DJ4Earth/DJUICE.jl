@@ -28,6 +28,18 @@ function Tria(sid::Int64, pid::Int64, vertexids::Vector{Int64}) #{{{
 end #}}}
 
 #Element functions
+function AnyFSet(element::Tria) # {{{
+
+	#Get value at each vertex (i.e. P1 Nodes)
+	gauss=GaussTria(P1Enum)
+	for i in 1:gauss.numgauss
+		if (FSize(element.nodes[i])>0) 
+			return true
+		end
+	end
+
+	return false
+end # }}}
 function AddInput(element::Tria,inputenum::IssmEnum,data::Vector{Float64},interpolation::IssmEnum) #{{{
 	if interpolation==P1Enum
 		@assert length(data)==3

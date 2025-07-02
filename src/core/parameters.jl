@@ -12,6 +12,10 @@ struct IntParam <: Parameter #{{{
 	enum::IssmEnum
 	value::Int64
 end# }}}
+struct EnumParam <: Parameter #{{{
+	enum::IssmEnum
+	value::IssmEnum
+end# }}}
 struct StringParam <: Parameter #{{{
 	enum::IssmEnum
 	value::String
@@ -52,6 +56,9 @@ end#}}}
 function GetParameterValue(param::IntParam) #{{{
 	return param.value::Int64
 end#}}}
+function GetParameterValue(param::EnumParam) #{{{
+	return param.value::IssmEnum
+end#}}}
 function GetParameterValue(param::StringParam) #{{{
 	return param.value::String
 end#}}}
@@ -84,6 +91,12 @@ end#}}}
 function AddParam(parameters::Parameters,value::Int64, enum::IssmEnum) #{{{
 
 	parameters.lookup[enum] = IntParam(enum,value)
+
+	return nothing
+end#}}}
+function AddParam(parameters::Parameters,value::IssmEnum, enum::IssmEnum) #{{{
+
+	parameters.lookup[enum] = EnumParam(enum,value)
 
 	return nothing
 end#}}}

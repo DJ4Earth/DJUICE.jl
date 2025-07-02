@@ -35,16 +35,16 @@ function Core(analysis::ExtrapolationAnalysis,femmodel::FemModel)# {{{
    SetCurrentConfiguration!(femmodel, analysis)
 
    #Fetch parameters relevant to solution sequence
-   extvar_num  = FindParam(Float64, femmodel.parameters,ExtrapolationVariableEnum)
+   extvar_num  = FindParam(IssmEnum, femmodel.parameters,ExtrapolationVariableEnum)
 
 	SetCurrentConfiguration!(femmodel, analysis)
 
    #Call solution sequence to compute new speeds
-	println("   extrapolation of", EnumToString(extvar), ":");
+	println("   extrapolation of ", EnumToString(extvar_num), ":");
    solutionsequence_linear(femmodel,analysis)
 
 	# save
-   RequestedOutputsx(femmodel, extvar_num)
+	RequestedOutputsx(femmodel, [extvar_num])
 	return nothing
 end #}}}
 function CreatePVector(analysis::ExtrapolationAnalysis,element::Tria)# {{{
@@ -62,8 +62,8 @@ function CreateKMatrix(analysis::ExtrapolationAnalysis,element::Tria)# {{{
 
 	#Retrieve all inputs and parameters
 	xyz_list = GetVerticesCoordinates(element.vertices)
-	lsf_slopex_input = GetInput(element, LevelsetfunctionSlopeXEnum)
-	lsf_slopey_input = GetInput(element, LevelsetfunctionSlopeYEnum)
+	#lsf_slopex_input = GetInput(element, LevelsetfunctionSlopeXEnum)
+	#lsf_slopey_input = GetInput(element, LevelsetfunctionSlopeYEnum)
 
 	#Start integrating
 	gauss = GaussTria(2)
@@ -88,10 +88,38 @@ function GetSolutionFromInputs(analysis::ExtrapolationAnalysis,ug::IssmVector,el
 	return nothing
 end#}}}
 function InputUpdateFromSolution(analysis::ExtrapolationAnalysis,ug::Vector{Float64},element::Tria) #{{{
-	extvar_num  = FindParam(Float64, femmodel.parameters,ExtrapolationVariableEnum)
+	extvar_num  = FindParam(IssmEnum, element, ExtrapolationVariableEnum)
 	InputUpdateFromSolutionOneDof(element, ug, extvar_num)
 end#}}}
+function SetConstraintsOnIce(analysis::ExtrapolationAnalysis, element::Tria) #{{{
+
+	# Intermediaries
+	numnodes = 3
+
+	# get parameters
+	extvar_num  = FindParam(IssmEnum, element, ExtrapolationVariableEnum)
+
+	active_input  = GetInput(element, IceMaskNodeActivationEnum)
+	extvar_input  = GetInput(element, extvar_num)
+
+	gauss = GaussTria(P1Enum)
+	for ig in 1:gauss.numgauss
+		node = element.nodes[ig]
+		active = GetInputValue(active_input, gauss, ig)
+		if node.active
+			if active>0.5
+				value = GetInputValue(extvar_input, gauss, ig)
+				ApplyConstraint!(node, Int8(1), value)
+			else
+				DofInFSet!(node, Int8(1))
+			end
+		end
+	end
+	return nothing
+end#}}}
 function UpdateConstraints(analysis::ExtrapolationAnalysis, femmodel::FemModel) #{{{
-	#Default do nothing
+	for i=1:length(femmodel.elements)
+		SetConstraintsOnIce(analysis,femmodel.elements[i])
+	end
 	return nothing
 end#}}}

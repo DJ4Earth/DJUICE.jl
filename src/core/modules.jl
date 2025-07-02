@@ -34,7 +34,7 @@ function ModelProcessor(md::model, solutionstring::Symbol) #{{{
 		analyses = Analysis[StressbalanceAnalysis()]
 	elseif solutionstring===:TransientSolution
 		if md.transient.ismovingfront
-			analyses = Analysis[StressbalanceAnalysis(), MasstransportAnalysis(), LevelsetAnalysis()]
+			analyses = Analysis[StressbalanceAnalysis(), MasstransportAnalysis(), LevelsetAnalysis(), L2ProjectionBaseAnalysis(), ExtrapolationAnalysis()]
 		else
 			analyses = Analysis[StressbalanceAnalysis(), MasstransportAnalysis()]
 		end
@@ -452,12 +452,16 @@ function SystemMatricesx(femmodel::FemModel,analysis::Analysis)# {{{
 	println("   Assembling matrices")
 	for i in 1:length(femmodel.elements)
 
-		if IsIceInElement(femmodel.elements[i])
+		if ((IsIceInElement(femmodel.elements[i])) || ((AnyFSet(femmodel.elements[i])) && typeof(analysis) == typeof(ExtrapolationAnalysis())))
 			Ke = CreateKMatrix(analysis,femmodel.elements[i])
-			AddToGlobal!(Ke,Kff,Kfs)
+			if Ke != nothing
+				AddToGlobal!(Ke,Kff,Kfs)
+			end
 
 			pe = CreatePVector(analysis,femmodel.elements[i])
-			AddToGlobal!(pe,pf)
+			if pe != nothing
+				AddToGlobal!(pe,pf)
+			end
 		end
 	end
 

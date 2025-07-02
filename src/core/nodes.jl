@@ -53,12 +53,30 @@ function Deactivate!(node::Node) #{{{
 
 	return nothing
 end# }}}
-function ApplyConstraint(node::Node,dof::Int8,value::Float64) #{{{
+function ApplyConstraint!(node::Node,dof::Int8,value::Float64) #{{{
 
-	node.indexingupdate = true
-	node.fdoflist[dof]  = -1
-	node.sdoflist[dof]  = +1
+	DofInSSet!(node, dof)
 	node.svalues[dof]   = value
+
+	return nothing
+end# }}}
+function DofInFSet!(node::Node,dof::Int8) #{{{
+
+	if (node.fdoflist[dof] < 0)
+		node.indexingupdate = true
+		node.fdoflist[dof]  = +1
+		node.sdoflist[dof]  = -1
+	end
+
+	return nothing
+end# }}}
+function DofInSSet!(node::Node,dof::Int8) #{{{
+
+	if (node.fdoflist[dof] > 0)
+		node.indexingupdate = true
+		node.fdoflist[dof]  = -1
+		node.sdoflist[dof]  = +1
+	end
 
 	return nothing
 end# }}}
@@ -167,11 +185,12 @@ function GetGlobalDofList(nodes::Vector{Node},ndofs::Int64,setenum::IssmEnum) #{
 	return doflist
 
 end# }}}
-function RelaxConstraint(node::Node, dof::Int8) #{{{
+function RelaxConstraint!(node::Node, dof::Int8) #{{{
 
-	node.indexingupdate = true
-	node.fdoflist[dof]  = +1
-	node.sdoflist[dof]  = -1
+	if (node.active)
+		DofInFSet!(node, dof)
+		node.svalues[dof] =0.0
+	end
 
 	return nothing
 end# }}}

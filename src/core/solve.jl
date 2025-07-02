@@ -20,6 +20,8 @@ include("./analyses/stressbalanceanalysis.jl")
 include("./analyses/masstransportanalysis.jl")
 include("./analyses/transientanalysis.jl")
 include("./analyses/levelsetanalysis.jl")
+include("./analyses/l2projectbassanalysis.jl")
+include("./analyses/extrapolationanalysis.jl")
 
 include("./solutionsequences.jl")
 include("./modules.jl")

@@ -101,6 +101,29 @@ end#}}}
 
 #Finite Element Analysis
 function Core(analysis::LevelsetAnalysis,femmodel::FemModel)# {{{
+	
+	# levelsetfunctionslope_core(femmodel)
+#	levelsetslope = L2ProjectionBaseAnalysis()
+#	SetCurrentConfiguration!(femmodel, levelsetslope)
+#	AddParam(femmodel.parameters, LevelsetfunctionSlopeXEnum, InputToL2ProjectEnum)
+#	solutionsequence_linear(femmodel, levelsetslope)
+#	AddParam(femmodel.parameters, LevelsetfunctionSlopeYEnum, InputToL2ProjectEnum)
+#	solutionsequence_linear(femmodel, levelsetslope)
+	
+	# determine variables for extrapolation
+	extrapol_vars = [VxEnum, VyEnum, ThicknessEnum]
+
+	# extrapolation
+	analysis = ExtrapolationAnalysis()
+	for i in 1:length(extrapol_vars)
+		AddParam(femmodel.parameters, extrapol_vars[i], ExtrapolationVariableEnum)
+		Core(analysis, femmodel)
+	end
+#   /* start the work from here */
+#   if(VerboseSolution()) _printf0_("   computing calving and undercutting\n");
+#   Calvingx(femmodel);
+#   FrontalForcingsx(femmodel);
+#   if(VerboseSolution()) _printf0_("   computing new ice front position\n");
 
 	# moving front
 	MovingFrontalVel(femmodel)

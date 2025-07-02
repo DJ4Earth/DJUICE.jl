@@ -21,7 +21,7 @@ function ConstrainNode(constraint::Constraint,nodes::Vector{Node},parameters::Pa
 	node = nodes[constraint.nodeid]
 
 	#Apply Constraint
-	ApplyConstraint(node, constraint.dof, constraint.value)
+	ApplyConstraint!(node, constraint.dof, constraint.value)
 
 	return nothing
 end# }}}
@@ -56,9 +56,9 @@ function ConstrainNode(constraint::ConstraintTransient, nodes::Vector{Node}, par
 
 	#Apply Constraint
 	if isnan(value)
-		RelaxConstraint(node, constraint.dof)
+		RelaxConstraint!(node, constraint.dof)
 	else
-		ApplyConstraint(node, constraint.dof, constraint.value)
+		ApplyConstraint!(node, constraint.dof, constraint.value)
 	end
 
 	return nothing
