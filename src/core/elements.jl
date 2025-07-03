@@ -332,6 +332,74 @@ function GetInputValue(element::Tria, vector::Vector{Float64}, gauss::GaussTria,
 
 	return value
 end # }}}
+function GetLevelsetIntersection!(element::Tria, indices::Vector{Int64}, numiceverts::Int64, fraction::Vector{Float64}, levelset_enum::IssmEnum, level::Float64) # {{{
+
+	numvetices = 3
+
+	# Intermediaries
+	lsf = Vector{Float64}(undef,numvetices)
+	indices_ice = Vector{Int64}(undef,numvetices)
+	indices_noice = Vector{Int64}(undef,numvetices)
+	# retrieve all inputs and parameters
+   GetInputListOnVertices!(element, lsf, levelset_enum)
+
+	# Determine distribution of ice over element.
+	# Exploit: ice/no-ice parts are connected, so find starting vertex of segment
+   lastindex = 1
+	for i = 1:numvetices # go backwards along vertices, and check for sign change
+      ind0=(numvetices-i+1)%numvetices+1
+      ind1=(numvetices+1-i)
+      if((lsf[ind0]-level)*(lsf[ind1]-level)<=0.) # levelset has been crossed, find last index belonging to segment
+         if(lsf[ind1]==level) # if levelset intersects 2nd vertex, choose this vertex as last
+            lastindex=ind1
+         else
+            lastindex=ind0
+			end
+			break
+		end
+	end
+
+   numiceverts = 0
+   numnoiceverts = 0
+	for i = 1:numvetices
+      if(lsf[i]<=level)
+			numiceverts += 1
+         indices_ice[numiceverts] = i
+      else
+         numnoiceverts += 1
+         indices_noice[numnoiceverts] = i
+		end
+	end
+	# merge indices
+	for i = 1:numiceverts
+		indices[i] = indices_ice[i]
+	end
+	for i = 1:numnoiceverts
+		indices[numiceverts+i] = indices_noice[i]
+	end
+	
+	if numiceverts == 0 # no vertex has ice: element is ice free, no intersection
+		for i = 1:2
+			fraction[i] = 0.0
+		end
+	elseif numiceverts == 1 # one vertex has ice
+		for i = 1:2
+			fraction[i] = (level-lsf[indices[1]])/(lsf[indices[numiceverts+i]]-lsf[indices[1]])
+		end
+	elseif numiceverts == 2
+		for i = 1:2
+			fraction[i] = (level-lsf[indices[i]])/(lsf[indices[numiceverts+1]]-lsf[indices[i]])
+		end
+	elseif numiceverts == numvetices
+		for i = 1:2
+			fraction[i] = 1.0
+		end
+	else
+		error("Wrong number of ice vertices in Tria::GetLevelsetIntersection! for ", levelset_enum)
+	end
+
+	return nothing
+end # }}}
 function GetXcoord(element::Tria, xyz_list::Matrix{Float64}, gauss::GaussTria, ig::Int64) #{{{
 
 	# create a list of x
@@ -660,6 +728,37 @@ function Update(element::Tria, inputs::Inputs, index::Int64, md::model, finiteel
 		push!(element.nodes_list, Vector{Node}(undef, numnodes))
 	else
 		error("not supported yet")
+	end
+
+	return nothing
+end #}}}
+function WriteFieldIsovalueSegment!(element::Tria, segments::Vector{Float64}, fieldenum::IssmEnum, fieldvalue::Float64) #{{{
+
+	@assert fieldvalue == 0. # field value != 0 not implemented yet
+	
+	lsf = Vector{Float64}(undef,3)
+	GetInputListOnVertices!(element, lsf, fieldenum)
+
+	# step 1: check that we do cross fieldvalue in this element
+	minvalue = minimum(lsf)
+	maxvalue = maximum(lsf)
+
+	if (fieldvalue>=minvalue) && (fieldvalue<=maxvalue)
+		# step 2: Find coordinates of where levelset crosses 0
+		x = Vector{Float64}(undef,2)
+		y = Vector{Float64}(undef,2)
+		s = Vector{Float64}(undef,2)
+		# init input
+		indices = Vector{Int64}(undef,3)
+		numiceverts = 0
+
+		# step 3: write coordinates
+		GetLevelsetIntersection!(element, indices, numiceverts, s, fieldenum, fieldvalue) 
+		println(element, indices, numiceverts, s)
+
+		xyz_list = GetVerticesCoordinates(element.vertices)
+		# step 4: write segment
+
 	end
 
 	return nothing

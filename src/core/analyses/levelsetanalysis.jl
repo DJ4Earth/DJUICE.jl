@@ -114,10 +114,10 @@ function Core(analysis::LevelsetAnalysis,femmodel::FemModel)# {{{
 	extrapol_vars = [VxEnum, VyEnum, ThicknessEnum]
 
 	# extrapolation
-	analysis = ExtrapolationAnalysis()
+	expanalysis = ExtrapolationAnalysis()
 	for i in 1:length(extrapol_vars)
 		AddParam(femmodel.parameters, extrapol_vars[i], ExtrapolationVariableEnum)
-		Core(analysis, femmodel)
+		Core(expanalysis, femmodel)
 	end
 #   /* start the work from here */
 #   if(VerboseSolution()) _printf0_("   computing calving and undercutting\n");
@@ -282,7 +282,9 @@ function InputUpdateFromSolution(analysis::LevelsetAnalysis,ug::Vector{Float64},
 	InputUpdateFromSolutionOneDof(element, ug, MaskIceLevelsetEnum)
 end#}}}
 function UpdateConstraints(analysis::LevelsetAnalysis, femmodel::FemModel) #{{{
-	#Default do nothing
+	# Intermediaries
+   InputDuplicatex(femmodel,MaskIceLevelsetEnum,DistanceToCalvingfrontEnum);
+   DistanceToFieldValue!(femmodel, MaskIceLevelsetEnum, 0.0, DistanceToCalvingfrontEnum);
 	return nothing
 end#}}}
 

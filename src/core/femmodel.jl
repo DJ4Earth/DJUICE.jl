@@ -43,3 +43,18 @@ function AddResult!(femmodel::FemModel, result::Result) #{{{
 	# TODO: maybe need to check if the result already exist, then overwrite
 	push!(femmodel.results, result)
 end#}}}
+function DistanceToFieldValue!(femmodel::FemModel, fieldnum::IssmEnum, fieldvalue::Float64, distanceenum::IssmEnum) #{{{
+
+	# get all segments
+	segments = Vector{Float64}(undef,0)
+
+	for i in 1:length(femmodel.elements)
+		WriteFieldIsovalueSegment!(femmodel.elements[i], segments, fieldnum, fieldvalue)
+	end
+
+	# TODO: parallel version
+	
+	# Add distance input to all elements
+
+	return nothing
+end#}}}

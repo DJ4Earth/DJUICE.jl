@@ -72,7 +72,6 @@ md.calving.calvingrate=0*ones(md.mesh.numberofvertices)
 md.frontalforcings.meltingrate=10000*ones(md.mesh.numberofvertices)
 md.frontalforcings.ablationrate=10000*ones(md.mesh.numberofvertices)
 md.levelset.spclevelset=NaN*ones(md.mesh.numberofvertices)
-md.levelset.spclevelset[pos] = md.mask.ice_levelset[pos]
 
 md=solve(md,:Transient)
 field_names =["Vx1","Vy1","Vel1"]
