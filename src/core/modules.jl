@@ -450,17 +450,31 @@ function SystemMatricesx(femmodel::FemModel,analysis::Analysis)# {{{
 
 	#Construct Stiffness matrix and load vector from elements
 	println("   Assembling matrices")
+	# Determine the type of analysis, decide if override icemask 
+	if typeof(analysis) == typeof(ExtrapolationAnalysis())
+		overrideicemask = true
+	elseif typeof(analysis) == typeof(LevelsetAnalysis())
+		overrideicemask = true
+	elseif typeof(analysis) == typeof(L2ProjectionBaseAnalysis())
+		overrideicemask = true
+	else
+		overrideicemask = false
+	end
+
+
 	for i in 1:length(femmodel.elements)
 
-		if ((IsIceInElement(femmodel.elements[i])) || ((AnyFSet(femmodel.elements[i])) && typeof(analysis) == typeof(ExtrapolationAnalysis())))
-			Ke = CreateKMatrix(analysis,femmodel.elements[i])
-			if Ke != nothing
-				AddToGlobal!(Ke,Kff,Kfs)
-			end
+		if (IsIceInElement(femmodel.elements[i]) || overrideicemask)
+			if (AnyFSet(femmodel.elements[i]) || (typeof(analysis) == typeof(StressbalanceAnalysis())))
+				Ke = CreateKMatrix(analysis,femmodel.elements[i])
+				if Ke != nothing
+					AddToGlobal!(Ke,Kff,Kfs)
+				end
 
-			pe = CreatePVector(analysis,femmodel.elements[i])
-			if pe != nothing
-				AddToGlobal!(pe,pf)
+				pe = CreatePVector(analysis,femmodel.elements[i])
+				if pe != nothing
+					AddToGlobal!(pe,pf)
+				end
 			end
 		end
 	end
