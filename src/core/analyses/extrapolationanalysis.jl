@@ -66,7 +66,7 @@ function CreateKMatrix(analysis::ExtrapolationAnalysis,element::Tria)# {{{
 	#lsf_slopey_input = GetInput(element, LevelsetfunctionSlopeYEnum)
 
 	#Start integrating
-	gauss = GaussTria(2)
+	gauss = GaussTria(P1Enum)
 	for ig in 1:gauss.numgauss
 
 		Jdet = JacobianDeterminant(xyz_list, gauss)

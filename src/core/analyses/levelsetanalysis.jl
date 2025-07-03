@@ -103,12 +103,12 @@ end#}}}
 function Core(analysis::LevelsetAnalysis,femmodel::FemModel)# {{{
 	
 	# levelsetfunctionslope_core(femmodel)
-#	levelsetslope = L2ProjectionBaseAnalysis()
-#	SetCurrentConfiguration!(femmodel, levelsetslope)
-#	AddParam(femmodel.parameters, LevelsetfunctionSlopeXEnum, InputToL2ProjectEnum)
-#	solutionsequence_linear(femmodel, levelsetslope)
-#	AddParam(femmodel.parameters, LevelsetfunctionSlopeYEnum, InputToL2ProjectEnum)
-#	solutionsequence_linear(femmodel, levelsetslope)
+	levelsetslope = L2ProjectionBaseAnalysis()
+	SetCurrentConfiguration!(femmodel, levelsetslope)
+	AddParam(femmodel.parameters, LevelsetfunctionSlopeXEnum, InputToL2ProjectEnum)
+	solutionsequence_linear(femmodel, levelsetslope)
+	AddParam(femmodel.parameters, LevelsetfunctionSlopeYEnum, InputToL2ProjectEnum)
+	solutionsequence_linear(femmodel, levelsetslope)
 	
 	# determine variables for extrapolation
 	extrapol_vars = [VxEnum, VyEnum, ThicknessEnum]
@@ -136,7 +136,7 @@ function Core(analysis::LevelsetAnalysis,femmodel::FemModel)# {{{
 
 	# TODO: add reinitialization
 	# save
-   RequestedOutputsx(femmodel, [MaskIceLevelsetEnum])
+   RequestedOutputsx(femmodel, [MaskIceLevelsetEnum, MovingFrontalVxEnum, MovingFrontalVyEnum])
 	return nothing
 end #}}}
 function CreateKMatrix(analysis::LevelsetAnalysis,element::Tria)# {{{

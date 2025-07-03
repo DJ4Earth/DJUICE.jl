@@ -587,8 +587,8 @@ function MovingFrontalVelocity(element::Tria) #{{{
 	
 	# load inputs
 	gr_input				= GetInput(element, MaskOceanLevelsetEnum)
-	#lsf_slopex_input	= GetInput(element, LevelsetfunctionSlopeXEnum)
-	#lsf_slopey_input	= GetInput(element, LevelsetfunctionSlopeYEnum)
+	lsf_slopex_input	= GetInput(element, LevelsetfunctionSlopeXEnum)
+	lsf_slopey_input	= GetInput(element, LevelsetfunctionSlopeYEnum)
 	#calvingratex_input= GetInput(element, CalvingratexEnum)
 	#calvingratey_input= GetInput(element, CalvingrateyEnum)
 	vx_input				= GetInput(element, VxEnum)
@@ -598,29 +598,27 @@ function MovingFrontalVelocity(element::Tria) #{{{
 
 	xyz_list = GetVerticesCoordinates(element.vertices)
 
-   gauss = GaussTria(2)
-   for ig in 1:3
+   gauss = GaussTria(P1Enum)
+   for ig in 1:gauss.numgauss
       vx  = GetInputValue(vx_input, gauss, ig)
       vy  = GetInputValue(vy_input, gauss, ig)
       groundedice  = GetInputValue(gr_input, gauss, ig)
 
-		dlsf = GetInputDerivativeValue(vx_input,xyz_list,gauss,ig)
-		#TODO: add L2Projection
-      #dlsfx  = GetInputValue(lsf_slopex_input, gauss, ig)
-      #dlsfy  = GetInputValue(lsf_slopey_input, gauss, ig)
+      dlsfx  = GetInputValue(lsf_slopex_input, gauss, ig)
+      dlsfy  = GetInputValue(lsf_slopey_input, gauss, ig)
       #cx  = GetInputValue(calvingratex_input, gauss, ig)
       #cy  = GetInputValue(calvingratey_input, gauss, ig)
 
-		norm_dlsf = sqrt(dlsf[1]^2+dlsf[2]^2)
+		norm_dlsf = sqrt(dlsfx^2+dlsfy^2)
 		
 		# TODO: depend on which calving law
       calvingrate  = GetInputValue(calvingrate_input, gauss, ig)
-		cx = calvingrate * dlsf[1] /norm_dlsf
-		cy = calvingrate * dlsf[2] /norm_dlsf
+		cx = calvingrate * dlsfx /norm_dlsf
+		cy = calvingrate * dlsfy /norm_dlsf
       meltingrate  = GetInputValue(meltingrate_input, gauss, ig)
 		if (groundedice < 0) meltingrate = 0.0; end
-		mx = meltingrate * dlsf[1] /norm_dlsf
-		my = meltingrate * dlsf[2] /norm_dlsf
+		mx = meltingrate * dlsfx /norm_dlsf
+		my = meltingrate * dlsfy /norm_dlsf
 		if (norm_dlsf <1e-10)
 			cx = 0.0; cy = 0.0
 			mx = 0.0; my = 0.0
