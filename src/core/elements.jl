@@ -332,7 +332,7 @@ function GetInputValue(element::Tria, vector::Vector{Float64}, gauss::GaussTria,
 
 	return value
 end # }}}
-function GetLevelsetIntersection!(element::Tria, indices::Vector{Int64}, numiceverts::Int64, fraction::Vector{Float64}, levelset_enum::IssmEnum, level::Float64) # {{{
+function GetLevelsetIntersection!(element::Tria, indices::Vector{Int64}, fraction::Vector{Float64}, levelset_enum::IssmEnum, level::Float64) # {{{
 
 	numvetices = 3
 
@@ -359,8 +359,9 @@ function GetLevelsetIntersection!(element::Tria, indices::Vector{Int64}, numicev
 		end
 	end
 
-   numiceverts = 0
    numnoiceverts = 0
+   numiceverts = 0
+
 	for i = 1:numvetices
       if(lsf[i]<=level)
 			numiceverts += 1
@@ -398,7 +399,7 @@ function GetLevelsetIntersection!(element::Tria, indices::Vector{Int64}, numicev
 		error("Wrong number of ice vertices in Tria::GetLevelsetIntersection! for ", levelset_enum)
 	end
 
-	return nothing
+	return numiceverts
 end # }}}
 function GetXcoord(element::Tria, xyz_list::Matrix{Float64}, gauss::GaussTria, ig::Int64) #{{{
 
@@ -750,14 +751,43 @@ function WriteFieldIsovalueSegment!(element::Tria, segments::Vector{Float64}, fi
 		s = Vector{Float64}(undef,2)
 		# init input
 		indices = Vector{Int64}(undef,3)
-		numiceverts = 0
 
 		# step 3: write coordinates
-		GetLevelsetIntersection!(element, indices, numiceverts, s, fieldenum, fieldvalue) 
-		println(element, indices, numiceverts, s)
+		numiceverts = GetLevelsetIntersection!(element, indices, s, fieldenum, fieldvalue) 
 
 		xyz_list = GetVerticesCoordinates(element.vertices)
+		counter = 1
+		if (numiceverts>0) && (numiceverts<3)
+			for i=1:numiceverts
+				for n=numiceverts+1:3 # iterate ove no-ice vertices
+					x[counter] = xyz_list[indices[i], 1] + s[counter]*(xyz_list[indices[n],1] - xyz_list[indices[i],1])
+					y[counter] = xyz_list[indices[i], 2] + s[counter]*(xyz_list[indices[n],2] - xyz_list[indices[i],2])
+					counter = counter + 1
+				end
+			end
+		elseif (numiceverts == 3)
+			for i=1:3
+				if (lsf[indices[i]] == 0.0)
+					x[counter] = xyz_list[indices[i], 1]
+					y[counter] = xyz_list[indices[i], 2]
+					counter = counter + 1
+				end
+				if (counter == 3) 
+					break
+				end
+			end
+			if (counter == 2)
+				# have only 1 vertex on levelset, write a signle point as a segment
+				x[counter] = x[1]
+				y[counter] = y[1]
+				counter = counter + 1
+			end
+
+		else 
+			error("no ice vertice found!")
+		end
 		# step 4: write segment
+		print(x, y,"\n")
 
 	end
 
