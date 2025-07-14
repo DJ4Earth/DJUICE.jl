@@ -733,7 +733,7 @@ function Update(element::Tria, inputs::Inputs, index::Int64, md::model, finiteel
 
 	return nothing
 end #}}}
-function WriteFieldIsovalueSegment!(element::Tria, segments::Vector{Float64}, fieldenum::IssmEnum, fieldvalue::Float64) #{{{
+function WriteFieldIsovalueSegment!(element::Tria, segments::Vector{Contour}, fieldenum::IssmEnum, fieldvalue::Float64) #{{{
 
 	@assert fieldvalue == 0. # field value != 0 not implemented yet
 	
@@ -789,6 +789,7 @@ function WriteFieldIsovalueSegment!(element::Tria, segments::Vector{Float64}, fi
 		# step 4: write segment
 		print(x, y,"\n")
 
+		push!(segments,Contour(length(segments)+1,2, x, y,false))
 	end
 
 	return nothing
