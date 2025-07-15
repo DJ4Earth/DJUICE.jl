@@ -75,6 +75,30 @@ function CharacteristicLength(element::Tria) #{{{
 
 	return sqrt(2*GetArea(element))
 end#}}}
+function CreateDistanceInputFromSegmentlist(element::Tria, distances::Vector{Float64}, distanceenum::IssmEnum) # {{{
+
+   # Get current field and vertex coordinates
+	ls = Vector{Float64}(undef, 3)
+	GetInputListOnVertices!(element, ls, distanceenum)
+
+	#Configure vertices
+	for i in 1:3
+		distance = distances[element.vertexids[i]]
+		if(isinf(distance)) error("Inf found in Vector") end
+		if(isnan(distance)) error("NaN found in Vector") end
+
+		if (ls[i] > 0)
+			ls[i] = distance
+		else
+			ls[i] = -distance
+		end
+	end
+
+	# update levelset
+	AddInput(element, distanceenum, ls, P1Enum)
+
+	return nothing
+end # }}}
 function FindParam(::Type{T}, element::Tria, enum::IssmEnum) where T # {{{
 
 	return FindParam(T, element.parameters, enum)
@@ -786,9 +810,8 @@ function WriteFieldIsovalueSegment!(element::Tria, segments::Vector{Contour}, fi
 		else 
 			error("no ice vertice found!")
 		end
-		# step 4: write segment
-		print(x, y,"\n")
 
+		# step 4: write segment
 		push!(segments,Contour(length(segments)+1,2, x, y,false))
 	end
 
