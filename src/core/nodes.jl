@@ -293,6 +293,13 @@ function DistributeDofs(nodes::Vector{Node},setenum::IssmEnum) #{{{
 end# }}}
 function NumberOfDofs(nodes::Vector{Node},setenum::IssmEnum) #{{{
 
+	numdofs = NumberOfDofsLocal(nodes, setenum)
+	# TODO: implement MPI version
+	return numdofs
+
+end# }}}
+function NumberOfDofsLocal(nodes::Vector{Node},setenum::IssmEnum) #{{{
+
 	numdofs = 0
 	for i in 1:length(nodes)
 		numdofs += GetNumberOfDofs(nodes[i],setenum)

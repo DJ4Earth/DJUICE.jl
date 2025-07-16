@@ -134,9 +134,13 @@ function Core(analysis::LevelsetAnalysis,femmodel::FemModel)# {{{
 	println("   call computational core:");
 	solutionsequence_linear(femmodel,analysis)
 
-	# TODO: add reinitialization
+	# TODO: add killicebergs, add reset reinitialization
+	
+	# update vertices included for next calculation
+	GetMaskOfIceVerticesLSMx0(femmodel)
+
 	# save
-   RequestedOutputsx(femmodel, [MaskIceLevelsetEnum, MovingFrontalVxEnum, MovingFrontalVyEnum])
+	RequestedOutputsx(femmodel, [MaskIceLevelsetEnum])
 	return nothing
 end #}}}
 function CreateKMatrix(analysis::LevelsetAnalysis,element::Tria)# {{{

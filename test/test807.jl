@@ -2,7 +2,7 @@ using DJUICE
 include("utils.jl")
 
 md = model()
-md = triangle(md,issmdir()*"/test/Exp/Square.exp", 200000.)
+md = triangle(md,issmdir()*"/test/Exp/Square.exp", 50000.)
 md = setmask(md,"all","")
 
 #Geometry
@@ -74,10 +74,33 @@ md.frontalforcings.ablationrate=10000*ones(md.mesh.numberofvertices)
 md.levelset.spclevelset=NaN*ones(md.mesh.numberofvertices)
 
 md=solve(md,:Transient)
-field_names =["Vx1","Vy1","Vel1"]
-field_tolerances=[4e-13,4e-13,4e-13]
+field_names =["Vx1","Vy1","Vel1","Pressure1","Thickness1","Surface1","MaskIceLevelset1",
+				 "Vx2","Vy2","Vel2","Pressure2","Thickness2","Surface2","MaskIceLevelset2",
+				 "Vx3","Vy3","Vel3","Pressure3","Thickness3","Surface3","MaskIceLevelset3"]
+field_tolerances=[1e-11,1e-11,1e-11,NaN,1e-11,1e-11,1e-11,
+					  2e-11,2e-11,2e-11,NaN,1e-11,1e-11,5e-11,
+					  2e-11,2e-11,2e-11,NaN,1e-11,1e-11,5e-11]
 field_values= [(md.results["TransientSolution"][1]["Vx"]),
 					(md.results["TransientSolution"][1]["Vy"]),
-					(md.results["TransientSolution"][1]["Vel"]) ]
-#compareArchive(@__FILE__, field_names, field_tolerances, field_values, :test)
+					(md.results["TransientSolution"][1]["Vel"]),
+					(md.results["TransientSolution"][1]["Thickness"]),
+					(md.results["TransientSolution"][1]["Thickness"]),
+					(md.results["TransientSolution"][1]["Surface"]),
+					(md.results["TransientSolution"][1]["MaskIceLevelset"]),
+					(md.results["TransientSolution"][2]["Vx"]),
+					(md.results["TransientSolution"][2]["Vy"]),
+					(md.results["TransientSolution"][2]["Vel"]),
+					(md.results["TransientSolution"][2]["Thickness"]),
+					(md.results["TransientSolution"][2]["Thickness"]),
+					(md.results["TransientSolution"][2]["Surface"]),
+					(md.results["TransientSolution"][2]["MaskIceLevelset"]),
+					(md.results["TransientSolution"][3]["Vx"]),
+					(md.results["TransientSolution"][3]["Vy"]),
+					(md.results["TransientSolution"][3]["Vel"]),
+					(md.results["TransientSolution"][3]["Thickness"]),
+					(md.results["TransientSolution"][3]["Thickness"]),
+					(md.results["TransientSolution"][3]["Surface"]),
+					(md.results["TransientSolution"][3]["MaskIceLevelset"])
+					]
+compareArchive(@__FILE__, field_names, field_tolerances, field_values, :test)
 
