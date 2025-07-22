@@ -1,5 +1,4 @@
 using DJUICE
-include("utils.jl")
 
 md = model()
 md = triangle(md,issmdir()*"/test/Exp/Square.exp", 150000.)

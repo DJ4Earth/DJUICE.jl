@@ -1,9 +1,6 @@
 # AD stressbalance frcition coefficient
-using Enzyme
-
 using DJUICE
 using MAT
-using Test
 
 #Load model from MATLAB file
 #file = matopen(joinpath(@__DIR__, "..", "data","temp12k.mat")) #BIG model
