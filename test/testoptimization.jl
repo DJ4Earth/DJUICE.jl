@@ -3,7 +3,10 @@ using DJUICE
 using MAT
 using Test
 
-using Optimization, OptimizationOptimJL
+#using Optimization, OptimizationNLopt
+using ManualNLPModels, JSOSolvers
+using MadNLP
+
 
 #Load model from MATLAB file
 file = matopen(joinpath(@__DIR__, "..", "data","temp.mat")) #SMALL model (35 elements)
@@ -26,13 +29,36 @@ md.inversion.dependent_string = ["SurfaceAbsVelMisfit"]
 α = md.inversion.independent
 ∂J_∂α = zero(α)
 
-femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
-n = length(α)
 
-DJUICE.costfunction(α, femmodel)
-# test Enzyme autodiff only
-dfemmodel = Enzyme.Compiler.make_zero(Base.Core.Typeof(femmodel), IdDict(), femmodel)
-autodiff(set_runtime_activity(Enzyme.Reverse), DJUICE.costfunction, Active, Duplicated(α, ∂J_∂α), Duplicated(femmodel,dfemmodel))
+# cost function f
+f(x) = begin
+	femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
+	DJUICE.costfunction(x, femmodel)
+end
+
+# Enzyme gradient g
+g!(gx, x) = begin
+	femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
+	dfemmodel = Enzyme.Compiler.make_zero(Base.Core.Typeof(femmodel), IdDict(), femmodel)
+	Enzyme.autodiff(set_runtime_activity(Enzyme.Reverse), DJUICE.costfunction, Active, Duplicated(x, gx), Duplicated(femmodel,dfemmodel))
+	gx
+end
+
+nlp = NLPModel(
+  α,
+  f,
+  grad = g!,
+)
+
+#output = lbfgs(nlp)
+
+results_qn = madnlp(
+           nlp;
+           linear_solver=LapackCPUSolver,
+           hessian_approximation=MadNLP.CompactLBFGS,
+       )
+
+
 
 # use user defined grad, errors!
 #optprob = OptimizationFunction(DJUICE.costfunction, Optimization.AutoEnzyme(; mode=set_runtime_activity(Enzyme.Reverse)))
@@ -44,3 +70,9 @@ autodiff(set_runtime_activity(Enzyme.Reverse), DJUICE.costfunction, Active, Dupl
 #sol = Optimization.solve(prob, Optim.NelderMead())
 #sol = Optimization.solve(prob, Optimization.LBFGS(), maxiters = 100)
 
+#using JuMP, Optim
+#m = Model(Optim.Optimizer);
+#set_optimizer_attribute(m, "method", LBFGS())
+#@variable(m, α)
+#@variable(m, femmodel)
+#@objective(m, Min, DJUICE.costfunction(α, femmodel))
