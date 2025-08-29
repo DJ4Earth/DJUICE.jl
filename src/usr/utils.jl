@@ -209,10 +209,10 @@ function InterpFromMeshToMesh2d2(index_data::Array,x_data::Vector,y_data::Vector
 	return dataout
 end #}}}
 function IssmStructDisp(io::IO, modelfield::Any) # {{{
-	@printf "%s:\n" typeof(modelfield)
+	@printf "   %s:\n" typeof(modelfield)
 	for name in fieldnames(typeof(modelfield))
 		a=getfield(modelfield,name)
-		@printf "%19s: " name
+		@printf "%30s: " name
 		IssmPrintField(io, a)
 		@printf "\n"
 	end
