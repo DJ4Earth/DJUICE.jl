@@ -206,7 +206,7 @@ mutable struct LinearBasalforcings  <: AbstractBasalforcings
 	geothermalflux::Vector{Float64}
 end
 function LinearBasalforcings()
-	return LinearBasalforcings(50., 0., -800., -400., Vector{Float64}(undef,0), Vector{Float64}(undef,0))
+	return LinearBasalforcings(50., 0., -800., -400., Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0))
 end
 # }}}
 #Surfaceforcings {{{
@@ -350,10 +350,10 @@ function model() #{{{
 													Masstransport(), Transient(), Inversion(), DefaultCalving(), 
 													Levelset(), Frontalforcings())
 end#}}}
-function model(md::model; mesh::AbstractMesh=md.mesh, friction::AbstractFriction=md.friction, calving::AbstractCalving=md.calving) #{{{
+function model(md::model; mesh::AbstractMesh=md.mesh, friction::AbstractFriction=md.friction, calving::AbstractCalving=md.calving, basalforcings::AbstractBasalforcings=md.basalforcings) #{{{
 	return model(mesh, md.geometry, md.mask, md.materials, 
 					 md.initialization, md.stressbalance, md.constants, md.results, 
-					 friction, md.basalforcings, md.smb, md.timestepping, 
+					 friction, basalforcings, md.smb, md.timestepping, 
 					 md.masstransport, md.transient, md.inversion, md.calving, 
 					 md.levelset, md.frontalforcings)
 end#}}}
