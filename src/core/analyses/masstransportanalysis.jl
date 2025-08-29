@@ -49,8 +49,11 @@ function UpdateElements(analysis::MasstransportAnalysis,elements::Vector{Tria}, 
 
 	#Deal with basal forcings
 	if typeof(md.basalforcings) == DefaultBasalforcings
-		FetchDataToInput(md,inputs,elements,md.basalforcings.groundedice_melting_rate,BasalforcingsGroundediceMeltingRateEnum, 1.0/md.constants.yts)
-		FetchDataToInput(md,inputs,elements,md.basalforcings.floatingice_melting_rate,BasalforcingsFloatingiceMeltingRateEnum, 1.0/md.constants.yts)
+		FetchDataToInput(md,inputs,elements,md.basalforcings.groundedice_melting_rate, BasalforcingsGroundediceMeltingRateEnum, 1.0/md.constants.yts)
+		FetchDataToInput(md,inputs,elements,md.basalforcings.floatingice_melting_rate, BasalforcingsFloatingiceMeltingRateEnum, 1.0/md.constants.yts)
+	elseif typeof(md.basalforcings) == LinearBasalforcings
+		FetchDataToInput(md,inputs,elements,md.basalforcings.groundedice_melting_rate, BasalforcingsGroundediceMeltingRateEnum, 1.0/md.constants.yts)
+		FetchDataToInput(md,inputs,elements,md.basalforcings.perturbation_melting_rate, BasalforcingsPerturbationMeltingRateEnum, 1.0/md.constants.yts)
 	else
 		error("Basalforcings ", typeof(md.basalforcings), " not supported yet")
 	end
@@ -61,6 +64,18 @@ function UpdateParameters(analysis::MasstransportAnalysis,parameters::Parameters
 
 	AddParam(parameters, md.masstransport.min_thickness, MasstransportMinThicknessEnum)
 	AddParam(parameters, md.masstransport.stabilization, MasstransportStabilizationEnum)
+
+	#Deal with basal forcings
+	if typeof(md.basalforcings) == DefaultBasalforcings
+		#Nothing to be done
+	elseif typeof(md.basalforcings) == LinearBasalforcings
+		AddParam(parameters, md.basalforcings.deepwater_melting_rate/md.constants.yts, BasalforcingsDeepwaterMeltingRateEnum)
+		AddParam(parameters, md.basalforcings.upperwater_melting_rate/md.constants.yts, BasalforcingsUpperwaterMeltingRateEnum)
+		AddParam(parameters, md.basalforcings.deepwater_elevation, BasalforcingsDeepwaterElevationEnum)
+		AddParam(parameters, md.basalforcings.upperwater_elevation, BasalforcingsUpperwaterElevationEnum)
+	else
+		error("Basalforcings ", typeof(md.basalforcings), " not supported yet")
+	end
 
 	return nothing
 end#}}}
