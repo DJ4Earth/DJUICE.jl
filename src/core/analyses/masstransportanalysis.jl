@@ -41,13 +41,19 @@ function UpdateElements(analysis::MasstransportAnalysis,elements::Vector{Tria}, 
 	FetchDataToInput(md,inputs,elements,md.geometry.surface,SurfaceEnum)
 	FetchDataToInput(md,inputs,elements,md.geometry.base,BaseEnum)
 	FetchDataToInput(md,inputs,elements,md.geometry.bed,BedEnum)
-	FetchDataToInput(md,inputs,elements,md.basalforcings.groundedice_melting_rate,BasalforcingsGroundediceMeltingRateEnum, 1.0/md.constants.yts)
-	FetchDataToInput(md,inputs,elements,md.basalforcings.floatingice_melting_rate,BasalforcingsFloatingiceMeltingRateEnum, 1.0/md.constants.yts)
 	FetchDataToInput(md,inputs,elements,md.smb.mass_balance,SmbMassBalanceEnum, 1.0/md.constants.yts)
 	FetchDataToInput(md,inputs,elements,md.mask.ice_levelset, MaskIceLevelsetEnum)
 	FetchDataToInput(md,inputs,elements,md.mask.ocean_levelset, MaskOceanLevelsetEnum)
 	FetchDataToInput(md,inputs,elements,md.initialization.vx,VxEnum, 1.0/md.constants.yts)
 	FetchDataToInput(md,inputs,elements,md.initialization.vy,VyEnum, 1.0/md.constants.yts)
+
+	#Deal with basal forcings
+	if typeof(md.basalforcings) == DefaultBasalforcings
+		FetchDataToInput(md,inputs,elements,md.basalforcings.groundedice_melting_rate,BasalforcingsGroundediceMeltingRateEnum, 1.0/md.constants.yts)
+		FetchDataToInput(md,inputs,elements,md.basalforcings.floatingice_melting_rate,BasalforcingsFloatingiceMeltingRateEnum, 1.0/md.constants.yts)
+	else
+		error("Basalforcings ", typeof(md.basalforcings), " not supported yet")
+	end
 
 	return nothing
 end#}}}

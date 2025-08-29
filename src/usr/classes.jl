@@ -182,14 +182,15 @@ function Base.show(io::IO, this::DNNFriction)# {{{
 end# }}}
 # }}}
 #Basalforcings {{{
-mutable struct Basalforcings
+abstract type AbstractBasalforcings end
+mutable struct DefaultBasalforcings  <: AbstractBasalforcings
 	groundedice_melting_rate::Vector{Float64}
 	floatingice_melting_rate::Vector{Float64}
 end
-function Basalforcings() #{{{
-	return Basalforcings( Vector{Float64}(undef,0), Vector{Float64}(undef,0))
+function DefaultBasalforcings() #{{{
+	return DefaultBasalforcings( Vector{Float64}(undef,0), Vector{Float64}(undef,0))
 end# }}}
-function Base.show(io::IO, this::Basalforcings)# {{{
+function Base.show(io::IO, this::DefaultBasalforcings)# {{{
 	IssmStructDisp(io, this)
 end# }}}
 # }}}
@@ -307,7 +308,7 @@ end# }}}
 # }}}
 
 #Model structure
-mutable struct model{Mesh<:AbstractMesh, Friction<:AbstractFriction, Calving<:AbstractCalving}
+mutable struct model{Mesh<:AbstractMesh, Friction<:AbstractFriction, Basalforcings<:AbstractBasalforcings, Calving<:AbstractCalving}
 	mesh::Mesh
 	geometry::Geometry
 	mask::Mask
@@ -330,7 +331,7 @@ end
 function model() #{{{
       return model( Mesh2dTriangle(), Geometry(), Mask(), Materials(),
                                        Initialization(),Stressbalance(), Constants(), Dict(),
-                                       BuddFriction(), Basalforcings(), SMBforcings(), Timestepping(),
+                                       BuddFriction(), DefaultBasalforcings(), SMBforcings(), Timestepping(),
 													Masstransport(), Transient(), Inversion(), DefaultCalving(), 
 													Levelset(), Frontalforcings())
 end#}}}
