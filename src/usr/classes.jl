@@ -3,8 +3,11 @@ using Flux
 using StatsBase
 
 #Model fields
-#Mesh {{{
+#Mesh (Abstract){{{
 abstract type AbstractMesh end
+function Base.show(io::IO, this::AbstractMesh) IssmStructDisp(io, this) end
+
+#Mesh2dTriangle
 mutable struct Mesh2dTriangle <: AbstractMesh
 	numberofvertices::Int64
 	numberofelements::Int64
@@ -14,12 +17,11 @@ mutable struct Mesh2dTriangle <: AbstractMesh
 	segments::Matrix{Int64}
 	vertexonboundary::Vector{Bool}
 end
-function Mesh2dTriangle() #{{{
+function Mesh2dTriangle()
 	return Mesh2dTriangle( 0, 0, Vector{Float64}(undef,0), Vector{Float64}(undef, 0), Matrix{Int64}(undef, 0, 0), Matrix{Int64}(undef, 0, 0), Vector{Bool}(undef,0))
-end# }}}
-function Base.show(io::IO, this::Mesh2dTriangle)# {{{
-	IssmStructDisp(io, this)
-end# }}}
+end
+
+#Mesh3dPrism
 mutable struct Mesh3dPrism{T} <: AbstractMesh
 	numberofvertices::Int64
 	numberofelements::Int64
@@ -31,9 +33,11 @@ mutable struct Mesh3dPrism{T} <: AbstractMesh
 	segments::Matrix{Int64}
 	vertexonboundary::Vector{Bool}
 end
-function Mesh3dPrism() #{{{
-	return Mesh3dPrism( 0, 0, 0, Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), Matrix{Int64}(undef, 0, 0), Matrix{Int64}(undef, 0, 0), Vector{Bool}(undef,0))
-end# }}}
+function Mesh3dPrism()
+	return Mesh3dPrism(0, 0, 0,
+							 Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0),
+							 Matrix{Int64}(undef, 0, 0), Matrix{Int64}(undef, 0, 0), Vector{Bool}(undef,0))
+end
 #}}}
 #Geometry{{{
 mutable struct Geometry
@@ -133,66 +137,77 @@ function Base.show(io::IO, this::Materials)# {{{
 	IssmStructDisp(io, this)
 end# }}}
 # }}}
-#Friction {{{
+#Friction (Abstract){{{
 abstract type AbstractFriction end
+function Base.show(io::IO, this::AbstractFriction) IssmStructDisp(io, this) end
+
+#BuddFriction
 mutable struct BuddFriction <: AbstractFriction
 	coefficient::Vector{Float64}
 	p::Vector{Float64}
 	q::Vector{Float64}
 end
-function BuddFriction() #{{{
+function BuddFriction()
 	return BuddFriction(Vector{Float64}(undef,0),Vector{Float64}(undef,0),Vector{Float64}(undef,0))
-end# }}}
-function Base.show(io::IO, this::BuddFriction)# {{{
-	IssmStructDisp(io, this)
-end# }}}
+end
+
+#WeertmanFriction
 mutable struct WeertmanFriction <: AbstractFriction
 	C::Vector{Float64}
 	m::Vector{Float64}
 end
-function WeertmanFriction() #{{{
+function WeertmanFriction()
 	return WeertmanFriction(Vector{Float64}(undef,0),Vector{Float64}(undef,0))
-end# }}}
-function Base.show(io::IO, this::WeertmanFriction)# {{{
-   IssmStructDisp(io, this)
-end# }}}
+end
+
+#SchoofFriction
 mutable struct SchoofFriction <: AbstractFriction
 	C::Vector{Float64}
 	m::Vector{Float64}
 	Cmax::Vector{Float64}
 end
-function SchoofFriction() #{{{
+function SchoofFriction()
 	return SchoofFriction(Vector{Float64}(undef,0),Vector{Float64}(undef,0),Vector{Float64}(undef,0))
-end# }}}
-function Base.show(io::IO, this::SchoofFriction)# {{{
-   IssmStructDisp(io, this)
-end# }}}
+end
+
+#DNNFriction
 mutable struct DNNFriction <: AbstractFriction
 	dnnChain::Vector{Flux.Chain{}}
 	dtx::Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64}} }
 	dty::Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64}} }
 end
-function DNNFriction() #{{{
+function DNNFriction() 
 	return DNNFriction(Vector{Flux.Chain{}}(undef,0),
 							 Vector{StatsBase.ZScoreTransform{ Float64, Vector{Float64} }}(undef,0),
 							 Vector{StatsBase.ZScoreTransform{ Float64, Vector{Float64} }}(undef,0))
-end# }}}
-function Base.show(io::IO, this::DNNFriction)# {{{
-	IssmStructDisp(io, this)
-end# }}}
+end
 # }}}
-#Basalforcings {{{
+#Basalforcings (Abstract) {{{
 abstract type AbstractBasalforcings end
+function Base.show(io::IO, this::AbstractBasalforcings) IssmStructDisp(io, this) end
+
+#DefaultBasalforcings
 mutable struct DefaultBasalforcings  <: AbstractBasalforcings
 	groundedice_melting_rate::Vector{Float64}
 	floatingice_melting_rate::Vector{Float64}
 end
-function DefaultBasalforcings() #{{{
+function DefaultBasalforcings()
 	return DefaultBasalforcings( Vector{Float64}(undef,0), Vector{Float64}(undef,0))
-end# }}}
-function Base.show(io::IO, this::DefaultBasalforcings)# {{{
-	IssmStructDisp(io, this)
-end# }}}
+end
+
+#LinearBasalforcings
+mutable struct LinearBasalforcings  <: AbstractBasalforcings
+	deepwater_melting_rate::Float64
+	upperwater_melting_rate::Float64
+	deepwater_elevation::Float64
+	upperwater_elevation::Float64
+	groundedice_melting_rate::Vector{Float64}
+	perturbation_melting_rate::Vector{Float64}
+	geothermalflux::Vector{Float64}
+end
+function LinearBasalforcings()
+	return LinearBasalforcings(50., 0., -800., -400., Vector{Float64}(undef,0), Vector{Float64}(undef,0))
+end
 # }}}
 #Surfaceforcings {{{
 mutable struct SMBforcings
@@ -205,19 +220,19 @@ function Base.show(io::IO, this::SMBforcings)# {{{
 	IssmStructDisp(io, this)
 end# }}}
 # }}}
-#Timestepping{{{
+#Timestepping (Abstract){{{
 abstract type AbstractTimestepping end
-mutable struct Timestepping <: AbstractTimestepping
+function Base.show(io::IO, this::AbstractTimestepping) IssmStructDisp(io, this) end
+
+#DefaultTimestepping
+mutable struct DefaultTimestepping <: AbstractTimestepping
 	start_time::Float64
 	final_time::Float64
 	time_step::Float64
 end
-function Timestepping() #{{{
-	return Timestepping( 0., 0., 0.)
-end# }}}
-function Base.show(io::IO, this::Timestepping)# {{{
-	IssmStructDisp(io, this)
-end# }}}
+function DefaultTimestepping() 
+	return DefaultTimestepping( 0., 0., 0.)
+end
 # }}}
 #Masstransport {{{
 mutable struct Masstransport
@@ -267,17 +282,17 @@ function Base.show(io::IO, this::Inversion)# {{{
 	IssmStructDisp(io, this)
 end# }}}
 # }}}
-#Calving {{{
+#Calving (Abstract){{{
 abstract type AbstractCalving end
+function Base.show(io::IO, this::AbstractCalving) IssmStructDisp(io, this) end
+
+#DefaultCalving
 mutable struct DefaultCalving <: AbstractCalving
 	calvingrate::Vector{Float64}
 end
-function DefaultCalving() #{{{
+function DefaultCalving()
 	return DefaultCalving(Vector{Float64}(undef,0))
-end# }}}
-function Base.show(io::IO, this::DefaultCalving)# {{{
-	IssmStructDisp(io, this)
-end# }}}
+end
 # }}}
 #Levelset{{{
 mutable struct Levelset
@@ -320,7 +335,7 @@ mutable struct model{Mesh<:AbstractMesh, Friction<:AbstractFriction, Basalforcin
 	friction::Friction
 	basalforcings::Basalforcings
 	smb::SMBforcings
-	timestepping::Timestepping
+	timestepping::DefaultTimestepping
 	masstransport::Masstransport
 	transient::Transient
 	inversion::Inversion
@@ -331,7 +346,7 @@ end
 function model() #{{{
       return model( Mesh2dTriangle(), Geometry(), Mask(), Materials(),
                                        Initialization(),Stressbalance(), Constants(), Dict(),
-                                       BuddFriction(), DefaultBasalforcings(), SMBforcings(), Timestepping(),
+                                       BuddFriction(), DefaultBasalforcings(), SMBforcings(), DefaultTimestepping(),
 													Masstransport(), Transient(), Inversion(), DefaultCalving(), 
 													Levelset(), Frontalforcings())
 end#}}}
