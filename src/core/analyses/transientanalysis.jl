@@ -36,7 +36,10 @@ function Core(analysis::TransientAnalysis,femmodel::FemModel)# {{{
 
 		if(ismovingfront) Core(LevelsetAnalysis(), femmodel) end
 
-      if(ismasstransport) Core(MasstransportAnalysis(), femmodel) end
+		if(ismasstransport)
+			FloatingiceMeltingRate(femmodel)
+			Core(MasstransportAnalysis(), femmodel)
+		end
 		MigrateGroundinglinex(femmodel)
 
 		step+=1

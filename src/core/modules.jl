@@ -208,6 +208,51 @@ function CreateNodalConstraintsx(nodes::Vector{Node})# {{{
 
 	return ys
 end# }}}
+function FloatingiceMeltingRate(femmodel::FemModel)# {{{
+
+	basalforcing_model = FindParam(IssmEnum, femmodel.parameters, BasalforcingsEnum)
+
+	if basalforcing_model==FloatingMeltRateEnum
+		#Nothing to be done
+	elseif basalforcing_model==LinearFloatingMeltRateEnum
+		LinearFloatingiceMeltingRate(femmodel)
+	end
+
+end# }}}
+function LinearFloatingiceMeltingRate(femmodel::FemModel)# {{{
+
+	values       = Vector{Float64}(undef,3)
+	base         = Vector{Float64}(undef,3)
+	perturbation = Vector{Float64}(undef,3)
+
+	for i=1:length(femmodel.elements)
+		element = femmodel.elements[i]
+
+		deepwaterel    = FindParam(Float64, element, BasalforcingsDeepwaterElevationEnum)
+		deepwatermelt  = FindParam(Float64, element, BasalforcingsDeepwaterMeltingRateEnum)
+		upperwaterel   = FindParam(Float64, element, BasalforcingsUpperwaterElevationEnum)
+		upperwatermelt = FindParam(Float64, element, BasalforcingsUpperwaterMeltingRateEnum)
+
+		GetInputListOnVertices!(element, base, BaseEnum)
+		GetInputListOnVertices!(element, perturbation, BasalforcingsPerturbationMeltingRateEnum)
+		for i in 1:3
+			if(base[i]>=upperwaterel)
+				values[i]=upperwatermelt
+			elseif (base[i]<deepwaterel)
+				values[i]=deepwatermelt
+			else
+				alpha = (base[i]-upperwaterel)/(deepwaterel-upperwaterel)
+				values[i]=deepwatermelt*alpha+(1.0 - alpha)*upperwatermelt
+			end
+
+			#Add perturbation
+			values[i] += perturbation[i]
+		end
+
+		AddInput(element, BasalforcingsFloatingiceMeltingRateEnum, values, P1Enum)
+	end
+
+end# }}}
 function GetMaskOfIceVerticesLSMx0(femmodel::FemModel) #{{{
 
 	#Initialize vector with number of vertices

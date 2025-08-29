@@ -67,12 +67,13 @@ function UpdateParameters(analysis::MasstransportAnalysis,parameters::Parameters
 
 	#Deal with basal forcings
 	if typeof(md.basalforcings) == DefaultBasalforcings
-		#Nothing to be done
+		AddParam(parameters, FloatingMeltRateEnum, BasalforcingsEnum)
 	elseif typeof(md.basalforcings) == LinearBasalforcings
 		AddParam(parameters, md.basalforcings.deepwater_melting_rate/md.constants.yts, BasalforcingsDeepwaterMeltingRateEnum)
 		AddParam(parameters, md.basalforcings.upperwater_melting_rate/md.constants.yts, BasalforcingsUpperwaterMeltingRateEnum)
 		AddParam(parameters, md.basalforcings.deepwater_elevation, BasalforcingsDeepwaterElevationEnum)
 		AddParam(parameters, md.basalforcings.upperwater_elevation, BasalforcingsUpperwaterElevationEnum)
+		AddParam(parameters, LinearFloatingMeltRateEnum, BasalforcingsEnum)
 	else
 		error("Basalforcings ", typeof(md.basalforcings), " not supported yet")
 	end
