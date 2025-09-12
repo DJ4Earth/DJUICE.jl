@@ -2,7 +2,7 @@
 #Matrix
 
 #Toolkit #1: serial sparse arrays
-#= DEACTIVATED FOR NOW
+# DEACTIVATED FOR NOW
 using SparseArrays
 mutable struct IssmMatrix #{{{
 	M::Int64
@@ -41,9 +41,8 @@ function Assemble!(matrix::IssmMatrix)#{{{
 
 	return nothing
 end#}}}
-=#
 
-#Toolkit #2: dense matrix (for enzyme)
+#= Toolkit #2: dense matrix (for enzyme)
 mutable struct IssmMatrix #{{{
 	M::Int64
 	N::Int64
@@ -82,7 +81,7 @@ function Echo(matrix::IssmMatrix)#{{{
 	end
 	return nothing
 end#}}}
-
+=#
 #Vector
 mutable struct IssmVector #{{{
 	vector::Vector{Float64}
