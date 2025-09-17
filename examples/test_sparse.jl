@@ -1,4 +1,6 @@
 using Enzyme
+Enzyme.API.strictAliasing!(false)
+Enzyme.Compiler.VERBOSE_ERRORS[] = true
 using DJUICE
 
 n = 5
