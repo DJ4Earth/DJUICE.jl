@@ -357,10 +357,10 @@ function model(md::model; mesh::AbstractMesh=md.mesh, friction::AbstractFriction
 					 md.masstransport, md.transient, md.inversion, md.calving, 
 					 md.levelset, md.frontalforcings)
 end#}}}
-function model(matmd::Dict; verbose::Bool=true, friction::AbstractFriction=BuddFriction()) #{{{
+function model(matmd::Dict; verbose::Bool=true, friction::AbstractFriction=BuddFriction(), basalforcings::AbstractBasalforcings=DefaultBasalforcings()) #{{{
 
 	#initialize output
-	md = model(model(), friction=friction)
+	md = model(model(), friction=friction, basalforcings=basalforcings)
 
 	#Loop over all possible fields
 	for name1 in keys(matmd)
