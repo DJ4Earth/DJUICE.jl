@@ -8,13 +8,22 @@ file = matopen(joinpath(@__DIR__, ".", "","ModelBig.mat"))
 
 mat  = read(file, "md")
 close(file)
-md = model(mat, friction=DJUICE.BuddFriction(), basalforcings=DJUICE.LinearBasalforcings())
+md = model(mat, friction=DJUICE.SchoofFriction(), basalforcings=DJUICE.LinearBasalforcings())
 
 md.timestepping.time_step = 0.1
 md.timestepping.start_time = 1995
 md.timestepping.final_time = 1995.5
 #make model run faster 
 #md.stressbalance.maxiter = 100
+
+# manually set basal forcings
+md.basalforcings.deepwater_melting_rate = 50.0
+md.basalforcings.upperwater_melting_rate = 0.0
+md.basalforcings.deepwater_elevation = -500.0
+md.basalforcings.upperwater_elevation = 0.0
+md.basalforcings.groundedice_melting_rate = zeros(md.mesh.numberofvertices)
+md.basalforcings.perturbation_melting_rate = zeros(md.mesh.numberofvertices)
+
 #
 ##Now call AD!
 md.inversion.iscontrol = 1
@@ -33,7 +42,7 @@ md.inversion.vy_obs = md.initialization.vy
 md = solve(md, :Transient)
 
 # save
-#@save "test_bm.jld2" md
+@save "test_bm_pm.jld2" md
 
 # the gradient
 #g = md.results["StressbalanceSolution"]["Gradient"]
