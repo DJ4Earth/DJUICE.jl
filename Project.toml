@@ -29,11 +29,11 @@ JLD2 = "0.6.2"
 JSOSolvers = "0.14.1"
 MAT = "0.10"
 MadNLP = "0.8"
-Makie = "0.22"
+Makie = "0.24"
 ManualNLPModels = "0.2.0"
 SparseArrays = "1"
 StatsBase = "0.34"
-Triangulate = "2.3"
+Triangulate = "3.0"
 julia = "1.10"
 
 [extras]
