@@ -579,20 +579,34 @@ function InputUpdateFromVector(element::Tria, vector::Vector{Float64}, enum::Iss
 	return nothing
 end #}}}
 function IsAllFloating(element::Tria) #{{{
-	input = GetInput(element, MaskOceanLevelsetEnum)
 
-	# by default use none migration
-	if GetInputMin(input) > 0. 
-		return false;
+	input=GetInput(element, MaskIceLevelsetEnum)
+	migration_style = FindParam(String, element, GroundinglineMigrationEnum)
+	# get the Enum
+	migration_style_enum = StringToEnum(migration_style)
+
+	if (migration_style_enum==SubelementMigrationEnum)
+		if GetInputMax(input) <= 0.
+			return true;
+		else
+			return false
+		end
+	elseif (migration_style_enum==ContactEnum)
+		if GetInputMin(input) < 0.
+			return true;
+		else
+			return false
+		end
+	elseif (migration_style_enum==NoneEnum || migration_style_enum==AggressiveMigrationEnum || migration_style_enum==SoftMigrationEnum || migration_style_enum==GroundingOnlyEnum)
+		# by default use none migration
+		if GetInputMin(input) > 0. 
+			return false;
+		else
+			return true
+		end
 	else
-		return true
+		error("migration_style not implemented yet")
 	end
-	# TODO: add subelement migration
-	#if GetInputMax(input) <= 0. 
-	#	return true;
-	#else
-	#	return false
-	#end
 end#}}}
 function IsIcefront(element::Tria) #{{{
 

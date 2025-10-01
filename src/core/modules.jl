@@ -136,6 +136,9 @@ function CreateParameters(parameters::Parameters,md::model,solutionstring::Symbo
 
 	#Is moving front 
 	AddParam(parameters,md.transient.ismovingfront,TransientIsmovingfrontEnum)
+	#Is grounding line
+	AddParam(parameters,md.transient.isgroundingline,TransientIsgroundinglineEnum)
+	AddParam(parameters,md.groundingline.migration,GroundinglineMigrationEnum)
 
 	return nothing
 end# }}}
