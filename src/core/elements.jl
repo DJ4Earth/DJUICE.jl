@@ -581,23 +581,21 @@ end #}}}
 function IsAllFloating(element::Tria) #{{{
 
 	input=GetInput(element, MaskOceanLevelsetEnum)
-	migration_style = FindParam(String, element, GroundinglineMigrationEnum)
-	# get the Enum
-	migration_style_enum = StringToEnum(migration_style)
+	migration_style = StringToEnum(FindParam(String, element, GroundinglineMigrationEnum))
 
-	if (migration_style_enum==SubelementMigrationEnum)
+	if (migration_style==SubelementMigrationEnum)
 		if GetInputMax(input) <= 0.
 			return true;
 		else
 			return false
 		end
-	elseif (migration_style_enum==ContactEnum)
+	elseif (migration_style==ContactEnum)
 		if GetInputMin(input) < 0.
 			return true;
 		else
 			return false
 		end
-	elseif (migration_style_enum==NoneEnum || migration_style_enum==AggressiveMigrationEnum || migration_style_enum==SoftMigrationEnum || migration_style_enum==GroundingOnlyEnum)
+	elseif (migration_style==NoneEnum || migration_style==AggressiveMigrationEnum || migration_style==SoftMigrationEnum || migration_style==GroundingOnlyEnum)
 		# by default use none migration
 		if GetInputMin(input) > 0. 
 			return false;
@@ -651,30 +649,54 @@ function MigrateGroundingLine(element::Tria) #{{{
 	#GetInputListOnVertices(element, sl, SealevelEnum)
 	GetInputListOnVertices!(element, phi, MaskOceanLevelsetEnum)
 
-
 	rho_water   = FindParam(Float64, element, MaterialsRhoSeawaterEnum)
 	rho_ice     = FindParam(Float64, element, MaterialsRhoIceEnum)
 	density     = rho_ice/rho_water
 
+	migration_style = StringToEnum(FindParam(String, element, GroundinglineMigrationEnum))
+
 	for i in 1:3
 
-		if(phi[i]<=0)
+		if (migration_style == GroundingOnlyEnum && b[i]<r[i])
+			#Ice shelf: if bed below bathymetry, impose it at the bathymetry and update surface, elso do nothing
+			b[i] = r[i]
+		elseif(phi[i]<=0)
 			#reground if base is below bed
 			if(b[i]<=r[i])
 				b[i] = r[i]
 				s[i] = b[i]+h[i]
 			end
+			# Ice sheet: if hydrostatic bed above bathymetry, ice sheet starts to unground, elso do nothing
+			# Change only if AggressiveMigration or if the ice sheet is in contact with the ocean
 		else
 			bed_hydro=-density*h[i]+sl[i];
 			if (bed_hydro>r[i])
 				#Unground only if the element is connected to the ice shelf
-				s[i] = (1-density)*h[i]+sl[i]
-				b[i] = -density*h[i]+sl[i]
+				if (migration_style==AggressiveMigrationEnum || migration_style==SubelementMigrationEnum)
+					s[i] = (1.0-density)*h[i]+sl[i]
+					b[i] = -density*h[i]+sl[i]
+				elseif (migration_style==SoftMigrationEnum)
+					s[i] = (1.0-density)*h[i]+sl[i]
+					b[i] = -density*h[i]+sl[i]
+				else
+					if (migration_style!=SoftMigrationEnum && migration_style!=ContactEnum && migration_style!=GroundingOnlyEnum) 
+						error("Error: migration should be Aggressive, Soft, Subelement, Contact or GroundingOnly")
+					end
+				end
 			end
 		end
+	end
 
-		#recalculate phi
-		phi[i]=h[i]+(r[i]-sl[i])/density
+	# Recalculate phi
+	for i in 1:3
+		if(migration_style==SoftMigrationEnum)
+			bed_hydro = -density*h[i]+sl[i]
+			if(phi[i]<0. || bed_hydro<=r[i] )
+				phi[i] = h[i]+(r[i]-sl[i])/density
+			end
+		elseif(migration_style!=ContactEnum)
+			phi[i]=h[i]+(r[i]-sl[i])/density
+		end
 	end
 
 	#Update inputs
