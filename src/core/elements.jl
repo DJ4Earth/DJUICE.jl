@@ -580,7 +580,7 @@ function InputUpdateFromVector(element::Tria, vector::Vector{Float64}, enum::Iss
 end #}}}
 function IsAllFloating(element::Tria) #{{{
 
-	input=GetInput(element, MaskIceLevelsetEnum)
+	input=GetInput(element, MaskOceanLevelsetEnum)
 	migration_style = FindParam(String, element, GroundinglineMigrationEnum)
 	# get the Enum
 	migration_style_enum = StringToEnum(migration_style)
