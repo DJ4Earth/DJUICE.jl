@@ -7,9 +7,10 @@ using Test
 using ManualNLPModels, JSOSolvers
 using MadNLP
 
+onlygrad = 1
 
 #Load model from MATLAB file
-file = matopen(joinpath(@__DIR__, "..", "data","temp.mat")) #SMALL model (35 elements)
+file = matopen(joinpath(@__DIR__, "..", "data","PIG_testopt.mat")) #SMALL model (35 elements)
 mat  = read(file, "md")
 close(file)
 md = model(mat)
@@ -17,49 +18,55 @@ md = model(mat)
 #make model run faster
 md.stressbalance.maxiter = 20
 
+
 #Now call AD!
 md.inversion.iscontrol = 1
-md.inversion.onlygrad = 0
+md.inversion.onlygrad = onlygrad
 md.inversion.independent = md.friction.coefficient
 md.inversion.min_parameters = ones(md.mesh.numberofvertices)*(0.0)
 md.inversion.max_parameters = ones(md.mesh.numberofvertices)*(1.0e3)
 md.inversion.independent_string = "FrictionCoefficient"
 md.inversion.dependent_string = ["SurfaceAbsVelMisfit"]
 
-α = md.inversion.independent
-∂J_∂α = zero(α)
+
+if onlygrad == 1
+	md = solve(md, :sb)
+else
+	α = md.inversion.independent
+	∂J_∂α = zero(α)
+
+	g!(∂J_∂α,α)
+
+	# cost function f
+	f(x) = begin
+		femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
+		DJUICE.costfunction(x, femmodel)
+	end
+
+	# Enzyme gradient g
+	g!(gx, x) = begin
+		femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
+		dfemmodel = Enzyme.Compiler.make_zero(Base.Core.Typeof(femmodel), IdDict(), femmodel)
+		Enzyme.autodiff(set_runtime_activity(Enzyme.Reverse), DJUICE.costfunction, Active, Duplicated(x, gx), Duplicated(femmodel,dfemmodel))
+		gx
+	end
+
+	nlp = NLPModel(
+						α,
+						f,
+						grad = g!,
+					  )
+
+	#output = lbfgs(nlp)
+
+	results_qn = madnlp(
+							  nlp;
+							  linear_solver=LapackCPUSolver,
+							  hessian_approximation=MadNLP.CompactLBFGS,
+							 )
 
 
-# cost function f
-f(x) = begin
-	femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
-	DJUICE.costfunction(x, femmodel)
 end
-
-# Enzyme gradient g
-g!(gx, x) = begin
-	femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
-	dfemmodel = Enzyme.Compiler.make_zero(Base.Core.Typeof(femmodel), IdDict(), femmodel)
-	Enzyme.autodiff(set_runtime_activity(Enzyme.Reverse), DJUICE.costfunction, Active, Duplicated(x, gx), Duplicated(femmodel,dfemmodel))
-	gx
-end
-
-nlp = NLPModel(
-  α,
-  f,
-  grad = g!,
-)
-
-#output = lbfgs(nlp)
-
-results_qn = madnlp(
-           nlp;
-           linear_solver=LapackCPUSolver,
-           hessian_approximation=MadNLP.CompactLBFGS,
-       )
-
-
-
 # use user defined grad, errors!
 #optprob = OptimizationFunction(DJUICE.costfunction, Optimization.AutoEnzyme(; mode=set_runtime_activity(Enzyme.Reverse)))
 #prob = Optimization.OptimizationProblem(optprob, α, femmodel, lb=md.inversion.min_parameters, ub=md.inversion.max_parameters)
