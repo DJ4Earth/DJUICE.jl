@@ -61,4 +61,24 @@ end
 	@test isapprox(J1, intH)
 end
 
+@testset "Verbose" begin
+	md = model()
+	DJUICE.SetVerbosityLevel(md)
+	@test DJUICE.verbositylevel == 0
+	for f in fieldnames(typeof(md.verbose))
+		setfield!(md.verbose,f,true)
+	end
+	DJUICE.SetVerbosityLevel(md)
+	@test DJUICE.VerboseMProcessor() == true
+	@test DJUICE.VerboseModule() == true
+	@test DJUICE.VerboseSolution() == true
+	@test DJUICE.VerboseSolver() == true
+	@test DJUICE.VerboseConvergence() == true
+	@test DJUICE.VerboseControl() == true
+	@test DJUICE.VerboseAutodiff() == true
+	md.verbose.solver = false
+	DJUICE.SetVerbosityLevel(md)
+	@test DJUICE.VerboseSolver() == false
+end
+
 end

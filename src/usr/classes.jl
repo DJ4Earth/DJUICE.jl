@@ -332,6 +332,23 @@ function Base.show(io::IO, this::Groundingline)# {{{
 	IssmStructDisp(io, this)
 end# }}}
 # }}}
+#Verbose{{{
+mutable struct Verbose
+	mprocessor::Bool
+	modules::Bool
+	solution::Bool
+	solver::Bool
+	convergence::Bool
+	control::Bool
+	autodiff::Bool
+end
+function Verbose() #{{{
+	return Verbose( false, false, false, false, false, false, false)
+end# }}}
+function Base.show(io::IO, this::Verbose)# {{{
+	IssmStructDisp(io, this)
+end# }}}
+# }}}
 
 #Model structure
 mutable struct model{Mesh<:AbstractMesh, Friction<:AbstractFriction, Basalforcings<:AbstractBasalforcings, Calving<:AbstractCalving}
@@ -354,20 +371,21 @@ mutable struct model{Mesh<:AbstractMesh, Friction<:AbstractFriction, Basalforcin
 	levelset::Levelset
 	frontalforcings::Frontalforcings
 	groundingline::Groundingline
+	verbose::Verbose
 end
 function model() #{{{
       return model( Mesh2dTriangle(), Geometry(), Mask(), Materials(),
                                        Initialization(),Stressbalance(), Constants(), Dict(),
                                        BuddFriction(), DefaultBasalforcings(), SMBforcings(), DefaultTimestepping(),
 													Masstransport(), Transient(), Inversion(), DefaultCalving(), 
-													Levelset(), Frontalforcings(), Groundingline())
+													Levelset(), Frontalforcings(), Groundingline(), Verbose())
 end#}}}
 function model(md::model; mesh::AbstractMesh=md.mesh, friction::AbstractFriction=md.friction, calving::AbstractCalving=md.calving, basalforcings::AbstractBasalforcings=md.basalforcings) #{{{
 	return model(mesh, md.geometry, md.mask, md.materials, 
 					 md.initialization, md.stressbalance, md.constants, md.results, 
 					 friction, basalforcings, md.smb, md.timestepping, 
 					 md.masstransport, md.transient, md.inversion, md.calving, 
-					 md.levelset, md.frontalforcings, md.groundingline)
+					 md.levelset, md.frontalforcings, md.groundingline, md.verbose)
 end#}}}
 function model(matmd::Dict; verbose::Bool=true, friction::AbstractFriction=BuddFriction(), basalforcings::AbstractBasalforcings=DefaultBasalforcings()) #{{{
 
@@ -449,6 +467,7 @@ function Base.show(io::IO, md::model)# {{{
 	@printf "%19s: %-26s -- %s\n" "levelset" typeof(md.levelset) "parameters for moving boundaries (level-set method)"
 	@printf "%19s: %-26s -- %s\n" "frontalforcings" typeof(md.frontalforcings) "parameters for frontalforcings"
 	@printf "%19s: %-26s -- %s\n" "groundingline" typeof(md.groundingline) "parameters for groundingline"
+	@printf "%19s: %-26s -- %s\n" "verbose" typeof(md.verbose) "verbosity level in solve"
 	@printf "%19s: %-26s -- %s\n" "results" typeof(md.results) "model results"
 
 end# }}}

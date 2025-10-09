@@ -28,6 +28,7 @@ include("./solutionsequences.jl")
 include("./modules.jl")
 include("./elementmatrix.jl")
 include("./utils.jl")
+include("./verbosity.jl")
 
 function solve(md::model, solution::Symbol) #{{{
 
