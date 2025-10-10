@@ -65,6 +65,8 @@ results_qn = madnlp(
 						  nlp;
 						  linear_solver=LapackCPUSolver,
 						  hessian_approximation=MadNLP.CompactLBFGS,
+						  tol=1e-5,
+						  max_iter=40,
 						  )
 
 
