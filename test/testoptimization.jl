@@ -28,6 +28,7 @@ md.inversion.max_parameters = ones(md.mesh.numberofvertices)*(200)
 md.inversion.independent_string = "FrictionCoefficient"
 md.inversion.dependent_string = ["SurfaceAbsVelMisfit"]
 
+md.verbose.convergence = false
 
 if onlygrad == 1
 	md = solve(md, :sb)

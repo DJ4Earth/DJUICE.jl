@@ -48,6 +48,7 @@ end
 
 	#make model run faster
 	md.stressbalance.maxiter = 20
+	md.verbose.convergence = false
 
 	#Now call AD!
 	md.inversion.iscontrol = 1

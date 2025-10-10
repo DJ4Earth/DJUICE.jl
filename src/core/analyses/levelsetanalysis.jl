@@ -131,7 +131,7 @@ function Core(analysis::LevelsetAnalysis,femmodel::FemModel)# {{{
 	SetCurrentConfiguration!(femmodel, analysis)
 
 	#Call solution sequence to compute new speeds
-	println("   call computational core:");
+	if (VerboseSolution()) println("   call computational core:") end
 	solutionsequence_linear(femmodel,analysis)
 
 	# TODO: add killicebergs, add reset reinitialization

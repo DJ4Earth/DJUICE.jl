@@ -115,7 +115,7 @@ function Core(analysis::StressbalanceAnalysis,femmodel::FemModel)# {{{
 	abstol  = FindParam(Float64, femmodel.parameters,StressbalanceAbstolEnum)
 
 	#Call solution sequence to compute new speeds
-	println("   computing stress balance");
+	if (VerboseSolution()) println("   computing stress balance") end
 	solutionsequence_nonlinear(femmodel,analysis,maxiter,restol,reltol,abstol)
 
 	#Save output

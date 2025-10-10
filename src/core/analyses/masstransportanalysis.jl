@@ -84,7 +84,7 @@ end#}}}
 #Finite Element Analysis
 function Core(analysis::MasstransportAnalysis,femmodel::FemModel)# {{{
 
-	println("   computing mass transport")
+	if (VerboseSolution()) println("   computing mass transport") end
 	SetCurrentConfiguration!(femmodel, analysis)
 
 	InputDuplicatex(femmodel, ThicknessEnum, ThicknessOldEnum)

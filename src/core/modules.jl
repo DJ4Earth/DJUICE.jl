@@ -13,6 +13,9 @@ function FetchDataToInput(md::model, inputs::Inputs, elements::Vector{Tria}, dat
 end#}}}
 function ModelProcessor(md::model, solutionstring::Symbol) #{{{
 
+	# Set Verbosity once for all
+	SetVerbosityLevel(md)
+
 	#Initialize structures
 	elements    = Vector{Tria}(undef,0)
 	vertices    = Vector{Vertex}(undef,0)
@@ -48,7 +51,7 @@ function ModelProcessor(md::model, solutionstring::Symbol) #{{{
 	constraints = Vector{Vector{AbstractConstraint}}(undef,numanalyses)
 	for i in 1:numanalyses
 		analysis = analyses[i]
-		println("   creating datasets for analysis ", typeof(analysis))
+		if (VerboseMProcessor()) println("   creating datasets for analysis ", typeof(analysis)) end
 		nodes[i]       = Vector{Node}(undef,0)
 		constraints[i] = Vector{Constraint}(undef,0)
 
@@ -79,7 +82,7 @@ function ModelProcessor(md::model, solutionstring::Symbol) #{{{
 							  Vector{Constraint}(undef,0), constraints,
 							  results)
 
-	println("      detecting active vertices")
+	if (VerboseMProcessor()) println("      detecting active vertices") end
 	GetMaskOfIceVerticesLSMx0(femmodel)
 
 	return femmodel
@@ -368,7 +371,7 @@ function NodesDofx(nodes::Vector{Node}, parameters::Parameters) #{{{
 	#Do we really need to update dof indexing
 	if(~RequiresDofReindexing(nodes)) return end
 
-	print("   Renumbering degrees of freedom\n")
+	if (VerboseModule()) print("   Renumbering degrees of freedom\n") end
 	DistributeDofs(nodes,GsetEnum)
 	DistributeDofs(nodes,FsetEnum)
 	DistributeDofs(nodes,SsetEnum)
@@ -489,7 +492,7 @@ end# }}}
 function SystemMatricesx(femmodel::FemModel,analysis::Analysis)# {{{
 
 	#Allocate matrices
-	println("   Allocating matrices")
+	if (VerboseModule()) println("   Allocating matrices") end
 	fsize = NumberOfDofs(femmodel.nodes,FsetEnum)
 	ssize = NumberOfDofs(femmodel.nodes,SsetEnum)
 	Kff = IssmMatrix(fsize,fsize)
@@ -497,7 +500,7 @@ function SystemMatricesx(femmodel::FemModel,analysis::Analysis)# {{{
 	pf  = IssmVector(fsize)
 
 	#Construct Stiffness matrix and load vector from elements
-	println("   Assembling matrices")
+	if (VerboseModule()) println("   Assembling matrices") end
 	# Determine the type of analysis, decide if override icemask 
 	if typeof(analysis) == typeof(ExtrapolationAnalysis())
 		overrideicemask = true

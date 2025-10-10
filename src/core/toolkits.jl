@@ -194,7 +194,7 @@ function Solverx(A::IssmMatrix, b::IssmVector, xold::IssmVector) #{{{
 end#}}}
 function Solverx(A::IssmMatrix, b::IssmVector) #{{{
 
-	println("   Solving matrix system")
+	if (VerboseModule()) println("   Solving matrix system") end
 
 	#Initialize output
 	x = IssmVector(0)

@@ -40,7 +40,7 @@ function Core(analysis::ExtrapolationAnalysis,femmodel::FemModel)# {{{
 	SetCurrentConfiguration!(femmodel, analysis)
 
    #Call solution sequence to compute new speeds
-	println("   extrapolation of ", EnumToString(extvar_num), ":");
+	if (VerboseSolution()) println("   extrapolation of ", EnumToString(extvar_num), ":") end
    solutionsequence_linear(femmodel,analysis)
 
 	# save

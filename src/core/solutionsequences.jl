@@ -67,18 +67,16 @@ function solutionsequence_nonlinear(femmodel::FemModel,analysis::Analysis,maxite
 		end
 	end
 
-	print("\n   total number of iterations: ",  count,  "\n")
+	if (VerboseConvergence()) print("\n   total number of iterations: ",  count,  "\n") end
 	return nothing
 
 end# }}}
 function convergence(Kff::IssmMatrix, pf::IssmVector, uf::IssmVector, old_uf::IssmVector, restol::Float64, reltol::Float64, abstol::Float64)#{{{
 
-	print("   checking convergence\n");
+	if(VerboseModule()) print("   checking convergence\n") end
 
 	#If solution vector is empty, return true
-	if(IsEmpty(uf))
-		return true
-	end
+	if(IsEmpty(uf)) return true end
 
 	#Convergence criterion #1: force equilibrium (Mandatory)
 	#compute K[n]U[n-1] - F
@@ -92,10 +90,10 @@ function convergence(Kff::IssmMatrix, pf::IssmVector, uf::IssmVector, old_uf::Is
 		error("mechanical equilibrium convergence criterion is not finite!")
 	end
 	if(res<restol)
-		print("   mechanical equilibrium convergence criterion ", res*100, " < ", restol*100, " %\n")
+		if (VerboseConvergence()) print("   mechanical equilibrium convergence criterion ", res*100, " < ", restol*100, " %\n") end
 		converged=true
 	else
-		print("   mechanical equilibrium convergence criterion ", res*100, " > ", restol*100, " %\n")
+		if (VerboseConvergence()) print("   mechanical equilibrium convergence criterion ", res*100, " > ", restol*100, " %\n") end
 		converged=false;
 	end
 
@@ -107,9 +105,9 @@ function convergence(Kff::IssmMatrix, pf::IssmVector, uf::IssmVector, old_uf::Is
 			error("convergence criterion is not finite!")
 		end
 		if((ndu/nu)<reltol)
-			print("   Convergence criterion: norm(du)/norm(u)      ", ndu/nu*100, " < ", reltol*100, " %\n")
+			if (VerboseConvergence()) print("   Convergence criterion: norm(du)/norm(u)      ", ndu/nu*100, " < ", reltol*100, " %\n") end
 		else
-			print("   Convergence criterion: norm(du)/norm(u)      ", ndu/nu*100, " > ", reltol*100, " %\n")
+			if (VerboseConvergence()) print("   Convergence criterion: norm(du)/norm(u)      ", ndu/nu*100, " > ", reltol*100, " %\n") end
 			converged=false;
 		end
 	end
@@ -122,9 +120,9 @@ function convergence(Kff::IssmMatrix, pf::IssmVector, uf::IssmVector, old_uf::Is
 			error("convergence criterion is not finite!")
 		end
 		if(nduinf<abstol)
-			print("   Convergence criterion: max(du)               ", nduinf, " < ", abstol, "\n")
+			if (VerboseConvergence()) print("   Convergence criterion: max(du)               ", nduinf, " < ", abstol, "\n") end
 		else
-			print("   Convergence criterion: max(du)               ", nduinf, " > ", abstol, "\n")
+			if (VerboseConvergence()) print("   Convergence criterion: max(du)               ", nduinf, " > ", abstol, "\n") end
 			converged=false;
 		end
 	end
