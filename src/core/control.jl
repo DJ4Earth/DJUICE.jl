@@ -1,6 +1,6 @@
 using Enzyme
-
-#using Optimization, OptimizationOptimJL
+using ManualNLPModels
+using MadNLP
 
 function Control_Core(md::model, femmodel::FemModel)
 	#independent variable
@@ -28,8 +28,12 @@ end#}}}
 function ComputeGradient(∂J_∂α::Vector{Float64}, α::Vector{Float64}, femmodel::FemModel) #{{{
 	# zero ALL depth of the model, make sure we get correct gradient
 	dfemmodel = Enzyme.Compiler.make_zero(Base.Core.Typeof(femmodel), IdDict(), femmodel)
+	# zero the gradient
+	∂α = zero(α)
 	# compute the gradient
-	autodiff(set_runtime_activity(Enzyme.Reverse), costfunction, Active, Duplicated(α, ∂J_∂α), Duplicated(femmodel,dfemmodel))
+	autodiff(set_runtime_activity(Enzyme.Reverse), costfunction, Active, Duplicated(α, ∂α), Duplicated(femmodel,dfemmodel))
+	# put gradient back
+	∂J_∂α .= ∂α
 end#}}}
 function CostFunctionx(femmodel::FemModel, α::Vector{Float64}, controlvar_enum::IssmEnum, SId_enum::IssmEnum, cost_enum_list::Vector{IssmEnum}, ::Val{solutionstring}) where solutionstring #{{{
 	#Update FemModel accordingly

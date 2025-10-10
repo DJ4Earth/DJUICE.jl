@@ -3,14 +3,13 @@ using DJUICE
 using MAT
 using Test
 
-#using Optimization, OptimizationNLopt
-using ManualNLPModels, JSOSolvers
+using ManualNLPModels
 using MadNLP
 
 onlygrad = 0
 
 #Load model from MATLAB file
-file = matopen(joinpath(@__DIR__, "..", "data","PIG_testopt.mat")) #SMALL model (35 elements)
+file = matopen(joinpath(@__DIR__, "..", "data","PIG_testopt_small.mat")) #SMALL model (35 elements)
 mat  = read(file, "md")
 close(file)
 md = model(mat)
