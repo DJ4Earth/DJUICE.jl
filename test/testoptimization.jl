@@ -38,7 +38,7 @@ end
 # cost function f
 f(x) = begin
 	femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
-	DJUICE.costfunction(x, femmodel)
+	DJUICE.CostFunction(x, femmodel)
 end
 
 # Enzyme gradient g
@@ -46,9 +46,15 @@ g!(gx, x) = begin
 	femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
 	dfemmodel = Enzyme.Compiler.make_zero(Base.Core.Typeof(femmodel), IdDict(), femmodel)
 	dx = zero(x)
-	Enzyme.autodiff(set_runtime_activity(Enzyme.Reverse), DJUICE.costfunction, Active, Duplicated(x, dx), Duplicated(femmodel,dfemmodel))
+	Enzyme.autodiff(set_runtime_activity(Enzyme.Reverse), DJUICE.CostFunction, Active, Duplicated(x, gx), Duplicated(femmodel,dfemmodel))
+	@assert typeof(dx) == typeof(gx)
 	gx .= dx
 end
+
+#g!(gx, x) = begin
+#	femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
+#	DJUICE.ComputeGradient(gx, x, femmodel)
+#end
 
 nlp = NLPModel(
 					α,
@@ -58,8 +64,6 @@ nlp = NLPModel(
 					uvar = md.inversion.max_parameters,
 					)
 
-#output = lbfgs(nlp)
-
 results_qn = madnlp(
 						  nlp;
 						  linear_solver=LapackCPUSolver,
@@ -68,20 +72,3 @@ results_qn = madnlp(
 						  max_iter=40,
 						  )
 
-
-# use user defined grad, errors!
-#optprob = OptimizationFunction(DJUICE.costfunction, Optimization.AutoEnzyme(; mode=set_runtime_activity(Enzyme.Reverse)))
-#prob = Optimization.OptimizationProblem(optprob, α, femmodel, lb=md.inversion.min_parameters, ub=md.inversion.max_parameters)
-#prob = Optimization.OptimizationProblem(optprob, α, femmodel)
-#sol = Optimization.solve(prob,  Optimization.LBFGS(), maxiters=10)
-#sol = Optimization.solve(prob, Optim.GradientDescent(), maxiters=10)
-#sol = Optimization.solve(prob, Optim.LBFGS(), maxiters=10)
-#sol = Optimization.solve(prob, Optim.NelderMead())
-#sol = Optimization.solve(prob, Optimization.LBFGS(), maxiters = 100)
-
-#using JuMP, Optim
-#m = Model(Optim.Optimizer);
-#set_optimizer_attribute(m, "method", LBFGS())
-#@variable(m, α)
-#@variable(m, femmodel)
-#@objective(m, Min, DJUICE.costfunction(α, femmodel))

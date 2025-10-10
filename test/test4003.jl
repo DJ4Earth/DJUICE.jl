@@ -86,12 +86,12 @@ gradient1 = md.results["TransientSolution"][3]["Gradient"]
    α = md.inversion.independent
 	delta = 1e-6*α[1]
    femmodel=DJUICE.ModelProcessor(md, :TransientSolution)
-   J1 = DJUICE.costfunction(α, femmodel)
+   J1 = DJUICE.CostFunction(α, femmodel)
    for i in 1:10:md.mesh.numberofvertices
 		dα = zero(α)
       dα[i] = delta
       femmodel=DJUICE.ModelProcessor(md, :TransientSolution)
-      J2 = DJUICE.costfunction(α+dα, femmodel)
+      J2 = DJUICE.CostFunction(α+dα, femmodel)
 		dJ = (J2-J1)
 
 		@test abs(dJ - delta*gradient1[i])< 5e-3*abs(dJ).+1e-16

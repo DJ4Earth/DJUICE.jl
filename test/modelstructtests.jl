@@ -57,7 +57,7 @@ end
 	md.inversion.dependent_string = ["IceVolume"]
 	α = md.inversion.independent
 	femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
-	J1 = DJUICE.costfunction(α, femmodel)
+	J1 = DJUICE.CostFunction(α, femmodel)
 	intH = DJUICE.IntegrateOverDomain(md, md.geometry.thickness)
 	@test isapprox(J1, intH)
 end

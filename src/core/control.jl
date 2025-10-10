@@ -27,13 +27,34 @@ end#}}}
 
 function ComputeGradient(∂J_∂α::Vector{Float64}, α::Vector{Float64}, femmodel::FemModel) #{{{
 	# zero ALL depth of the model, make sure we get correct gradient
-	dfemmodel = Enzyme.Compiler.make_zero(Base.Core.Typeof(femmodel), IdDict(), femmodel)
+	dfemmodel = make_zero(Base.Core.Typeof(femmodel), IdDict(), femmodel)
 	# zero the gradient
-	∂α = zero(α)
+	∂α = make_zero(α)
 	# compute the gradient
-	autodiff(set_runtime_activity(Enzyme.Reverse), costfunction, Active, Duplicated(α, ∂α), Duplicated(femmodel,dfemmodel))
+	autodiff(set_runtime_activity(Enzyme.Reverse), CostFunction, Active, Duplicated(α, ∂α), Duplicated(femmodel,dfemmodel))
 	# put gradient back
 	∂J_∂α .= ∂α
+end#}}}
+function CostFunction(α::Vector{Float64}, femmodel::FemModel) #{{{
+	# get the md.inversion.independent_string
+	control_string = FindParam(String, femmodel.parameters, InversionControlParametersEnum)
+	# get the Enum
+	controlvar_enum = StringToEnum(control_string)
+	if isnothing(controlvar_enum)
+		error(control_string, " is not defined in DJUICE, therefore the derivative with respect to ", control_string, " is meaningless")
+	end
+
+	# get the cost function list from md.inversion.dependent_string
+	cost_list = FindParam(Vector{String}, femmodel.parameters, InversionCostFunctionsEnum)
+	cost_enum_list = Vector{IssmEnum}(undef, length(cost_list))
+	for (index, value) in enumerate(cost_list)
+		cost_enum_list[index] = StringToEnum(value)
+	end
+
+	# compute cost function
+	# TODO: loop through all controls with respect to all the components in the cost function
+	solutionstring = FindParam(Symbol, femmodel.parameters, SolutionTypeEnum)
+	CostFunctionx(femmodel, α, controlvar_enum, VertexSIdEnum, cost_enum_list, Val(solutionstring))
 end#}}}
 function CostFunctionx(femmodel::FemModel, α::Vector{Float64}, controlvar_enum::IssmEnum, SId_enum::IssmEnum, cost_enum_list::Vector{IssmEnum}, ::Val{solutionstring}) where solutionstring #{{{
 	#Update FemModel accordingly
@@ -63,25 +84,3 @@ function CostFunctionx(femmodel::FemModel, α::Vector{Float64}, controlvar_enum:
 	return J
 end#}}}
 
-# cost function handler for autodiff
-function costfunction(α::Vector{Float64}, femmodel::FemModel) #{{{
-	# get the md.inversion.independent_string
-	control_string = FindParam(String, femmodel.parameters, InversionControlParametersEnum)
-	# get the Enum
-	controlvar_enum = StringToEnum(control_string)
-	if isnothing(controlvar_enum)
-		error(control_string, " is not defined in DJUICE, therefore the derivative with respect to ", control_string, " is meaningless")
-	end
-
-	# get the cost function list from md.inversion.dependent_string
-	cost_list = FindParam(Vector{String}, femmodel.parameters, InversionCostFunctionsEnum)
-	cost_enum_list = Vector{IssmEnum}(undef, length(cost_list))
-	for (index, value) in enumerate(cost_list)
-		cost_enum_list[index] = StringToEnum(value)
-	end
-
-	# compute cost function
-	# TODO: loop through all controls with respect to all the components in the cost function
-	solutionstring = FindParam(Symbol, femmodel.parameters, SolutionTypeEnum)
-	CostFunctionx(femmodel, α, controlvar_enum, VertexSIdEnum, cost_enum_list, Val(solutionstring))
-end#}}}

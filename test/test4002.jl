@@ -31,7 +31,7 @@ addJ = md.results["StressbalanceSolution"]["Gradient"]
 
    α = md.inversion.independent
    femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
-   J1 = DJUICE.costfunction(α, femmodel)
+   J1 = DJUICE.CostFunction(α, femmodel)
    @test ~isnothing(J1)
 end
 
@@ -39,12 +39,12 @@ end
 	α = md.inversion.independent
 	delta = 1e-8
 	femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
-	J1 = DJUICE.costfunction(α, femmodel)
+	J1 = DJUICE.CostFunction(α, femmodel)
 	for i in 1:md.mesh.numberofvertices
 		dα = zero(md.friction.coefficient)
 		dα[i] = delta
 		femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
-		J2 = DJUICE.costfunction(α+dα, femmodel)
+		J2 = DJUICE.CostFunction(α+dα, femmodel)
 		dJ = (J2-J1)/delta
 
 		@test abs(dJ - addJ[i])< 1e-6
