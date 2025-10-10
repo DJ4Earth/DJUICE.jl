@@ -2,30 +2,52 @@ using Enzyme
 using ManualNLPModels
 using MadNLP
 
-function Control_Core(md::model, femmodel::FemModel)
+function Control_Core(md::model, femmodel::FemModel, solutionstring::Symbol)#{{{
 	#independent variable
 	α = md.inversion.independent
 	#initialize derivative as 0
-	∂J_∂α = zero(α)
+	∂J_∂α = make_zero(α)
 	if md.inversion.onlygrad
 		# only compute the gradient
-		ComputeGradient(∂J_∂α, α, femmodel)
+		ComputeGradient!(∂J_∂α, α, femmodel)
 		#Put gradient in results
 		InputUpdateFromVectorx(femmodel, ∂J_∂α, GradientEnum, VertexSIdEnum)
 		RequestedOutputsx(femmodel, [GradientEnum])
 	else
 		# optimization
-		# use user defined grad, errors!
-		#		optprob = OptimizationFunction(costfunction, Optimization.AutoEnzyme())
-		#		prob = Optimization.OptimizationProblem(optprob, α, femmodel, lb=md.inversion.min_parameters, ub=md.inversion.max_parameters)
-		#		sol = Optimization.solve(prob, Optim.LBFGS())
+		# define cost function and gradient
+		# need to build connection between md and x
+		f(x) = begin
+			fem=DJUICE.ModelProcessor(md, solutionstring)
+			DJUICE.CostFunction(x, fem)
+		end
+
+		g!(gx, x) = begin
+			fem=DJUICE.ModelProcessor(md, solutionstring)
+			DJUICE.ComputeGradient!(gx, x, fem)
+		end
+		nlp = NLPModel(
+							α,
+							f,
+							grad = g!,
+							lvar = md.inversion.min_parameters,
+							uvar = md.inversion.max_parameters,
+							)
+
+		results_qn = madnlp(
+								  nlp;
+								  linear_solver=LapackCPUSolver,
+								  hessian_approximation=MadNLP.CompactLBFGS,
+								  tol=md.inversion.tol,
+								  max_iter=md.inversion.maxiter,
+								  )
+
 		independent_enum = StringToEnum(md.inversion.independent_string)
-		InputUpdateFromVectorx(femmodel, sol.u, independent_enum, VertexSIdEnum)
+		InputUpdateFromVectorx(femmodel, results_qn.solution, independent_enum, VertexSIdEnum)
 		RequestedOutputsx(femmodel, [independent_enum])
 	end
 end#}}}
-
-function ComputeGradient(∂J_∂α::Vector{Float64}, α::Vector{Float64}, femmodel::FemModel) #{{{
+function ComputeGradient!(∂J_∂α::Vector{Float64}, α::Vector{Float64}, femmodel::FemModel) #{{{
 	# zero ALL depth of the model, make sure we get correct gradient
 	dfemmodel = make_zero(Base.Core.Typeof(femmodel), IdDict(), femmodel)
 	# zero the gradient
@@ -54,6 +76,7 @@ function CostFunction(α::Vector{Float64}, femmodel::FemModel) #{{{
 	# compute cost function
 	# TODO: loop through all controls with respect to all the components in the cost function
 	solutionstring = FindParam(Symbol, femmodel.parameters, SolutionTypeEnum)
+	# return J
 	CostFunctionx(femmodel, α, controlvar_enum, VertexSIdEnum, cost_enum_list, Val(solutionstring))
 end#}}}
 function CostFunctionx(femmodel::FemModel, α::Vector{Float64}, controlvar_enum::IssmEnum, SId_enum::IssmEnum, cost_enum_list::Vector{IssmEnum}, ::Val{solutionstring}) where solutionstring #{{{

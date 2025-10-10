@@ -44,9 +44,9 @@ function solve(md::model, solution::Symbol) #{{{
 	#Construct FemModel from md
 	femmodel=ModelProcessor(md, solutionkey)
 
-	#Solve (FIXME: to be improved later...)
+	#Solve 
 	if (md.inversion.iscontrol) # solve inverse problem
-		Control_Core(md, femmodel)
+		Control_Core(md, femmodel, solutionkey)
 	else # otherwise forward problem
 		if(solutionkey===:StressbalanceSolution)
 			analysis = StressbalanceAnalysis()

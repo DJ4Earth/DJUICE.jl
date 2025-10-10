@@ -26,12 +26,13 @@ md.inversion.min_parameters = ones(md.mesh.numberofvertices)*(1.0)
 md.inversion.max_parameters = ones(md.mesh.numberofvertices)*(200)
 md.inversion.independent_string = "FrictionCoefficient"
 md.inversion.dependent_string = ["SurfaceAbsVelMisfit"]
+md.inversion.maxiter = 40
+md.inversion.tol = 1e-5
 
 md.verbose.convergence = false
 
-if onlygrad == 1
-	md = solve(md, :sb)
-end
+#md = solve(md, :sb);
+
 α = md.inversion.independent
 ∂J_∂α = zero(α)
 
@@ -44,20 +45,11 @@ end
 # Enzyme gradient g
 g!(gx, x) = begin
 	femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
-	dfemmodel = Enzyme.Compiler.make_zero(Base.Core.Typeof(femmodel), IdDict(), femmodel)
-	dx = zero(x)
-	Enzyme.autodiff(set_runtime_activity(Enzyme.Reverse), DJUICE.CostFunction, Active, Duplicated(x, gx), Duplicated(femmodel,dfemmodel))
-	@assert typeof(dx) == typeof(gx)
-	gx .= dx
+	DJUICE.ComputeGradient!(gx, x, femmodel)
 end
 
-#g!(gx, x) = begin
-#	femmodel=DJUICE.ModelProcessor(md, :StressbalanceSolution)
-#	DJUICE.ComputeGradient(gx, x, femmodel)
-#end
-
 nlp = NLPModel(
-					α,
+					md.inversion.independent,
 					f,
 					grad = g!,
 					lvar = md.inversion.min_parameters,
@@ -68,7 +60,8 @@ results_qn = madnlp(
 						  nlp;
 						  linear_solver=LapackCPUSolver,
 						  hessian_approximation=MadNLP.CompactLBFGS,
-						  tol=1e-5,
-						  max_iter=40,
+						  tol=md.inversion.tol,
+						  max_iter=md.inversion.maxiter,
 						  )
+
 

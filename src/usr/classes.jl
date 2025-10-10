@@ -272,11 +272,12 @@ mutable struct Inversion
 	max_parameters::Vector{Float64}
 	independent::Vector{Float64}
 	maxiter::Int64
+	tol::Float64
 	independent_string::String
 	dependent_string::Vector{String}
 end
 function Inversion() #{{{
-	return Inversion( false, true, Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), 0, "Friction", Vector{String}(undef,0))
+	return Inversion( false, true, Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), Vector{Float64}(undef,0), 0, 0., "Friction", Vector{String}(undef,0))
 end# }}}
 function Base.show(io::IO, this::Inversion)# {{{
 	IssmStructDisp(io, this)
