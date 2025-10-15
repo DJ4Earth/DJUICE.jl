@@ -66,7 +66,7 @@ function UpdateElements(analysis::StressbalanceAnalysis,elements::Vector{Tria}, 
 		FetchDataToInput(md,inputs,elements,md.friction.C,FrictionCEnum)
 		FetchDataToInput(md,inputs,elements,md.friction.m,FrictionMEnum)
 		FetchDataToInput(md,inputs,elements,md.friction.Cmax,FrictionCmaxEnum)
-	elseif typeof(md.friction) == DNNFriction
+	elseif typeof(md.friction) == FluxDNNFriction
 		FetchDataToInput(md,inputs,elements,md.geometry.ssx,SurfaceSlopeXEnum)
 		FetchDataToInput(md,inputs,elements,md.geometry.ssy,SurfaceSlopeYEnum)
 		FetchDataToInput(md,inputs,elements,md.geometry.bsx,BedSlopeXEnum)
@@ -90,7 +90,7 @@ function UpdateParameters(analysis::StressbalanceAnalysis,parameters::Parameters
 		AddParam(parameters, 2, FrictionLawEnum)
 	elseif typeof(md.friction)==SchoofFriction
 		AddParam(parameters, 11, FrictionLawEnum)
-	elseif typeof(md.friction)==DNNFriction
+	elseif typeof(md.friction)==FluxDNNFriction
 		AddParam(parameters, 20, FrictionLawEnum)
 		AddParam(parameters, md.friction.dnnChain, FrictionDNNChainEnum)
 		AddParam(parameters, md.friction.dtx, FrictionDNNdtxEnum)

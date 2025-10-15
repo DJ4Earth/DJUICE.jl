@@ -11,8 +11,8 @@ using MAT
 	@test (typeof(md.friction)) <: DJUICE.AbstractFriction
 	@test (typeof(md.friction)) <: DJUICE.BuddFriction
 
-	md = model(md; friction=DNNFriction())
-	@test (typeof(md.friction)) == DJUICE.DNNFriction
+	md = model(md; friction=FluxDNNFriction())
+	@test (typeof(md.friction)) == DJUICE.FluxDNNFriction
 
 	md = model(md; friction=SchoofFriction())
 	@test (typeof(md.friction)) == DJUICE.SchoofFriction

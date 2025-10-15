@@ -170,14 +170,14 @@ function SchoofFriction()
 	return SchoofFriction(Vector{Float64}(undef,0),Vector{Float64}(undef,0),Vector{Float64}(undef,0))
 end
 
-#DNNFriction
-mutable struct DNNFriction <: AbstractFriction
+#FluxDNNFriction: using flux
+mutable struct FluxDNNFriction <: AbstractFriction
 	dnnChain::Vector{Flux.Chain{}}
 	dtx::Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64}} }
 	dty::Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64}} }
 end
-function DNNFriction() 
-	return DNNFriction(Vector{Flux.Chain{}}(undef,0),
+function FluxDNNFriction() 
+	return FluxDNNFriction(Vector{Flux.Chain{}}(undef,0),
 							 Vector{StatsBase.ZScoreTransform{ Float64, Vector{Float64} }}(undef,0),
 							 Vector{StatsBase.ZScoreTransform{ Float64, Vector{Float64} }}(undef,0))
 end

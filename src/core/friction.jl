@@ -31,7 +31,7 @@ mutable struct CoreSchoofFriction <: CoreFriction #{{{
 	rho_water::Float64
 	g::Float64
 end# }}}
-mutable struct CoreDNNFriction <: CoreFriction#{{{
+mutable struct CoreFluxDNNFriction <: CoreFriction#{{{
 	dnnChain::Vector{Flux.Chain}
 	dtx::Vector{StatsBase.ZScoreTransform}
 	dty::Vector{StatsBase.ZScoreTransform}
@@ -95,7 +95,7 @@ function CoreFriction(element::Tria, ::Val{frictionlaw}) where frictionlaw #{{{
 		rho_water = FindParam(Float64, element, MaterialsRhoSeawaterEnum)
 		g         = FindParam(Float64, element, ConstantsGEnum)
 
-		return CoreDNNFriction(dnnChain,dtx,dty,xyz_list,vx_input,vy_input,b_input,H_input,rho_ice,rho_water,g)
+		return CoreFluxDNNFriction(dnnChain,dtx,dty,xyz_list,vx_input,vy_input,b_input,H_input,rho_ice,rho_water,g)
 	else
 		error("Friction ",typeof(md.friction)," not supported yet")
 	end
@@ -161,7 +161,7 @@ end#}}}
 	end
 	return alpha2
 end #}}}
-@inline function Alpha2(friction::CoreDNNFriction, gauss::GaussTria, i::Int64)#{{{
+@inline function Alpha2(friction::CoreFluxDNNFriction, gauss::GaussTria, i::Int64)#{{{
 	bed = GetInputValue(friction.b_input, gauss, i)
 	H = GetInputValue(friction.H_input, gauss, i)
 	vx = GetInputValue(friction.vx_input, gauss, i)
