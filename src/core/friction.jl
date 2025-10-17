@@ -13,7 +13,7 @@ mutable struct CoreBuddFriction <: CoreFriction #{{{
 	rho_water::Float64
 	g::Float64
 end# }}}
-struct  CoreWeertmanFriction <: CoreFriction#{{{
+mutable struct CoreWeertmanFriction <: CoreFriction#{{{
    c_input::Input
 	vx_input::Input
 	vy_input::Input
@@ -31,18 +31,13 @@ mutable struct CoreSchoofFriction <: CoreFriction #{{{
 	rho_water::Float64
 	g::Float64
 end# }}}
-mutable struct CoreFluxDNNFriction <: CoreFriction#{{{
-	dnnChain::Vector{Flux.Chain}
-	dtx::Vector{StatsBase.ZScoreTransform}
-	dty::Vector{StatsBase.ZScoreTransform}
-	xyz_list::Matrix{Float64}
+mutable struct CoreDNNFriction <: CoreFriction#{{{
+	model::AbstractLuxLayer
+	ps
+	st
+   c_input::Input
 	vx_input::Input
 	vy_input::Input
-   b_input::Input
-   H_input::Input
-	rho_ice::Float64
-	rho_water::Float64
-	g::Float64
 end# }}}
 
 function CoreFriction(element::Tria, ::Val{frictionlaw}) where frictionlaw #{{{
@@ -79,23 +74,12 @@ function CoreFriction(element::Tria, ::Val{frictionlaw}) where frictionlaw #{{{
 
 		return CoreSchoofFriction(c_input, vx_input, vy_input, m_input, Cmax_input, H_input, b_input, rho_ice, rho_water, g)
 	elseif frictionlaw==20
-		dnnChain  = FindParam(Vector{Flux.Chain{}}, element, FrictionDNNChainEnum)
-		dtx  = FindParam(Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64}} }, element, FrictionDNNdtxEnum)
-		dty  = FindParam(Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64}} }, element, FrictionDNNdtyEnum)
-		H_input   = GetInput(element, ThicknessEnum)
-		b_input   = GetInput(element, BaseEnum)
-		ssx_input   = GetInput(element, SurfaceSlopeXEnum)
-		ssy_input   = GetInput(element, SurfaceSlopeYEnum)
-		bsx_input   = GetInput(element, BedSlopeXEnum)
-		bsy_input   = GetInput(element, BedSlopeYEnum)
+		c_input   = GetInput(element, FrictionCEnum)
+		model  = FindParam(AbstractLuxLayer, element, FrictionDNNEnum)
+		ps  = FindParam(NamedTuple, element, FrictionDNNpsEnum)
+		st  = FindParam(NamedTuple, element, FrictionDNNstEnum)
 
-      xyz_list = GetVerticesCoordinates(element.vertices)
-		
-		rho_ice   = FindParam(Float64, element, MaterialsRhoIceEnum)
-		rho_water = FindParam(Float64, element, MaterialsRhoSeawaterEnum)
-		g         = FindParam(Float64, element, ConstantsGEnum)
-
-		return CoreFluxDNNFriction(dnnChain,dtx,dty,xyz_list,vx_input,vy_input,b_input,H_input,rho_ice,rho_water,g)
+		return CoreDNNFriction(model,ps,st,c_input,vx_input,vy_input)
 	else
 		error("Friction ",typeof(md.friction)," not supported yet")
 	end
@@ -161,40 +145,18 @@ end#}}}
 	end
 	return alpha2
 end #}}}
-@inline function Alpha2(friction::CoreFluxDNNFriction, gauss::GaussTria, i::Int64)#{{{
-	bed = GetInputValue(friction.b_input, gauss, i)
-	H = GetInputValue(friction.H_input, gauss, i)
+@inline function Alpha2(friction::CoreDNNFriction, gauss::GaussTria, i::Int64)#{{{
 	vx = GetInputValue(friction.vx_input, gauss, i)
 	vy = GetInputValue(friction.vy_input, gauss, i)
-	h = bed + H
 
+	c = GetInputValue(friction.c_input, gauss, i)
 	# Get the velocity
 	vmag = VelMag(friction, gauss, i)
 
-	# velocity gradients
-	dvx = GetInputDerivativeValue(friction.vx_input,friction.xyz_list,gauss,i)
-	dvy = GetInputDerivativeValue(friction.vy_input,friction.xyz_list,gauss,i)
-	vxdx = dvx[1]
-	vxdy = dvx[2]
-	vydx = dvy[1]
-	vydy = dvy[2]
-
-	# Get effective pressure
-	Neff = EffectivePressure(friction, gauss, i)
-
-	# need to change according to the construction of DNN
-	alpha2 = 0.0
-	for i in 1:length(friction.dnnChain)
-		xin = StatsBase.transform(friction.dtx[i], (reshape(vcat(vx, vy, vxdx, vxdy, vydx, vydy, bed, h), 8, :)))
-		pred = StatsBase.reconstruct(friction.dty[i], friction.dnnChain[i](xin))
-		alpha2 += first(pred)
-	end
-	# Average
-	alpha2 = alpha2 / length(friction.dnnChain)
-	if ( (vmag == 0.0) | (alpha2 < 0.0) )
+	if (vmag == 0.0 )
 		alpha2 = 0.0
 	else
-		alpha2 = alpha2 ./ vmag
+		alpha2 = c^2*vmag^2
 	end
 	return alpha2
 end#}}}

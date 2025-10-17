@@ -1,5 +1,5 @@
 using Printf
-using Flux
+using Lux
 using StatsBase
 
 #Model fields
@@ -170,18 +170,20 @@ function SchoofFriction()
 	return SchoofFriction(Vector{Float64}(undef,0),Vector{Float64}(undef,0),Vector{Float64}(undef,0))
 end
 
-#FluxDNNFriction: using flux
-mutable struct FluxDNNFriction <: AbstractFriction
-	dnnChain::Vector{Flux.Chain{}}
-	dtx::Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64}} }
-	dty::Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64}} }
+#DNNFriction: using lux
+mutable struct DNNFriction <: AbstractFriction
+	C::Vector{Float64}
+	model::AbstractLuxLayer
+	ps
+	st
 end
-function FluxDNNFriction() 
-	return FluxDNNFriction(Vector{Flux.Chain{}}(undef,0),
-							 Vector{StatsBase.ZScoreTransform{ Float64, Vector{Float64} }}(undef,0),
-							 Vector{StatsBase.ZScoreTransform{ Float64, Vector{Float64} }}(undef,0))
-end
-# }}}
+function DNNFriction() 
+	return DNNFriction(Vector{Float64}(undef,0),
+							 Lux.Chain(),
+							 NamedTuple{},
+							 NamedTuple{})
+						 end
+						 # }}}
 #Basalforcings (Abstract) {{{
 abstract type AbstractBasalforcings end
 function Base.show(io::IO, this::AbstractBasalforcings) IssmStructDisp(io, this) end

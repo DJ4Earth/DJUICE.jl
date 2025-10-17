@@ -220,8 +220,8 @@ end #}}}
 function IssmPrintField(io::IO, field::Any) #{{{
 	@printf "%s" field
 end #}}}
-function IssmPrintField(io::IO, field::Flux.Chain) #{{{
-	@printf "Flux: %s" field
+function IssmPrintField(io::IO, field::Lux.AbstractLuxLayer) #{{{
+	@printf "Lux:AbstractLuxLayer %s" field
 end #}}}
 function IssmPrintField(io::IO, field::StatsBase.ZScoreTransform) #{{{
 	@printf "Normalization: %s" field

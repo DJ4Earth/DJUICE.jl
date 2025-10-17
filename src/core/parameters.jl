@@ -28,13 +28,23 @@ mutable struct StringArrayParam <: Parameter #{{{
 	enum::IssmEnum
 	value::Vector{String}
 end# }}}
-mutable struct FluxChainParam <: Parameter #{{{
+mutable struct AbstractLuxLayerParam{M<:Lux.AbstractLuxLayer} <: Parameter #{{{
 	enum::IssmEnum
-	value::Vector{Flux.Chain{}}
+	value::M
+	function AbstractLuxLayerParam(enum::IssmEnum, value)
+		return new{typeof(value)}(enum, value)
+	end
+end# }}}
+mutable struct NamedTupleParam{M<:NamedTuple} <: Parameter #{{{
+	enum::IssmEnum
+	value::M
+	function NamedTupleParam(enum::IssmEnum, value::NamedTuple)
+		return new{typeof(value)}(enum, value)
+	end
 end# }}}
 mutable struct StatsBaseTransformParam <: Parameter #{{{
 	enum::IssmEnum
-	value::Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64}} } 
+	value::StatsBase.ZScoreTransform{Float64, Vector{Float64}}
 end# }}}
 
 #Parameters dataset class definition
@@ -68,11 +78,14 @@ end#}}}
 function GetParameterValue(param::StringArrayParam) #{{{
 	return param.value::Vector{String}
 end#}}}
-function GetParameterValue(param::FluxChainParam) #{{{
-	return param.value::Vector{Flux.Chain{}}
+function GetParameterValue(param::AbstractLuxLayerParam)#{{{
+	return param.value
+end#}}}
+function GetParameterValue(param::NamedTupleParam) #{{{
+	return param.value
 end#}}}
 function GetParameterValue(param::StatsBaseTransformParam) #{{{
-	return param.value::Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64} }}
+	return param.value::StatsBase.ZScoreTransform{Float64, Vector{Float64}}
 end#}}}
 
 #Parameters functions
@@ -118,15 +131,21 @@ function AddParam(parameters::Parameters,value::Vector{String}, enum::IssmEnum) 
 
 	return nothing
 end#}}}
-function AddParam(parameters::Parameters,value::Vector{Flux.Chain{}}, enum::IssmEnum) #{{{
+function AddParam(parameters::Parameters,value::StatsBase.ZScoreTransform{Float64, Vector{Float64}}, enum::IssmEnum) #{{{
 
-	parameters.lookup[enum] = FluxChainParam(enum,value)
+	parameters.lookup[enum] = StatsBaseTransformParam(enum,value)
 
 	return nothing
 end#}}}
-function AddParam(parameters::Parameters,value::Vector{StatsBase.ZScoreTransform{Float64, Vector{Float64}} }, enum::IssmEnum) #{{{
+function AddParam(parameters::Parameters,value::T, enum::IssmEnum) where {T<:Lux.AbstractLuxLayer} #{{{
 
-	parameters.lookup[enum] = StatsBaseTransformParam(enum,value)
+	parameters.lookup[enum] = AbstractLuxLayerParam(enum,value)
+
+	return nothing
+end#}}}
+function AddParam(parameters::Parameters,value::T, enum::IssmEnum) where {T<:NamedTuple}#{{{
+
+	parameters.lookup[enum] = NamedTupleParam(enum,value)
 
 	return nothing
 end#}}}
