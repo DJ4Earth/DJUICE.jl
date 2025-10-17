@@ -14,7 +14,7 @@ function __init__()
 end
 
 include("$userdir/classes.jl")
-export model, WeertmanFriction, SchoofFriction, FluxDNNFriction, LinearBasalforcings
+export model, WeertmanFriction, SchoofFriction, DNNFriction, LinearBasalforcings
 include("$userdir/exp.jl")
 export expread, ContourToNodes
 include("$userdir/utils.jl")
