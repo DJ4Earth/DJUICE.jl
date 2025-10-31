@@ -2,7 +2,7 @@ clear
 close all
 steps = [2];
 clustername = 'totten';
-saveflag = 0;
+saveflag = 1;
 %Cluster parameters{{{
 if strcmpi(clustername, 'andes')
 	cluster=andes('numnodes',1,'cpuspernode',64, 'memory', 32);
@@ -55,7 +55,7 @@ if perform(org, 'Compare_with_DJUICE')% {{{
 		'caxis#3',[-1e-4,1e-4],'caxis#1,2',[-1e-2,1e-2],...
 		'title', 'ISSM Sensitivity', 'title','DJUICE Sensitivity', 'title','ISSM - DJUICE',...
 		'nlines', 1,...
-		'xlabel#all','x','ylabel#all','y')
+		'xlabel#all','x (m)','ylabel#all','y (m)')
 
 	set(gcf,'color','w');
 	if saveflag

@@ -1,8 +1,8 @@
 clear
 close all
-steps = [1];
+steps = [2];
 clustername = 'totten';
-saveflag = 0;
+saveflag = 1;
 %Cluster parameters{{{
 if strcmpi(clustername, 'andes')
    cluster=andes('numnodes',1,'cpuspernode',64, 'memory', 32);
@@ -67,7 +67,7 @@ if perform(org, 'Compare_with_DJUICE')% {{{
       'nlines', 1,...
       'mask#all', (md.mask.ocean_levelset<0 & md.mask.ice_levelset<0),...
       'axis#all', [-1.8275   -1.4059   -0.8326   -0.2671]*1e6,...
-      'xlabel#all','x','ylabel#all','y')
+      'xlabel#all','x (m)','ylabel#all','y (m)')
 
    set(gcf,'color','w');
 
