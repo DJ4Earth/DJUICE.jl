@@ -92,6 +92,8 @@ function UpdateParameters(analysis::StressbalanceAnalysis,parameters::Parameters
 		AddParam(parameters, md.friction.model, FrictionDNNEnum)
 		AddParam(parameters, md.friction.ps, FrictionDNNpsEnum)
 		AddParam(parameters, md.friction.st, FrictionDNNstEnum)
+		AddParam(parameters, md.friction.input_scale, FrictionDNNInputScaleEnum)
+		AddParam(parameters, md.friction.output_scale, FrictionDNNOutputScaleEnum)
 	else
 		error("Friction ", typeof(md.friction), " not supported yet")
 	end

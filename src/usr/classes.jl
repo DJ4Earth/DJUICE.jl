@@ -176,12 +176,15 @@ mutable struct DNNFriction <: AbstractFriction
 	model::AbstractLuxLayer
 	ps
 	st
+	input_scale::Float64
+	output_scale::Float64
 end
 function DNNFriction() 
 	return DNNFriction(Vector{Float64}(undef,0),
 							 Lux.Chain(),
 							 NamedTuple{},
-							 NamedTuple{})
+							 NamedTuple{},
+							 1.0, 1.0)
 						 end
 						 # }}}
 #Basalforcings (Abstract) {{{

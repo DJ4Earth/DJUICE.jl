@@ -1,4 +1,5 @@
 #Friction class definition
+using Lux
 
 abstract type CoreFriction end
 mutable struct CoreBuddFriction <: CoreFriction #{{{
@@ -35,6 +36,8 @@ mutable struct CoreDNNFriction <: CoreFriction#{{{
 	model::AbstractLuxLayer
 	ps
 	st
+	inputScale::Float64
+	outputScale::Float64
    c_input::Input
 	vx_input::Input
 	vy_input::Input
@@ -78,8 +81,10 @@ function CoreFriction(element::Tria, ::Val{frictionlaw}) where frictionlaw #{{{
 		model  = FindParam(AbstractLuxLayer, element, FrictionDNNEnum)
 		ps  = FindParam(NamedTuple, element, FrictionDNNpsEnum)
 		st  = FindParam(NamedTuple, element, FrictionDNNstEnum)
+		inputScale  = FindParam(Float64, element, FrictionDNNInputScaleEnum)
+		outputScale  = FindParam(Float64, element, FrictionDNNOutputScaleEnum)
 
-		return CoreDNNFriction(model,ps,st,c_input,vx_input,vy_input)
+		return CoreDNNFriction(model,ps,st,inputScale,outputScale,c_input,vx_input,vy_input)
 	else
 		error("Friction ",typeof(md.friction)," not supported yet")
 	end
@@ -152,11 +157,13 @@ end #}}}
 	c = GetInputValue(friction.c_input, gauss, i)
 	# Get the velocity
 	vmag = VelMag(friction, gauss, i)
+	# construct nn model
+	smodel = StatefulLuxLayer(friction.model, friction.ps, friction.st)
 
 	if (vmag == 0.0 )
 		alpha2 = 0.0
 	else
-		alpha2 = c^2*vmag^2
+		alpha2 = c^2*((smodel([vmag]/friction.inputScale)[1])*friction.outputScale)/vmag
 	end
 	return alpha2
 end#}}}

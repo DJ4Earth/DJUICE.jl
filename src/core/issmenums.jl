@@ -203,6 +203,8 @@
 	FrictionDNNEnum
 	FrictionDNNpsEnum
 	FrictionDNNstEnum
+	FrictionDNNInputScaleEnum
+	FrictionDNNOutputScaleEnum
 	FrictionEffectivePressureLimitEnum
 	FrictionFEnum
 	FrictionGammaEnum
@@ -3973,6 +3975,8 @@ function EnumToString(enum::IssmEnum)
 	if(enum==FrictionDNNEnum) return "FrictionDNN" end
 	if(enum==FrictionDNNpsEnum) return "FrictionDNNps" end
 	if(enum==FrictionDNNstEnum) return "FrictionDNNst" end
+	if(enum==FrictionDNNInputScaleEnum) return "FrictionDNNInputScale" end
+	if(enum==FrictionDNNOutputScaleEnum) return "FrictionDNNOutputScale" end
 	if(enum==FrictionEffectivePressureLimitEnum) return "FrictionEffectivePressureLimit" end
 	if(enum==FrictionFEnum) return "FrictionF" end
 	if(enum==FrictionGammaEnum) return "FrictionGamma" end
@@ -7743,6 +7747,8 @@ function StringToEnum(name::String)
 	if(name=="FrictionDNN") return FrictionDNNEnum  end
 	if(name=="FrictionDNNps") return FrictionDNNpsEnum  end
 	if(name=="FrictionDNNst") return FrictionDNNstEnum  end
+	if(name=="FrictionDNNInputScale") return FrictionDNNInputScaleEnum  end
+	if(name=="FrictionDNNOutputScale") return FrictionDNNOutputScaleEnum  end
 	if(name=="FrictionEffectivePressureLimit") return FrictionEffectivePressureLimitEnum  end
 	if(name=="FrictionF") return FrictionFEnum  end
 	if(name=="FrictionGamma") return FrictionGammaEnum  end
