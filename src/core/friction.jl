@@ -125,10 +125,10 @@ end #}}}
 	m = GetInputValue(friction.m_input, gauss, i)
 	vmag = VelMag(friction, gauss, i)
 	
-	if vmag==0.0 && m<1.0
+	if vmag==0.0 && (1.0/m)<1.0
 		return 0.0
 	else
-		return c^2*vmag^(m-1)
+		return c^2*vmag^(1.0/m-1.0)
 	end
 end#}}}
 @inline function Alpha2(friction::CoreSchoofFriction, gauss::GaussTria, i::Int64) #{{{
