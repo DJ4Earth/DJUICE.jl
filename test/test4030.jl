@@ -1,8 +1,10 @@
+# DNN friction that learns y=x^1/3 and compare with Weertman friction
 using DJUICE
-using Flux
-using BSON: @load
+using Lux
+using JLD2
 
-md = model2()
+md = model()
+md = model(md, friction=DNNFriction())
 md = triangle(md,issmdir()*"/test/Exp/Square.exp",150000.)
 md = setmask(md,"","")
 
@@ -24,9 +26,15 @@ md.initialization.vy=zeros(md.mesh.numberofvertices)#InterpFromMeshToMesh2d(inde
 
 md.materials.rheology_B=1.815730284801701e+08*ones(md.mesh.numberofvertices)
 md.materials.rheology_n=3*ones(md.mesh.numberofelements)
-md.friction.coefficient=20*ones(md.mesh.numberofvertices)
-@load "../data/Weertman.bson" nn
-md.friction.dnnChain = nn;
+
+# load NN
+@load issmdir()*"/test/Data/friction_DNN.jld2" trained_model
+md.friction.model = trained_model.model.model
+md.friction.ps = trained_model.ps
+md.friction.st = trained_model.st
+md.friction.C = 20*ones(md.mesh.numberofvertices)
+md.friction.input_scale = 4e3/md.constants.yts
+md.friction.output_scale = (md.friction.input_scale)^(1.0/3.0)
 
 md.stressbalance.restol=0.05
 md.stressbalance.reltol=0.05
@@ -39,4 +47,16 @@ pos = findall(md.mesh.vertexonboundary)
 md.stressbalance.spcvx[pos] .= 0.0
 md.stressbalance.spcvy[pos] .= 0.0
 
-md=solve(md,"Stressbalance")
+
+# Weertman
+md2 = model(deepcopy(md), friction=WeertmanFriction())
+md2.friction.C = 20*ones(md.mesh.numberofvertices)
+md2.friction.m = 3*ones(md.mesh.numberofvertices)
+
+md = solve(md,:Stressbalance)
+md2 = solve(md2,:Stressbalance)
+
+@testset "DNNFriction for Weertman" begin
+	err = abs.(md2.results["StressbalanceSolution"]["Vel"]-md.results["StressbalanceSolution"]["Vel"])./md.results["StressbalanceSolution"]["Vel"]
+	@test sum(filter(!isnan, err)) < 1e-2
+end
