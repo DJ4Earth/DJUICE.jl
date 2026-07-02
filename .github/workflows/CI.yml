@@ -21,6 +21,7 @@ jobs:
         version:
           - '1.10'   # the minimum version 
           - '1.11'
+          - '1.12'
         os:
           - ubuntu-24.04
           # - macOS-latest
